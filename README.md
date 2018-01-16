@@ -1,0 +1,2 @@
+# Peako
+A JavaScript library.
