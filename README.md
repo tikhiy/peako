@@ -1,2 +1,5 @@
 # Peako
-A JavaScript library.
+
+Is a JavaScript Library.
+
+

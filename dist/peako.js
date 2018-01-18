@@ -1,5 +1,6 @@
 /**
- * Peako - a JavaScript library.
+ * Peako is a JavaScript Library.
+ * https://github.com/silent-tempest/Peako
  *
  * Based on jQuery:
  * https://github.com/jquery/jquery
@@ -60,8 +61,6 @@ var document = window.document,
     max = Math.max,
     min = Math.min,
     pow = Math.pow,
-    cos = Math.cos,
-    pi = Math.PI,
     RE_NOT_WHITESPACES = /[^\s\uFEFF\xA0]+/g,
     RE_PROPERTY = /(^|\.)\s*([_a-z]\w*)\s*|\[\s*(\d+|\d*\.\d+|"(([^\\]\\(\\\\)*"|[^"])*)"|'(([^\\]\\(\\\\)*'|[^'])*)')\s*\]/gi,
     RE_DEEP_KEY = /(^|[^\\])(\\\\)*(\.|\[)/,
@@ -788,6 +787,9 @@ var baseInvert = function ( object, keys ) {
   return inverted;
 };
 
+/**
+ * `Object.keys` polyfill.
+ */
 if ( support.keys !== 2 ) {
   if ( !support.keys ) {
     var non_enums = [
@@ -847,7 +849,17 @@ var baseMap = function ( iterable, iteratee, context, fromRight ) {
   return result;
 };
 
-// #todo rewrite this
+/**
+ * Merges `iterable` with `expander`.
+ *
+ * Examples:
+ *
+ * var iterable = [ 'flowers', 'john' ];
+ * var expander = [ 'numbers', 'universe' ];
+ *
+ * baseMerge( iterable, expander );
+ * // -> [ 'flowers', 'john', 'numbers', 'universe' ]
+ */
 var baseMerge = function ( iterable, expander ) {
   var i = 0,
       length = expander.length;
@@ -2033,36 +2045,9 @@ var shuffle = function ( object ) {
   return baseShuffle( toArray( object ) );
 };
 
-var size = function ( value ) {
-  var stack = [ value ],
-      checked = [],
-      size = 0;
-
-  while ( stack.length ) {
-    if ( ( value = stack.pop() ) == null ) {
-      continue;
-    }
-
-    switch ( typeof value ) {
-      case 'boolean': size += 4; break;
-      case 'number': size += 8; break;
-      case 'string': size += value.length * 2; break;
-
-      case 'object':
-      case 'function':
-        if ( baseIndexOf( checked, value ) < 0 ) {
-          checked.push( value );
-          stack = apply( concat, stack, baseToPairs( value, getKeys( value ) ) );
-        }
-    }
-  }
-
-  return size;
-};
-
 var sleep = function ( ms ) {
   var awakeTime = timestamp() + ms;
-  while ( timestamp() < awakeTime ) {}
+  while ( timestamp() < awakeTime );
 };
 
 var slice = function ( iterable, start, end ) {
@@ -4308,131 +4293,9 @@ var warn = _warn ? function () {
 // for _.typy method
 var types = create( null );
 
-// #noise
-// Perlin Noise Adapted from p5.js
-// https://github.com/processing/p5.js/blob/master/src/math/noise.js
-
-var PERLIN_YWRAPB = 4,
-    PERLIN_YWRAP = 1 << PERLIN_YWRAPB,
-    PERLIN_ZWRAPB = 8,
-    PERLIN_ZWRAP = 1 << PERLIN_ZWRAPB,
-    PERLIN_SIZE = 4095,
-    perlin_octaves = 4,
-    perlin_amp_falloff = 0.5,
-    m = 4294967296,
-    c = 1013904223,
-    a = 1664525,
-    z, seed, perlin;
-
-var set_lcg_seed = function ( value ) {
-  z = seed = ( value === undefined ?
-    rand() * m : value ) >>> 0;
-};
-
-var lcg_rand = function () {
-  return ( z = ( a * z + c ) % m ) / m;
-};
-
-var noise_seed = function ( seed ) {
-  set_lcg_seed( seed );
-
-  var len = PERLIN_SIZE + 1,
-      i = 0;
-
-  if ( !perlin ) {
-    perlin = Array( len );
-  }
-
-  for ( ; i < len; ++i ) {
-    perlin[ i ] = lcg_rand();
-  }
-};
-
-var noise = function ( x, y, z ) {
-  if ( !y ) {
-    y = 0;
-  }
-
-  if ( !z ) {
-    z = 0;
-  }
-
-  var amp = 0.5,
-      r = 0,
-      o = 0,
-      i, xi, yi, zi, xf, yf, zf, rxf, ryf, n1, n2, n3, of;
-
-  if ( !perlin ) {
-    perlin = Array( ( i = PERLIN_SIZE ) + 1 );
-
-    for ( ; i >= 0; --i ) {
-      perlin[ i ] = rand();
-    }
-  }
-
-  if ( x < 0 ) {
-    x = -x;
-  }
-
-  if ( y < 0 ) {
-    y = -y;
-  }
-
-  if ( z < 0 ) {
-    z = -z;
-  }
-
-  xf = x - ( xi = floor( x ) );
-  yf = y - ( yi = floor( y ) );
-  zf = z - ( zi = floor( z ) );
-
-  for ( ; o < perlin_octaves; ++o ) {
-    of = xi + ( yi << PERLIN_YWRAPB ) + ( zi << PERLIN_ZWRAPB );
-    rxf = ( 1 - cos( xf * pi ) ) * 0.5;
-    ryf = ( 1 - cos( yf * pi ) ) * 0.5;
-    n1 = perlin[ of & PERLIN_SIZE ];
-    n1 += ( perlin[ ( of + 1 ) & PERLIN_SIZE ] - n1 ) * rxf;
-    n2 = perlin[ ( of + PERLIN_YWRAP ) & PERLIN_SIZE ];
-    n2 += ( perlin[ ( of + PERLIN_YWRAP + 1 ) & PERLIN_SIZE ] - n2 ) * rxf;
-    n1 += ryf * ( n2 - n1 );
-    of += PERLIN_ZWRAP;
-    n2 = perlin[ of & PERLIN_SIZE ];
-    n2 += ( perlin[ ( of + 1 ) & PERLIN_SIZE ] - n2 ) * rxf;
-    n3 = perlin[ ( of + PERLIN_YWRAP ) & PERLIN_SIZE ];
-    n3 += ( perlin[ ( of + PERLIN_YWRAP + 1 ) & PERLIN_SIZE ] - n3 ) * rxf;
-    n2 += ryf * ( n3 - n2 );
-    n1 += ( 1 - cos( zf * pi ) ) * 0.5 * ( n2 - n1 );
-    r += n1 * amp;
-    amp *= perlin_amp_falloff;
-    xi <<= 1;
-    yi <<= 1;
-    zi <<= 1;
-    xf *= 2;
-    yf *= 2;
-    zf *= 2;
-
-    if ( xf >= 1 ) {
-      ++xi;
-      --xf;
-    }
-
-    if ( yf >= 1 ) {
-      ++yi;
-      --yf;
-    }
-
-    if ( zf >= 1 ) {
-      ++zi;
-      --zf;
-    }
-  }
-
-  return r;
-};
-
 var fetch, Headers, Request, Response;
 
-support.fetch = false && has( 'fetch', window ) &&
+support.fetch = has( 'fetch', window ) &&
   has( 'Headers', window ) &&
   has( 'Request', window ) &&
   has( 'Response', window );
@@ -5048,7 +4911,6 @@ peako.sample = sample;
 peako.sampleSize = sampleSize;
 peako.setPrototypeOf = setPrototypeOf;
 peako.shuffle = shuffle;
-peako.size = size;
 peako.sleep = sleep;
 peako.slice = slice;
 peako.some = some;
@@ -5071,8 +4933,6 @@ peako.values = getValues;
 peako.valuesIn = getValuesIn;
 peako.without = without;
 peako.zip = zip;
-peako.noise = noise;
-peako.noiseSeed = noise_seed;
 peako.fetch = fetch;
 peako.cssNumbers = cssNumbers;
 peako.eventProps = eventprops;
