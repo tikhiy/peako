@@ -2263,7 +2263,7 @@ var Event = function ( source, options ) {
     }
 
     this.originalEvent = source;
-    
+
     this.target = source.target && source.target.nodeType === 3 ?
       source.target.parentNode : source.target;
 
@@ -2428,7 +2428,7 @@ var event = function () {
     var i = 0,
         len = types.len,
         type, items, item, j, a_children, b_children;
-    
+
     for ( ; i < len; ++i ) {
       items = list[ type = types[ i ] ];
 
@@ -2669,7 +2669,10 @@ var frame = function () {
     window[ 'mozCancelRequest' + suffix ];
 
   // iOS6 is buggy
-  if ( !request || !cancel || /iP(ad|hone|od).*OS\s6/.test( window.navigator.userAgent ) ) {
+  if ( !request ||
+    !cancel ||
+    /iP(ad|hone|od).*OS\s6/.test( window.navigator.userAgent ) )
+  {
     var lastTime = 0,
         frameDuration = 1000 / 60;
 
@@ -2862,7 +2865,9 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
         return getStyle( element, name );
       }
 
-      if ( ( addUnit === 2 ? !cssNumbers[ toCamelCase( name ) ] : addUnit === 1 ) && isNumber( value ) ) {
+      if ( ( addUnit === 2 ? !cssNumbers[ toCamelCase( name ) ] : addUnit === 1 ) &&
+        isNumber( value ) )
+      {
         value += 'px';
       }
 
@@ -2896,10 +2901,16 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
     for ( ; i >= 0; --i ) {
       if ( ( element = this[ i ] ).nodeType === 1 ) {
         switch ( true ) {
-          case all: element.className = ''; break;
-          case re: classList.removewithre( element, classes ); break;
-          case fn: classList.remove( element, classes.call( element, i, element.className ) ); break;
-          default: classList.remove( element, classes );
+          case all:
+            element.className = ''; break;
+          case re:
+            classList.removewithre( element, classes ); break;
+          case fn:
+            classList.remove( element,
+              classes.call( element, i, element.className ) );
+            break;
+          default:
+            classList.remove( element, classes );
         }
       }
     }
