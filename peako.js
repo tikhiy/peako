@@ -72,42 +72,7 @@ var document = window.document,
     ERR_INVALID_PROPERTY_DESCRIPTOR = 'Invalid property descriptor.' +
       ' Cannot both specify accessors and a value or writable attribute';
 
-var support = {
-  HTMLElement: toString.call( body ).indexOf( 'HTML' ) > 0,
-  getElementsByClassName: !!document.getElementsByClassName,
-  addEventListener: !!window.addEventListener,
-  defineGetter: !!obj.__defineGetter__,
-
-  keys: Object.keys ?
-    2 : { toString: null }.propertyIsEnumerable( 'toString' ) ?
-    1 : 0,
-
-  defineProperty: function () {
-    var test = function ( target ) {
-      try {
-        if ( '' in Object.defineProperty( target, '', {} ) ) {
-          return 1;
-        }
-      } catch ( e ) {}
-
-      return 0;
-    };
-
-    return test( document.createElement( 'span' ) ) + test( {} );
-  }(),
-
-  getAttribute: function () {
-    var temp = document.createElement( 'span' ),
-        name = 'name';
-
-    try {
-      return temp.setAttribute( name, name ),
-        temp.getAttribute( name ) === name;
-    } catch ( e ) {}
-
-    return false;
-  }()
-};
+var support = {};
 
 var cached = function ( getOutput, lastInput, lastOutput ) {
   return function ( input ) {
@@ -242,6 +207,8 @@ var isFunction = function ( value ) {
 var isFunctionLike = function ( value ) {
   return typeof value == 'function';
 };
+
+support.HTMLElement = toString.call( body ).indexOf( 'HTML' ) > 0;
 
 /**
  * Returns true is `value` is a HTMLElement instance.
@@ -619,6 +586,22 @@ var baseCloneArray = function ( iterable ) {
   return clone;
 };
 
+support.defineProperty = function () {
+  var test = function ( target ) {
+    try {
+      if ( '' in Object.defineProperty( target, '', {} ) ) {
+        return 1;
+      }
+    } catch ( e ) {}
+
+    return 0;
+  };
+
+  return test( document.createElement( 'span' ) ) + test( {} );
+}();
+
+support.defineGetter = '__defineGetter__' in obj;
+
 /**
  * Base implementation of `Object.defineProperty` polyfill.
  */
@@ -786,6 +769,10 @@ var baseInvert = function ( object, keys ) {
 
   return inverted;
 };
+
+support.keys = Object.keys ?
+  2 : { toString: null }.propertyIsEnumerable( 'toString' ) ?
+  1 : 0;
 
 /**
  * `Object.keys` polyfill.
@@ -1067,16 +1054,22 @@ var createFind = function ( returnIndex, fromRight ) {
 
 var createForEach = function ( fromRight ) {
   return function ( iterable, iteratee, context ) {
-    iterable = getIterable( toObject( iterable ) );
-    iteratee = getIteratee( iteratee );
-    return baseForEach( iterable, iteratee, context, fromRight );
+    return baseForEach(
+      getIterable( toObject( iterable ) ),
+      getIteratee( iteratee ),
+      context,
+      fromRight );
   };
 };
 
 var createForIn = function ( getKeys, fromRight ) {
   return function ( object, iteratee, context ) {
-    return ( object = toObject( object ) ),
-      baseForIn( object, iteratee, context, getKeys( object ), fromRight );
+    return baseForIn(
+      object = toObject( object ),
+      iteratee,
+      context,
+      getKeys( object ),
+      fromRight );
   };
 };
 
@@ -1092,21 +1085,23 @@ var createIndexOf = function ( fromRight ) {
 
 var createMap = function ( fromRight ) {
   return function ( iterable, iteratee, context ) {
-    iterable = getIterable( toObject( iterable ) );
-    iteratee = getIteratee( iteratee );
-    return baseMap( iterable, iteratee, context, fromRight );
+    return baseMap(
+      getIterable( toObject( iterable ) ),
+      getIteratee( iteratee ),
+      context,
+      fromRight );
   };
 };
 
 var createRange = function ( reverse ) {
   return function ( start, end, step ) {
     if ( step === undefined ) {
-      step = 1;
-
       if ( end === undefined ) {
         end = start;
         start = 0;
       }
+
+      step = 1;
     }
 
     if ( end < start && step > 0 ) {
@@ -1123,15 +1118,15 @@ var createToCaseFirst = function ( toCase ) {
       throw TypeError( ERR_UNDEFINED_OR_NULL );
     }
 
-    return ( string += '' ).length > 1 ?
-      string.charAt( 0 )[ toCase ]() + string.slice( 1 ) : string[ toCase ]();
+    return ( string += '' ).charAt( 0 )[ toCase ]() + string.slice( 1 );
   };
 };
 
 var createToPairs = function ( getKeys ) {
   return function ( object ) {
-    object = toObject( object );
-    return baseToPairs( object, getKeys( object ) );
+    return baseToPairs(
+      object = toObject( object ),
+      getKeys( object ) );
   };
 };
 
@@ -2316,6 +2311,8 @@ Event.prototype = {
   }
 };
 
+support.addEventListener = 'addEventListener' in window;
+
 // #event
 // based on Jonathan Neal addEventListener() polyfill.
 // https://gist.github.com/jonathantneal/3748027
@@ -2759,6 +2756,8 @@ var parseHTML = function ( data, context ) {
     [ document.createElement( match[ 2 ] || match[ 3 ] ) ] :
     baseCloneArray( createFragment( [ data ], context ).childNodes );
 };
+
+support.getElementsByClassName = 'getElementsByClassName' in document;
 
 var RE_SIMPLE_SELECTOR = /^(?:#([\w-]+)|([\w-]+)|\.([\w-]+))$/;
 
@@ -3513,7 +3512,9 @@ forInRight( {
     if ( !element ) {
       value = null;
     } else if ( element.window === element ) {
-      value = max( element.document.documentElement[ 'client' + name ], element[ 'inner' + name ] || 0 );
+      value = max(
+        element.document.documentElement[ 'client' + name ],
+        element[ 'inner' + name ] || 0 );
     } else if ( element.nodeType === 9 ) {
       body = element.body;
       root = element.documentElement;
@@ -3524,8 +3525,7 @@ forInRight( {
         body[ 'offset' + name ],
         root[ 'offset' + name ],
         body[ 'client' + name ],
-        root[ 'client' + name ]
-      );
+        root[ 'client' + name ] );
     } else {
       value = element[ 'client' + name ];
     }
@@ -3829,6 +3829,18 @@ var getDefaultVisibleDisplay = function ( target ) {
   display = getDefaultStyle( target ).display;
   return ( defaultVisibleDisplayMap[ nodeName ] = display == 'null' ? 'block' : display );
 };
+
+support.getAttribute = function () {
+  var span = document.createElement( 'span' ),
+      name = 'name';
+
+  try {
+    span.setAttribute( name, name );
+    return span.getAttribute( name ) === name;
+  } catch ( e ) {}
+
+  return false;
+}();
 
 var propNames = {
   'for': 'htmlFor',
@@ -4284,22 +4296,12 @@ baseForIn( {
   insertAfter: 'after'
 }, function ( based, name ) {
   this[ name ] = function ( element ) {
-    return ( element && element instanceof DOMWrapper ? element : new DOMWrapper( element ) )[ based ]( this ), this;
+    return ( element && element instanceof DOMWrapper ?
+      element : new DOMWrapper( element ) )[ based ]( this ), this;
   };
 }, prototype, [ 'appendTo', 'prependTo', 'insertBefore', 'insertAfter' ], true );
 
-var _warn = console && console.warn;
-
-var _warn_count = 0;
-
-var warn = _warn ? function () {
-  if ( ++_warn_count >= 256 ) {
-    warn = noop;
-    _warn( 'peako.js: too many errors, no more errors will be reported to the console from.' );
-  } else {
-    apply( _warn, console, arguments );
-  }
-} : noop;
+var warn = console && console.warn || noop;
 
 // for _.typy method
 var types = create( null );
