@@ -3944,7 +3944,7 @@ var classList = {
     }
 
     var i = classes.length - 1,
-        className = ' ' + this.get( element ).join( '' ) + ' ',
+        className = ' ' + this.get( element ).join( ' ' ) + ' ',
         value;
 
     for ( ; i >= 0; --i ) {
