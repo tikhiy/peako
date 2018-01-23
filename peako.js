@@ -752,7 +752,7 @@ var createBaseIndexOf = function ( pred ) {
       index = fromRight ? j : ++i;
       value = iterable[ index ];
 
-      if ( pred( search, value ) ) {
+      if ( pred( search, value, index, iterable ) ) {
         return index;
       }
     }
@@ -761,8 +761,8 @@ var createBaseIndexOf = function ( pred ) {
   };
 };
 
-var baseIndexOf = arr.indexOf || createBaseIndexOf( function ( search, value ) {
-  return value === search;
+var baseIndexOf = arr.indexOf || createBaseIndexOf( function ( search, value, i, array ) {
+  return value === search && has( i, array );
 } );
 
 var baseIndexOfNaN = createBaseIndexOf( function ( search, value ) {
