@@ -729,45 +729,35 @@ var baseForIn = function ( object, iteratee, context, keys, fromRight ) {
   return object;
 };
 
-var createBaseIndexOf = function ( pred ) {
-  return function ( iterable, search, fromIndex, fromRight ) {
-    var length = getLength( iterable ),
-        i = -1,
-        j = length + i,
-        index, value;
+var baseIndexOf = function ( iterable, search, fromIndex, fromRight ) {
+  var length = getLength( iterable ),
+      i = -1,
+      j = length - 1,
+      index, value;
 
-    if ( !length ) {
-      return -1;
-    }
-
-    if ( fromIndex !== undefined ) {
-      fromIndex = baseToIndex( fromIndex, length );
-
-      i += j = fromRight ?
-        min( j, fromIndex ) :
-        max( 0, fromIndex );
-    }
-
-    for ( ; j >= 0; --j ) {
-      index = fromRight ? j : ++i;
-      value = iterable[ index ];
-
-      if ( pred( search, value, index, iterable ) ) {
-        return index;
-      }
-    }
-
+  if ( !length ) {
     return -1;
-  };
+  }
+
+  if ( fromIndex !== undefined ) {
+    fromIndex = baseToIndex( fromIndex, length );
+
+    i += j = fromRight ?
+      min( j, fromIndex ) :
+      max( 0, fromIndex );
+  }
+
+  for ( ; j >= 0; --j ) {
+    index = fromRight ? j : ++i;
+    value = iterable[ index ];
+
+    if ( value === search || value !== value && search !== search ) {
+      return index;
+    }
+  }
+
+  return -1;
 };
-
-var baseIndexOf = arr.indexOf || createBaseIndexOf( function ( search, value, i, array ) {
-  return value === search && has( i, array );
-} );
-
-var baseIndexOfNaN = createBaseIndexOf( function ( search, value ) {
-  return value !== value;
-} );
 
 var baseInvert = function ( object, keys ) {
   var inverted = {}, // create( getPrototypeOf( object ) ),
@@ -1070,9 +1060,7 @@ var createForIn = function ( getKeys, fromRight ) {
 
 var createIndexOf = function ( fromRight ) {
   return function ( iterable, search, fromIndex ) {
-    return search !== search ?
-      baseIndexOfNaN( toObject( iterable ), null, fromIndex, fromRight ) :
-      baseIndexOf( toObject( iterable ), search, fromIndex, fromRight );
+    return baseIndexOf( toObject( iterable ), search, fromIndex, fromRight );
   };
 };
 
