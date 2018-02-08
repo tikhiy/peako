@@ -3563,7 +3563,7 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   length: 0
 };
 
-forInRight( {
+forOwnRight( {
   value: 'value',
   text: 'textContent' in body ? 'textContent' : 'innerText',
   html: 'innerHTML'
@@ -3583,7 +3583,7 @@ forInRight( {
   };
 }, prototype );
 
-forIn( {
+forOwn( {
   on: 'on',
   one: 'on',
   off: 'off',
@@ -3625,7 +3625,7 @@ forIn( {
   };
 }, peako.fn );
 
-forInRight( {
+forOwnRight( {
   width: 'Width',
   height: 'Height'
 }, function ( name, methodName ) {
@@ -3669,7 +3669,7 @@ var getWindow = function ( element ) {
     document.defaultView || document.parentWindow : false;
 };
 
-forInRight( {
+forOwnRight( {
   scrollTop: 'pageYOffset',
   scrollLeft: 'pageXOffset'
 }, function ( offset, name ) {
@@ -3729,7 +3729,7 @@ var show = function () {
   }
 };
 
-forInRight( { hide: hide, show: show }, function ( method, name ) {
+forOwnRight( { hide: hide, show: show }, function ( method, name ) {
   this[ name ] = function () {
     return this.each( method );
   };
@@ -3852,14 +3852,15 @@ var access = function ( collection, callback, key, value, chainable, empty, raw 
   var bulk = key == null,
       i = 0,
       length = collection.length,
-      element;
+      element, keys, j, k_len;
 
   if ( !bulk && getType( key ) == 'object' ) {
     chainable = true;
-
-    forIn( key, function ( value, name ) {
-      this( collection, callback, name, value, chainable, empty, raw );
-    }, access );
+    k_len = ( keys = getKeys( key ) ).length;
+    
+    for ( j = 0; j < k_len; ++j ) {
+      access( collection, callback, keys[ j ], key[ keys[ j ] ], chainable, empty, raw );
+    }
   } else if ( value !== undefined ) {
     chainable = true;
 
@@ -4024,13 +4025,13 @@ var removeProp = function ( element, names ) {
   }
 };
 
-forInRight( { attr: attr, prop: prop }, function ( method, methodName ) {
+forOwnRight( { attr: attr, prop: prop }, function ( method, methodName ) {
   this[ methodName ] = function ( name, value ) {
     return access( this, method, name, value, arguments.length > 1, null );
   };
 }, prototype );
 
-forInRight( {
+forOwnRight( {
   removeAttr: removeAttr,
   removeProp: removeProp
 }, function ( method, methodName ) {
