@@ -439,6 +439,17 @@ var isWindowLike = function ( value ) {
 /** private 'base' methods */
 
 /**
+ * Copies elements from the `source` array to the `target` array.
+ */
+var baseCopyArray = function ( target, source ) {
+  for ( var i = source.length - 1; i >= 0; --i ) {
+    target[ i ] = source[ i ];
+  }
+
+  return target;
+};
+
+/**
  * Returns or set and returns a value of `path`.
  */
 
@@ -3230,25 +3241,26 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   },
 
   children: function ( selector ) {
-    var
-      i = 0,
-      length = getLength( this ),
-      list = [],
-      element, children, child, j, clength;
+    var len = this.length,
+        els = this.pushStack(),
+        el, children, child, c_len, i, j;
 
-    for ( ; i < length; ++i ) {
-      if ( ( children = ( element = this[ i ] ).nodeType === 1 && element.children ) ) {
-        for ( j = 0, clength = getLength( children ); j < clength; ++j ) {
-          child = children[ j ];
+    for ( i = 0; i < len; ++i ) {
+      // If the element isn't an HTML element or doesn't have children.
+      if ( ( el = this[ i ] ).nodeType !== 1 || !( c_len = ( children = el.children ).length ) ) {
+        continue;
+      }
 
-          if ( child.nodeType === 1 && ( !arguments.length || matches.call( child, selector ) ) ) {
-            list.push( child );
-          }
+      for ( j = 0; j < c_len; ++j ) {
+        child = children[ j ];
+
+        if ( child.nodeType === 1 && ( !arguments.length || matches.call( child, selector ) ) ) {
+          els[ els.length++ ] = child;
         }
       }
     }
 
-    return this.pushStack( list );
+    return els;
   },
 
   find: function ( selector ) {
@@ -3279,25 +3291,32 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
     return this.pushStack( list );
   },
 
-  not: function ( selector ) {
-    var byCallback = typeof selector == 'function',
-        i = 0,
-        length = this.length,
-        list = [],
-        element;
+  __filter: function ( selector, inverse ) {
+    var callable = typeof selector == 'function',
+        len = this.length,
+        els = this.pushStack(),
+        el, i;
 
-    for ( ; i < length; ++i ) {
-      element = this[ i ];
+    for ( i = 0; i < len; ++i ) {
+      el = this[ i ];
 
-      if ( !( byCallback ?
-        selector.call( element, i, element ) :
-        is( element, selector ) ) )
+      // .not( 'span' ); // ( .__filter( 'span', true ) )
+      // if the element is "span", then `is`
+      // returns true, then it will be false,
+      // and the element will not be added
+      if ( !( callable ?
+        selector.call( el, i, el ) :
+        is( el, selector ) ) == inverse )
       {
-        list.push( element );
+        els[ els.length++ ] = el;
       }
     }
 
-    return this.pushStack( list );
+    return els;
+  },
+
+  not: function ( selector ) {
+    return this.__filter( selector, true );
   },
 
   offsetParent: function () {
@@ -3332,48 +3351,43 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   },
 
   position: function () {
-    var element = this[ 0 ],
-        offset, style, offsetParent, opElement,
-        opElementStyle, parentOffset, topWidth, leftWidth;
+    var el = this[ 0 ],
+        off, comp, parent_off, parent_comp, parent, $parent;
 
-    if ( !element || element.nodeType !== 1 ) {
+    if ( !el || el.nodeType !== 1 ) {
       return null;
     }
 
-    style = getComputedStyle( element );
-    parentOffset = { top: 0, left: 0 };
+    comp = getComputedStyle( el );
 
-    if ( style.position === 'fixed' ) {
-      offset = element.getBoundingClientRect();
-    } else {
-      offsetParent = this.offsetParent();
-      opElement = offsetParent[ 0 ];
+    parent_off = {
+      left: 0,
+      top: 0
+    };
 
-      if ( !opElement || opElement.nodeType !== 1 ) {
+    if ( comp.position !== 'fixed' ) {
+      parent = ( $parent = this.offsetParent() )[ 0 ];
+
+      if ( !parent || parent.nodeType !== 1 ) {
         return null;
       }
 
-      offset = this.offset();
+      off = this.offset();
 
-      if ( opElement.nodeName !== 'HTML' ) {
-        parentOffset = offsetParent.offset();
+      if ( parent.nodeName !== 'HTML' ) {
+        parent_off = $parent.offset();
       }
 
-      opElementStyle = getComputedStyle( opElement );
-      topWidth = opElementStyle.borderTopWidth;
-      leftWidth = opElementStyle.borderLeftWidth;
-      parentOffset.top += window.parseInt( topWidth, 10 );
-      parentOffset.left += window.parseInt( leftWidth, 10 );
+      parent_comp = getComputedStyle( parent );
+      parent_off.left += window.parseInt( parent_comp.borderLeftWidth, 10 );
+      parent_off.top += window.parseInt( parent_comp.borderTopWidth, 10 );
+    } else {
+      off = el.getBoundingClientRect();
     }
 
     return {
-      top: offset.top -
-        parentOffset.top -
-        window.parseInt( style.marginTop, 10 ),
-
-      left: offset.left -
-        parentOffset.left -
-        window.parseInt( style.marginLeft, 10 )
+      left: off.left - parent_off.left - window.parseInt( comp.marginLeft, 10 ),
+      top: off.top - parent_off.top - window.parseInt( comp.marginTop, 10 )
     };
   },
 
@@ -3406,7 +3420,8 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
     readyState = document.readyState;
 
     if ( document.attachEvent ?
-      readyState === 'complete' : readyState !== 'loading' )
+      readyState === 'complete' :
+      readyState !== 'loading' )
     {
       callback( peako );
     } else {
@@ -3419,9 +3434,15 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   },
 
   pushStack: function ( elements ) {
-    var set = baseMerge( new DOMWrapper(), elements );
-    set.prevObject = this;
-    return set;
+    var wrapper = new DOMWrapper();
+
+    if ( elements ) {
+      baseCopyArray( wrapper, elements );
+      wrapper.length = elements.length;
+    }
+
+    wrapper.prevObject = this;
+    return wrapper;
   },
 
   end: function () {
@@ -3429,9 +3450,7 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   },
 
   filter: function ( selector ) {
-    return this.pushStack( baseFilter( this, function ( element, i ) {
-      return this ? selector.call( element, i, element ) : is( element, selector );
-    }, typeof selector == 'function', false ) );
+    return this.__filter( selector, false );
   },
 
   first: function () {
