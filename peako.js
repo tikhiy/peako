@@ -1524,6 +1524,19 @@ var bind = function () {
     return result;
   };
 
+  /**
+   * Binds the `target` function to the `context`.
+   */
+
+  // var greet = function ( name, end ) {
+  //   alert( this.greeting + ', ' + name + end );
+  // };
+  //
+  // _.bind( greet, { greeting: 'Hi' }, _, '!' )( 'Josh' );
+  //   -> 'Hi, Josh!'
+  // _.bind( greet, { greeting: 'Hello' }, 'Mike' )( '.' );
+  //   -> 'Hello, Mike.'
+
   return function ( target, context ) {
     if ( typeof target != 'function' ) {
       throw TypeError( ERR_FUNCTION_EXPECTED );
@@ -1545,35 +1558,45 @@ var bind = function () {
   };
 }();
 
+// _.clamp( -5, 0, 10 ); // -> 0
+// _.clamp( 15, 0, 10 ); // -> 10
+
 var clamp = function ( value, lower, upper ) {
-  return upper !== undefined ?
-    value >= upper ? upper : value <= lower ? lower : value :
-    value >= lower ? lower : value;
+  if ( value >= upper ) {
+    return upper;
+  }
+
+  if ( value <= lower ) {
+    return lower;
+  }
+
+  return value;
 };
 
-/**
- * var Person = function ( greetings ) {
- *  this.greetings = greetings;
- *  this.person = this;
- * };
- *
- * Person.prototype.greet = function () {
- *   return this.greetings;
- * };
- *
- * var person = new Person( 'Hello!' ),
- *     clone = _.clone( person );
- *
- * clone.greet(); // -> 'Hello!'
- * clone.person; // -> clone
- */
+// var Person = function ( greeting ) {
+//  this.greeting = greeting;
+//  this.person = this;
+// };
+//
+// Person.prototype.greet = function () {
+//   return this.greeting;
+// };
+//
+// var person = new Person( 'Hello!' ),
+//     clone = _.clone( person );
+//
+// clone.greet(); // -> 'Hello!'
+// clone.person; // -> clone
+
 var clone = function ( deep, target, guard ) {
+  var cln;
+
   if ( target === undefined || guard ) {
     target = deep;
     deep = true;
   }
 
-  var cln = create( getPrototypeOf( target = toObject( target ) ) );
+  cln = create( getPrototypeOf( target = toObject( target ) ) );
 
   each( target, function ( value, key, target ) {
     if ( value === target ) {
@@ -1945,6 +1968,8 @@ var merge = function ( iterable ) {
 
   return iterable;
 };
+
+// _.forEach( shapes, _.method( 'draw' ) );
 
 var method = function ( path ) {
   var len = ( path = toPath( path ) ).length,
