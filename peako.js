@@ -12,9 +12,7 @@
  * Code below could be confusing!
  */
 
-/* jshint esversion: 3 */
-/* jshint unused: true */
-/* jshint undef: true */
+/* jshint esversion: 3, unused: true, undef: true */
 /* global XMLHttpRequest, Element, FileReader, Blob, FormData, ArrayBuffer */
 
 ;( function ( window, undefined ) {
@@ -43,7 +41,6 @@ var document = window.document,
     min = Math.min,
     pow = Math.pow,
     RE_NOT_WHITESPACES = /[^\s\uFEFF\xA0]+/g,
-    RE_PROPERTY = /(^|\.)\s*([_a-z]\w*)\s*|\[\s*(\d+|\d*\.\d+|"(([^\\]\\(\\\\)*"|[^"])*)"|'(([^\\]\\(\\\\)*'|[^'])*)')\s*\]/gi,
     RE_DEEP_KEY = /(^|[^\\])(\\\\)*(\.|\[)/,
     ERR_INVALID_ARGS = 'Invalid arguments',
     ERR_FUNCTION_EXPECTED = 'Expected a function',
@@ -53,7 +50,7 @@ var document = window.document,
 
 var regexps = {
   selector: /^(?:#([\w-]+)|([\w-]+)|\.([\w-]+))$/,
-  property: /(^|\.)\s*([_a-z]\w*)\s*|\[\s*(\d+|\d*\.\d+|"(([^\\]\\(\\\\)*"|[^"])*)"|'(([^\\]\\(\\\\)*'|[^'])*)')\s*\]/gi,
+  property: /(^|\.)\s*([_a-z]\w*)\s*|\[\s*(\d+|\d*\.\d+|("|')(([^\\]\\(\\\\)*|[^\1])*)\4)\s*\]/gi,
   deep_key: /(^|[^\\])(\\\\)*(\.|\[)/,
   single_tag: /^(<([\w-]+)><\/[\w-]+>|<([\w-]+)(\s*\/)?>)$/,
   not_whitespaces: /[^\s\uFEFF\xA0]+/g
@@ -276,7 +273,7 @@ var isNaN = function ( value ) {
 
 // _.isNumber( 0 ); // -> true
 // _.isNumber( NaN ) // -> true
-// _.isNumber( new Number( Infinity ) ) -> false (in older versions - true)
+// _.isNumber( new Number( Infinity ) ) // -> false (in older versions - true)
 
 var isNumber = function ( value ) {
   return typeof value == 'number';
@@ -394,7 +391,7 @@ var isDOMElement = function ( value ) {
  */
 
 // _.isString( '' ); // -> true
-// _.isString( new String() ) -> false (in older versions - true)
+// _.isString( new String() ) // -> false (in older versions - true)
 
 var isString = function ( value ) {
   return typeof value == 'string';
@@ -404,14 +401,20 @@ var isString = function ( value ) {
  * Returns true if `value` represents a symbol primitive or object.
  */
 
-// _.isString( Symbol() ); // -> true
-// _.isString( Object( Symbol() ) ) -> true
+// _.isSymbol( Symbol() ); // -> true
+// _.isSymbol( Object( Symbol() ) ) // -> true
 
 var isSymbol = function ( value ) {
-  return !!value && (
-    typeof value == 'symbol' ||
+  // disable "Invalid typeof value 'symbol' (W122)" (esversion: 3)
+  /* jshint -W122 */
+  if ( typeof value == 'symbol' ) {
+  /* jshint +W122 */
+    return true;
+  }
+
+  return value != null &&
     typeof value == 'object' &&
-    toString.call( value ) == '[object Symbol]' );
+    toString.call( value ) == '[object Symbol]';
 };
 
 /**
@@ -429,8 +432,8 @@ var isWindow = function ( value ) {
  * Returns true if `value` represents a Window instance, faster than `_.isWindow`.
  */
 
-// _.isWindow( window ); // -> true
-// _.isWindow( new function () { this.window = this; } ) // -> true
+// _.isWindowLike( window ); // -> true
+// _.isWindowLike( new function () { this.window = this; } ) // -> true
 
 var isWindowLike = function ( value ) {
   return isObjectLike( value ) && value.window === value;
@@ -457,21 +460,15 @@ var baseCopyArray = function ( target, source ) {
 //
 // baseAccessor(
 //   nested,
-//   toPath( 'one.two.three' ),
+//   toPath( 'one.two' ),
 //   0, // offset from right
-//   3, // value to set
+//   2, // value to set
 //   true ); // we want to set the value
-// // -> 3
+// // -> 2
 
 /**
  * nested mutated into:
- * {
- *   one: {
- *     two: {
- *       three: 3
- *     }
- *   }
- * }
+ * { one: { two: 2 } }
  */
 
 var baseAccessor = function ( object, path, offset, value, setValue ) {
@@ -555,6 +552,12 @@ var baseCloneArray = function ( iterable ) {
   return clone;
 };
 
+/**
+ * There are three possible values for `support.defineProperty`:
+ * 0 - not supported.
+ * 1 - works only with DOM elements (old IE).
+ * 2 - full support.
+ */
 support.defineProperty = function () {
   var test = function ( target ) {
     try {
@@ -891,14 +894,18 @@ if ( support.keys !== 2 ) {
 
 /**
  * Base implementation of `_.map` and `_mapRight` (works only with array-like objects).
+ * `_.mapRight()` reverses the array, but doesn't loop through it reversibly!
  */
 var baseMap = function ( iterable, iteratee, context, fromRight ) {
-  var length = getLength( iterable ),
-      result = Array( length ),
-      j = length,
-      i = 0;
+  var length, result, j, i;
 
-  for ( ; i < length; ++i ) {
+  if ( !fromRight && arr.map ) {
+    return arr.map.call( iterable, iteratee, context );
+  }
+
+  result = Array( j = length = getLength( iterable ) );
+
+  for ( i = 0; i < length; ++i ) {
     if ( has( i, iterable ) ) {
       result[ fromRight ? --j : i ] = iteratee
         .call( context, iterable[ i ], i, iterable );
@@ -1043,8 +1050,13 @@ var baseTimes = function ( times, callback ) {
 
 /**
  * Returns a valid index for an array with
- * a length of `length` from` value`.
+ * the `length` length from the `value`.
  */
+
+// baseToIndex( -1, 10 ); // -> 9
+// baseToIndex( -1, 0 ); // -> 0
+// baseToIndex( NaN, 10 ); // -> 0
+
 var baseToIndex = function ( value, length ) {
   if ( !length || !value ) {
     return 0;
@@ -1057,6 +1069,13 @@ var baseToIndex = function ( value, length ) {
   return value || 0;
 };
 
+/**
+ * Returns an array filled with the "[key, value]" pairs of the `object`.
+ */
+
+// baseToPairs( { a: 10, b: 20 }, [ 'a', 'b' ] );
+//   -> [ [ 'a', 10 ], [ 'b', 20 ] ]
+
 var baseToPairs = function ( object, keys ) {
   var i = keys.length,
       pairs = Array( i-- );
@@ -1067,6 +1086,13 @@ var baseToPairs = function ( object, keys ) {
 
   return pairs;
 };
+
+/**
+ * Retruns values of the `object`.
+ */
+
+// baseValues( { a: 10, b: 20 }, [ 'a', 'b' ] );
+//   -> [ 10, 20 ]
 
 var baseValues = function ( object, keys ) {
   var i = keys.length,
@@ -1372,16 +1398,25 @@ var exec = function ( regexp, string ) {
 };
 
 var stringToPath = function ( string ) {
-  var path = exec( RE_PROPERTY, string ),
+  var path = exec( regexps.property, string ),
       i = path.length - 1,
       value;
 
   for ( ; i >= 0; --i ) {
     value = path[ i ];
 
-    path[ i ] = unescape( value[ 7 ] !== undefined ?
-      value[ 7 ] : value[ 4 ] !== undefined ?
-      value[ 4 ] : value[ 2 ] || value[ 3 ] );
+    // .name
+    if ( value[ 2 ] ) {
+      path[ i ] = value[ 2 ];
+
+    // [ "" ] || [ '' ]
+    } else if ( value[ 5 ] != null ) {
+      path[ i ] = unescape( value[ 5 ] );
+
+    // [ 0 ]
+    } else {
+      path[ i ] = value[ 3 ];
+    }
   }
 
   return path;
@@ -1446,13 +1481,13 @@ var getTime = Date.now || function () {
  * Returns a function that can only be called `n` times.
  */
 var before = function ( n, target ) {
+  var value;
+
   if ( typeof target != 'function' ) {
     throw TypeError( ERR_FUNCTION_EXPECTED );
   }
 
   n = defaultTo( n, 2 );
-
-  var value;
 
   return function () {
     if ( target ) {
@@ -1461,7 +1496,7 @@ var before = function ( n, target ) {
       }
 
       if ( n < 2 ) {
-        target = undefined;
+        target = null;
       }
     }
 
@@ -3300,14 +3335,17 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
     for ( i = 0; i < len; ++i ) {
       el = this[ i ];
 
-      // .not( 'span' ); // ( .__filter( 'span', true ) )
+      // .not( 'span' ); // .__filter( 'span', true )
       // if the element is "span", then `is`
       // returns true, then it will be false,
-      // and the element will not be added
-      if ( !( callable ?
-        selector.call( el, i, el ) :
-        is( el, selector ) ) == inverse )
-      {
+      // and the element will not be added.
+
+      // disable the "Confusing use of '!'. (W018)" warning,
+      // because "a != b" and "!a == b" behave differently.
+      // we need to convert "a" to a boolean value.
+      /* jshint -W018 */
+      if ( !( callable ? selector.call( el, i, el ) : is( el, selector ) ) == inverse ) {
+      /* jshint +W018 */
         els[ els.length++ ] = el;
       }
     }
