@@ -50,7 +50,7 @@ var document = window.document,
 
 var regexps = {
   selector: /^(?:#([\w-]+)|([\w-]+)|\.([\w-]+))$/,
-  property: /(^|\.)\s*([_a-z]\w*)\s*|\[\s*(\d+|\d*\.\d+|("|')(([^\\]\\(\\\\)*|[^\1])*)\4)\s*\]/gi,
+  property: /(^|\.)\s*([_a-z]\w*)\s*|\[\s*(\d+|\d*\.\d+|("|')(([^\\]\\(\\\\)*|[^\4])*)\4)\s*\]/gi,
   deep_key: /(^|[^\\])(\\\\)*(\.|\[)/,
   single_tag: /^(<([\w-]+)><\/[\w-]+>|<([\w-]+)(\s*\/)?>)$/,
   not_whitespaces: /[^\s\uFEFF\xA0]+/g
@@ -70,9 +70,17 @@ var cached = function ( getOutput, lastInput, lastOutput ) {
 
 /**
  * Binds the function to `context`. Bound function
- * will execute faster than if it was bound by `_.bind`.
- * In `_.bindFast` you can't use partial arguments.
+ * will execute faster than if it was bound by `_.bind()`.
+ * NOTE: In the `_.bindFast()` method you can't use partial arguments.
  */
+
+// var hello = function () {
+//   alert( this.greeting );
+// };
+//
+// _.bindFast( hello, { greeting: 'goodbye.' } )();
+// // -> 'goodbye.'
+
 var bindFast = function ( target, context ) {
   if ( typeof target != 'function' ) {
     throw TypeError( ERR_FUNCTION_EXPECTED );
@@ -109,8 +117,8 @@ var isArray = Array.isArray || function ( value ) {
 };
 
 /**
- * Returns true if `value` is array-like. String is array-like,
- * objects with a valid `length` property also array-like.
+ * Returns true if `value` is array-like. String is array-like.
+ * Objects with a valid `length` property also array-like.
  */
 
 // _.isArrayLike( [] ); // -> true
@@ -178,7 +186,7 @@ var isFunction = function ( value ) {
 support.HTMLElement = toString.call( body ).indexOf( 'HTML' ) > 0;
 
 /**
- * Returns true is `value` is a HTMLElement instance.
+ * Returns true if `value` is a HTMLElement instance.
  */
 
 // _.isElement( document.createElement( 'span' ) ) // -> true
@@ -198,7 +206,7 @@ var isElement = function ( value ) {
 };
 
 /**
- * Returns true is `value` is a HTMLElement instance, but faster than `_.isElement`.
+ * Returns true if `value` is a HTMLElement instance, but faster than `_.isElement`.
  */
 
 // _.isElementLike( document.createElement( 'span' ) ) // -> true
@@ -213,16 +221,13 @@ var isElementLike = function ( value ) {
  * Returns true if `value` is a valid array-like index.
  */
 
-// _.isIndex( 0 ) // -> true
-// _.isIndex( -1 ) // -> false
-// _.isIndex( 0.1 ) // -> false
-// _.isIndex( Infinity ) // -> false
+// /** Without `length` parameter. */
+// _.isIndex( 0 ); // -> true
+// _.isIndex( -1 ); // -> false
+// _.isIndex( 0.1 ); // -> false
+// _.isIndex( Infinity ); // -> false
 // _.isIndex( new Number() ); // -> false
-
-/**
- * Using second parameter:
- */
-
+// /** Using second parameter. */
 // var names = [ 'Josh', 'Jared' ];
 // _.isIndex( 1, names.length ); // -> true
 // _.isIndex( 10, names.length ); // -> false
@@ -245,9 +250,9 @@ var MAX_ARRAY_LENGTH = 4294967295;
  * Returns true if `value` is a valid Array instance length.
  */
 
-// _.isLength( 0 ) // -> true
+// _.isLength( 0 ); // -> true
 // _.isLength( -0.1 ); // -> false
-// _.isLength( new Number() ) // -> false
+// _.isLength( new Number() ); // -> false
 
 var isLength = function ( value ) {
   return typeof value == 'number' &&
@@ -257,11 +262,11 @@ var isLength = function ( value ) {
 };
 
 /**
- * Checks if `value` is a NaN.
+ * Checks if `value` is NaN.
  */
 
-// _.isNaN( NaN ) // -> true
-// _.isNaN( new Number( NaN ) ) // -> true
+// _.isNaN( NaN ); // -> true
+// _.isNaN( new Number( NaN ) ); // -> true
 
 var isNaN = function ( value ) {
   return isNumber( value ) && value != +value;
@@ -272,8 +277,8 @@ var isNaN = function ( value ) {
  */
 
 // _.isNumber( 0 ); // -> true
-// _.isNumber( NaN ) // -> true
-// _.isNumber( new Number( Infinity ) ) // -> false (in older versions - true)
+// _.isNumber( NaN ); // -> true
+// _.isNumber( new Number( Infinity ) ); // -> false (in older versions - true)
 
 var isNumber = function ( value ) {
   return typeof value == 'number';
@@ -1074,7 +1079,7 @@ var baseToIndex = function ( value, length ) {
  */
 
 // baseToPairs( { a: 10, b: 20 }, [ 'a', 'b' ] );
-//   -> [ [ 'a', 10 ], [ 'b', 20 ] ]
+// // -> [ [ 'a', 10 ], [ 'b', 20 ] ]
 
 var baseToPairs = function ( object, keys ) {
   var i = keys.length,
@@ -1092,7 +1097,7 @@ var baseToPairs = function ( object, keys ) {
  */
 
 // baseValues( { a: 10, b: 20 }, [ 'a', 'b' ] );
-//   -> [ 10, 20 ]
+// // -> [ 10, 20 ]
 
 var baseValues = function ( object, keys ) {
   var i = keys.length,
@@ -1479,7 +1484,18 @@ var getTime = Date.now || function () {
 
 /**
  * Returns a function that can only be called `n` times.
+ * NOTE: Behave differently from Lodash `_.before`.
  */
+
+// Math.weirdFunc = _.before( 2, function () {
+//   return this.floor( this.random() * 100 );
+// } );
+
+// Math.weirdFunc(); // -> 87
+// Math.weirdFunc(); // -> 21
+// Math.weirdFunc(); // -> 21
+// Math.weirdFunc(); // -> 21...
+
 var before = function ( n, target ) {
   var value;
 
@@ -1487,11 +1503,11 @@ var before = function ( n, target ) {
     throw TypeError( ERR_FUNCTION_EXPECTED );
   }
 
-  n = defaultTo( n, 2 );
+  n = defaultTo( n, 1 );
 
   return function () {
     if ( target ) {
-      if ( --n > 0 ) {
+      if ( --n >= 0 ) {
         value = apply( target, this, arguments );
       }
 
@@ -1533,9 +1549,9 @@ var bind = function () {
   // };
   //
   // _.bind( greet, { greeting: 'Hi' }, _, '!' )( 'Josh' );
-  //   -> 'Hi, Josh!'
+  // // -> 'Hi, Josh!'
   // _.bind( greet, { greeting: 'Hello' }, 'Mike' )( '.' );
-  //   -> 'Hello, Mike.'
+  // // -> 'Hello, Mike.'
 
   return function ( target, context ) {
     if ( typeof target != 'function' ) {
@@ -1558,6 +1574,10 @@ var bind = function () {
   };
 }();
 
+/**
+ * Returns a number that doesn't go out of bounds `lower` and `upper`.
+ */
+
 // _.clamp( -5, 0, 10 ); // -> 0
 // _.clamp( 15, 0, 10 ); // -> 10
 
@@ -1572,6 +1592,10 @@ var clamp = function ( value, lower, upper ) {
 
   return value;
 };
+
+/**
+ * Creates a clone of the `target` object.
+ */
 
 // var Person = function ( greeting ) {
 //  this.greeting = greeting;
@@ -1611,6 +1635,21 @@ var clone = function ( deep, target, guard ) {
   return cln;
 };
 
+/**
+ * Creates an array with elements from the `iterable` array.
+ * NOTE: You can use `<Array>.slice()`, but in some situations
+ * `_.cloneArray()` works much faster (for array-like objects).
+ */
+
+// var weirdObject = {
+//   0: 'A',
+//   1: 'Z',
+//   length: 2
+// };
+//
+// _.cloneArray( weirdObject );
+// // -> [ 'A', 'B' ]
+
 var cloneArray = function ( iterable ) {
   if ( iterable == null ) {
     throw TypeError( ERR_UNDEFINED_OR_NULL );
@@ -1622,6 +1661,10 @@ var cloneArray = function ( iterable ) {
 /**
  * Returns array without falsy values.
  */
+
+// _.compact( [ 'A', 0, null, '', 'Z' ] );
+// // -> [ 'A', 'Z' ]
+
 var compact = function ( iterable ) {
   var compacted = [],
       i = 0,
@@ -1642,6 +1685,20 @@ var constant = function ( value ) {
     return value;
   };
 };
+
+/**
+ * Polyfill for the `Object.create()` method.
+ */
+
+// var prototype = null;
+//
+// var descriptors = {
+//   one: {
+//     get: _.constant( 1 )
+//   }
+// };
+//
+// var object = _.create( prototype, descriptors );
 
 var create = Object.create || function () {
   var Constructor = function () {};
@@ -1664,10 +1721,41 @@ var create = Object.create || function () {
   };
 }();
 
+/**
+ * Returns `value` or `defaultValue`.
+ */
+
+// _.defaultTo( new Number( NaN ), 0 );
+// // -> new Number( NaN )
+// _.defaultTo( NaN, 0 );
+// // -> 0
+// _.defaultTo( null, {} );
+// // -> {}
+// _.defaultTo( 0, 100 );
+// // -> 0
+
 var defaultTo = function ( value, defaultValue ) {
   return value == null || value !== value ?
     defaultValue : value;
 };
+
+/**
+ * Polyfill for the `Object.defineProperties()` method.
+ */
+
+// var object = {};
+//
+// var descriptors = {
+//   one: {
+//     get: _.constant( 1 )
+//   },
+//
+//   two: {
+//     get: _.constant( 2 )
+//   },
+// };
+//
+// _.defineProperties( object, descriptors );
 
 var defineProperties = support.defineProperty === 2 ?
   Object.defineProperties :
@@ -1698,6 +1786,18 @@ function ( object, descriptors ) {
   return object;
 };
 
+/**
+ * Polyfill for the `Object.defineProperty()` method.
+ */
+
+// var person = {};
+//
+// var descriptors = {
+//   value: 'Josh'
+// };
+//
+// _.defineProperty( person, 'name', descriptor );
+
 var defineProperty = support.defineProperty === 2 ?
   Object.defineProperty :
 
@@ -1723,6 +1823,13 @@ var equal = function ( a, b ) {
   return a === b || a !== a && b !== b;
 };
 
+/**
+ * It's like `<RegExp>.exec()`, but it works like `<String>.match()` with the global flag.
+ */
+
+// _.exec( /f(o){2}/g, 'foobarfoo' );
+// // -> [ [ 'foo', 'o' ], [ 'foo', 'o' ] ]
+
 var globalExec = function ( regexp, string ) {
   if ( getType( regexp ) != 'regexp' ) {
     throw TypeError( 'Expected a regexp' );
@@ -1735,14 +1842,29 @@ var globalExec = function ( regexp, string ) {
   return regexp.exec( string );
 };
 
+/**
+ * Fill the `iterable` array from `start` to `end` index with `value`.
+ */
+
+// _.fill( Array( 5 ), 0 );
+// // -> [ 0, 0, 0, 0, 0 ]
+// _.fill( [ 'a', null, null, null, 'z' ], '.', 1, -1 );
+// // -> [ 'a', '.', '.', '.', 'z' ]
+
 var fill = function ( iterable, value, start, end ) {
   var length = getLength( iterable = toObject( iterable ) );
 
-  start = start === undefined ?
-    0 : toIndex( start, length );
+  if ( start !== undefined ) {
+    start = toIndex( start, length );
+  } else {
+    start = 0;
+  }
 
-  end = end === undefined ?
-    length : toIndex( end, length );
+  if ( end !== undefined ) {
+    end = toIndex( end, length );
+  } else {
+    end = length;
+  }
 
   for ( ; start < end; ++start ) {
     iterable[ start ] = value;
@@ -1751,9 +1873,35 @@ var fill = function ( iterable, value, start, end ) {
   return iterable;
 };
 
+/**
+ * Flattens the `iterable` array by reduce the number of
+ * dimensions in it on `depth` value (default - Infinity).
+ */
+
+// var weirdArray = [
+//   [ [ "I'm in the array!" ] ]
+// ];
+//
+// _.flatten( weirdArray );
+// // -> [ "I'm in the array!" ];
+// _.flatten( weirdArray, 1 );
+// // -> [ [ "I'm in the array!" ] ];
+
 var flatten = function ( iterable, depth ) {
   return baseFlatten( toObject( iterable ), [], defaultTo( depth, Infinity ) );
 };
+
+/**
+ * Makes an object from the pairs (see `_.toPairs()`).
+ */
+
+// _.fromPairs( [
+//   [ 'name', 'Josh' ]
+// ] );
+// // -> { name: 'Josh' }
+//
+// _.fromPairs( _.toPairs( { one: 1 } ) );
+// // -> { one: 1 }
 
 var fromPairs = function ( pairs ) {
   var i = 0,
@@ -1767,6 +1915,9 @@ var fromPairs = function ( pairs ) {
   return object;
 };
 
+/**
+ * Polyfill for the `perfomance.now` method.
+ */
 var timestamp = function () {
   var perfomance = window.perfomance,
       navigatorStart;
@@ -1809,11 +1960,25 @@ var toPath = function ( value ) {
   return parsed;
 };
 
-var accessor = function ( object, path, value ) {
-  object = toObject( object );
+/**
+ * Returns the value at path of the object. If the
+ * third argument passed, it will be set to the path,
+ * if the path doesn't exists, it will be created.
+ */
 
+// var object = {},
+//     path = '[ 0 ][ "1" ][ \'2\' ].three';
+//
+// _.access( object, path, 3 );
+// // -> 3
+// _.access( object, path );
+// // -> 3
+
+var accessor = function ( object, path, value ) {
   var len = ( path = toPath( path ) ).length,
       setValue = arguments.length > 2;
+
+  object = toObject( object );
 
   if ( len ) {
     return len > 1 ?
@@ -1830,6 +1995,26 @@ var default_file_options = {
 
   timeout: 6e4
 };
+
+/**
+ * Returns the contents of the file at the path.
+ * The following values are passed to the option:
+ * [async] Use an asynchronous request.
+ * [onload] Will be execute when the data is loaded.
+ * [onerror] Will be execute when an error occur.
+ * [timeout=60000] At the end of the time, the download will be canceled.
+ */
+
+// _.file( [path], [options] );
+//
+// // Use cases:
+//
+// // 1. async = false
+// _.file( path );
+// // 2. async = options.async || true
+// _.file( path, options );
+// // 3. async = options.async || true
+// _.file( options );
 
 var file = function ( path, options ) {
 
@@ -1893,14 +2078,15 @@ var file = function ( path, options ) {
 };
 
 var getPrototypeOf = Object.getPrototypeOf || function ( target ) {
+  var prototype, constructor;
+
   if ( target == null ) {
     throw TypeError( ERR_UNDEFINED_OR_NULL );
   }
 
   // jshint proto: true
-  var prototype = target.__proto__,
+  prototype = target.__proto__;
   // jshint proto: false
-      constructor;
 
   if ( prototype !== undefined ) {
     return prototype;
@@ -1908,7 +2094,7 @@ var getPrototypeOf = Object.getPrototypeOf || function ( target ) {
 
   constructor = target.constructor;
 
-  return isFunction( constructor ) ?
+  return getType( constructor ) == 'function' ?
     constructor.prototype : obj;
 };
 
@@ -1937,10 +2123,10 @@ var getKeys = support.keys !== 2 ? function ( object ) {
 } : Object.keys;
 
 var getKeysIn = function ( target ) {
-  target = toObject( target );
-
   var keys = [],
       key;
+
+  target = toObject( target );
 
   for ( key in target ) {
     keys.push( key );
@@ -1950,11 +2136,11 @@ var getKeysIn = function ( target ) {
 };
 
 var merge = function ( iterable ) {
-  iterable = toObject( iterable );
-
   var i = 1,
       length = arguments.length,
       expander;
+
+  iterable = toObject( iterable );
 
   for ( ; i < length; ++i ) {
     expander = arguments[ i ];
@@ -2057,7 +2243,13 @@ var noop = function () {};
 var nth = function ( iterable, index ) {
   var length = getLength( iterable );
 
-  if ( length && isIndex( index = baseToIndex( index, length ), length ) ) {
+  if ( !length ) {
+    return;
+  }
+
+  index = baseToIndex( index, length );
+
+  if ( isIndex( index, length ) ) {
     return iterable[ index ];
   }
 };
@@ -2073,7 +2265,7 @@ var nthArg = function ( index ) {
 };
 
 var once = function ( target ) {
-  return before( 2, target );
+  return before( 1, target );
 };
 
 var property = function ( path ) {
@@ -3206,17 +3398,8 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   },
 
   is: function ( selector ) {
-    var byCallback = typeof selector == 'function',
-        i = this.length - 1,
-        element;
-
-    for ( ; i >= 0; --i ) {
-      element = this[ i ];
-
-      if ( byCallback ?
-        selector.call( element, i, element ) :
-        is( element, selector ) )
-      {
+    for ( var i = this.length - 1; i >= 0; --i ) {
+      if ( is( this[ i ], selector, i ) ) {
         return true;
       }
     }
@@ -3352,8 +3535,7 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   },
 
   __filter: function ( selector, inverse ) {
-    var callable = typeof selector == 'function',
-        len = this.length,
+    var len = this.length,
         els = this.pushStack(),
         el, i;
 
@@ -3369,7 +3551,7 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
       // because "a != b" and "!a == b" behave differently.
       // we need to convert "a" to a boolean value.
       /* jshint -W018 */
-      if ( !( callable ? selector.call( el, i, el ) : is( el, selector ) ) == inverse ) {
+      if ( !is( el, selector, i ) == inverse ) {
       /* jshint +W018 */
         els[ els.length++ ] = el;
       }
@@ -3646,6 +3828,34 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
 };
 
 forOwnRight( {
+  next: 'nextSibling',
+  prev: 'previousSibling'
+}, function ( nextSibling, name ) {
+  this[ name ] = function ( selector ) {
+    var els = this.pushStack(),
+        len = this.length,
+        sibling, el, i;
+
+    for ( i = 0; i < len; ++i ) {
+      el = this[ i ];
+
+      if ( el.nodeType !== 1 ) {
+        continue;
+      }
+
+      /** Skip some weird stuff (spaces, comments, whatever...) */
+      while ( ( sibling = el[ nextSibling ] ) && sibling.nodeType !== 1 );
+
+      if ( sibling && ( !selector || is( sibling, selector, i ) ) ) {
+        els[ els.length++ ] = sibling;
+      }
+    }
+
+    return els;
+  };
+}, prototype );
+
+forOwnRight( {
   value: 'value',
   text: 'textContent' in body ? 'textContent' : 'innerText',
   html: 'innerHTML'
@@ -3796,11 +4006,13 @@ var hide = function () {
 };
 
 var show = function () {
+  var style;
+
   if ( this.nodeType !== 1 ) {
     return;
   }
 
-  var style = this.style;
+  style = this.style;
 
   if ( style.display === 'none' ) {
     style.display = '';
@@ -3818,15 +4030,15 @@ forOwnRight( { hide: hide, show: show }, function ( method, name ) {
 }, prototype );
 
 var toggle = function ( element, name, state, setState ) {
-  if ( element.nodeType === 1 ) {
-    if ( !setState ) {
-      return element[ name ];
-    }
-
-    element[ name ] = state;
+  if ( element.nodeType !== 1 ) {
+    return null;
   }
 
-  return null;
+  if ( !setState ) {
+    return element[ name ];
+  }
+
+  element[ name ] = state;
 };
 
 baseForEach( [ 'checked', 'disabled' ], function ( methodName ) {
@@ -3996,8 +4208,8 @@ var cssNumbers = {
   "zoom": true
 };
 
-var is = function ( element, selector ) {
-  if ( isString( selector ) ) {
+var is = function ( element, selector, index ) {
+  if ( typeof selector == 'string' ) {
     return element.nodeType === 1 && matches.call( element, selector );
   }
 
@@ -4005,39 +4217,42 @@ var is = function ( element, selector ) {
     return indexOf( selector, element ) >= 0;
   }
 
-  return element === selector;
-};
-
-var defaultStyleMap = {};
-
-var getDefaultStyle = function ( target ) {
-  var document, element,
-      nodeName = target.nodeName,
-      defaultStyle = defaultStyleMap[ nodeName ];
-
-  if ( defaultStyle ) {
-    return defaultStyle;
+  if ( typeof selector == 'function' ) {
+    return selector.call( element, index, element );
   }
 
-  document = target.ownerDocument;
-  element = document.body.appendChild( document.createElement( nodeName ) );
-  defaultStyle = defaultStyleMap[ nodeName ] = clone( false, getComputedStyle( element ) );
-  element.parentNode.removeChild( element );
-  return defaultStyle;
+  return element === selector;
 };
 
 var defaultVisibleDisplayMap = {};
 
 var getDefaultVisibleDisplay = function ( target ) {
   var nodeName = target.nodeName,
-      display = defaultVisibleDisplayMap[ nodeName ];
+      display = defaultVisibleDisplayMap[ nodeName ],
+      doc, el;
 
-  if ( display ) {
-    return display;
+  if ( !display ) {
+    /** Get the document in which now is `target`. */
+    doc = target.ownerDocument;
+    /** Create the same element as the `target`. Add it to the `document`. */
+    el = doc.body.appendChild( doc.createElement( nodeName ) );
+    /** Get it 'display' style. */
+    display = getComputedStyle( el ).display;
+    /** This element is no longer needed. */
+    doc.body.removeChild( el );
+    /** IE can don't to delete element from the memory? */
+    el = doc = null;
+
+    /** Force the `target` to show. */
+    if ( display === 'none' ) {
+      display = 'block';
+    }
+
+    /** Caching results. */
+    defaultVisibleDisplayMap[ nodeName ] = display;
   }
 
-  display = getDefaultStyle( target ).display;
-  return ( defaultVisibleDisplayMap[ nodeName ] = display == 'null' ? 'block' : display );
+  return display;
 };
 
 support.getAttribute = function () {
