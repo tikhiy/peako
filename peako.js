@@ -33,10 +33,10 @@ var document = window.document,
     arrslice = arr.slice,
     push = arr.push,
     call = fn.call,
-    floor = Math.floor,
-    round = Math.round,
+    math_floor = Math.floor,
+    math_round = Math.round,
+    math_ceil = Math.ceil,
     rand = Math.random,
-    ceil = Math.ceil,
     max = Math.max,
     min = Math.min,
     pow = Math.pow,
@@ -266,10 +266,10 @@ var isLength = function ( value ) {
  */
 
 // _.isNaN( NaN ); // -> true
-// _.isNaN( new Number( NaN ) ); // -> true
+// _.isNaN( new Number( NaN ) ); // -> false (in older versions - true)
 
 var isNaN = function ( value ) {
-  return isNumber( value ) && value != +value;
+  return value !== value;
 };
 
 /**
@@ -992,7 +992,7 @@ var baseMerge = function ( iterable, expander ) {
 
 var baseRange = function ( reverse, start, end, step ) {
   var i = -1,
-      j = ceil( ( end - start ) / step ),
+      j = math_ceil( ( end - start ) / step ),
       temp = Array( j-- );
 
   for ( ; j >= 0; --j ) {
@@ -1353,6 +1353,8 @@ var toCamelCase = function () {
 }();
 
 var getType = function ( value ) {
+  var type;
+
   if ( value === null ) {
     return 'null';
   }
@@ -1361,14 +1363,19 @@ var getType = function ( value ) {
     return 'undefined';
   }
 
-  var type = typeof value;
+  type = typeof value;
 
   if ( type != 'object' && type != 'function' ) {
     return type;
   }
 
-  return types[ type = toString.call( value ) ] ||
-    ( types[ type ] = type.slice( 8, -1 ).toLowerCase() );
+  type = types[ type = toString.call( value ) ];
+
+  if ( type ) {
+    return type;
+  }
+
+  return ( types[ type ] = type.slice( 8, -1 ).toLowerCase() );
 };
 
 var getIteratee = function ( value ) {
@@ -1554,6 +1561,8 @@ var bind = function () {
   // // -> 'Hello, Mike.'
 
   return function ( target, context ) {
+    var partial_args;
+
     if ( typeof target != 'function' ) {
       throw TypeError( ERR_FUNCTION_EXPECTED );
     }
@@ -1562,7 +1571,7 @@ var bind = function () {
       return fnbind.call( target, context );
     }
 
-    var partial_args = arrslice.call( arguments, 2 );
+    partial_args = arrslice.call( arguments, 2 );
 
     if ( indexOf( partial_args, peako ) < 0 ) {
       return call.apply( fnbind, arguments );
@@ -1704,20 +1713,25 @@ var create = Object.create || function () {
   var Constructor = function () {};
 
   return function ( prototype, descriptors ) {
+    var object;
+
     if ( prototype !== null && isPrimitive( prototype ) ) {
       throw TypeError( 'Object prototype may only be an Object or null: ' + prototype );
     }
 
     Constructor.prototype = prototype;
 
-    var object = new Constructor();
+    object = new Constructor();
 
     if ( prototype === ( Constructor.prototype = null ) ) {
       setPrototypeOf( object, prototype );
     }
 
-    return arguments.length < 2 ?
-      object : defineProperties( object, descriptors );
+    if ( arguments.length >= 2 ) {
+      defineProperties( object, descriptors );
+    }
+
+    return object;
   };
 }();
 
@@ -1735,8 +1749,11 @@ var create = Object.create || function () {
 // // -> 0
 
 var defaultTo = function ( value, defaultValue ) {
-  return value == null || value !== value ?
-    defaultValue : value;
+  if ( value != null && value === value ) {
+    return value;
+  }
+
+  return defaultValue;
 };
 
 /**
@@ -1824,7 +1841,7 @@ var equal = function ( a, b ) {
 };
 
 /**
- * It's like `<RegExp>.exec()`, but it works like `<String>.match()` with the global flag.
+ * It's like `<RegExp>.exec()`, but it works as `<String>.match()` with the global flag.
  */
 
 // _.exec( /f(o){2}/g, 'foobarfoo' );
@@ -1842,6 +1859,14 @@ var globalExec = function ( regexp, string ) {
   return regexp.exec( string );
 };
 
+var defaultIndex = function ( value, length, defaultValue ) {
+  if ( value !== undefined ) {
+    return toIndex( value, length );
+  }
+
+  return defaultValue;
+};
+
 /**
  * Fill the `iterable` array from `start` to `end` index with `value`.
  */
@@ -1854,17 +1879,8 @@ var globalExec = function ( regexp, string ) {
 var fill = function ( iterable, value, start, end ) {
   var length = getLength( iterable = toObject( iterable ) );
 
-  if ( start !== undefined ) {
-    start = toIndex( start, length );
-  } else {
-    start = 0;
-  }
-
-  if ( end !== undefined ) {
-    end = toIndex( end, length );
-  } else {
-    end = length;
-  }
+  start = defaultIndex( start, length, 0 );
+  end = defaultIndex( end, length, length );
 
   for ( ; start < end; ++start ) {
     iterable[ start ] = value;
@@ -2318,7 +2334,7 @@ var random = function ( lower, upper, floating ) {
     return lower + rand() * ( upper - lower );
   }
 
-  return round( lower + rand() * ( upper - lower ) );
+  return math_round( lower + rand() * ( upper - lower ) );
 };
 
 var reduce = function ( iterable, iteratee, value ) {
@@ -2424,15 +2440,11 @@ var shuffle = function ( object ) {
 };
 
 var slice = function ( iterable, start, end ) {
-  var length = getLength( iterable = toObject( iterable ) ),
+  var len = getLength( iterable = toObject( iterable ) ),
       i, sliced, index;
 
-  start = start === undefined ?
-    0 : toIndex( start, length );
-
-  end = end === undefined ?
-    length : toIndex( end, length );
-
+  start = defaultIndex( start, len, 0 );
+  end = defaultIndex( end, len, len );
   i = end - start;
   sliced = Array( i-- );
 
@@ -2484,8 +2496,11 @@ var toObject = function ( target ) {
 };
 
 var toPlainObject = function ( target ) {
-  return target == null ?
-    {} : assignIn( {}, toObject( target ) );
+  if ( target == null ) {
+    return {};
+  }
+
+  return assignIn( {}, toObject( target ) );
 };
 
 var getTypeCached = cached( getType, undefined, 'undefined' );
@@ -2526,7 +2541,7 @@ var assign = Object.assign || createAssign( getKeys ),
     assignIn = createAssign( getKeysIn ),
     each = createEach( false ),
     eachRight = createEach( true ),
-    ceilnum = createRound( ceil ),
+    ceil = createRound( math_ceil ),
     every = createEverySome( true ),
     some = createEverySome( false ),
     filter = createFilter( false, getKeys ),
@@ -2537,7 +2552,7 @@ var assign = Object.assign || createAssign( getKeys ),
     findIndex = arr.findIndex ? bindFast( call, arr.findIndex ) : createFind( true, false ),
     findLast = createFind( false, true ),
     findLastIndex = createFind( true, true ),
-    floornum = createRound( floor ),
+    floor = createRound( math_floor ),
     forEach = createForEach( false ),
     forEachRight = createForEach( true ),
     forIn = createForIn( getKeysIn, false ),
@@ -2551,7 +2566,7 @@ var assign = Object.assign || createAssign( getKeys ),
     mapRight = createMap( true ),
     range = createRange( false ),
     rangeRight = createRange( true ),
-    roundnum = createRound( round ),
+    round = createRound( math_round ),
     upperFirst = createToCaseFirst( 'toUpperCase' ),
     lowerFirst = createToCaseFirst( 'toLowerCase' ),
     toPairs = Object.entries || createToPairs( getKeys ),
@@ -2563,7 +2578,7 @@ var assign = Object.assign || createAssign( getKeys ),
     getValuesIn = createValues( getKeysIn );
 
 // from jquery
-var eventprops = [
+var event_props = [
   'altKey',        'bubbles',        'cancelable',
   'cancelBubble',  'changedTouches', 'ctrlKey',
   'currentTarget', 'detail',         'eventPhase',
@@ -2575,17 +2590,18 @@ var eventprops = [
   'pointerId',     'pointerType',    'relatedTarget',
   'returnValue',   'screenX',        'screenY',
   'targetTouches', 'toElement',      'touches',
-  'type',          'which',          'isTrusted'
+  'type',          'isTrusted'
 ];
 
 // Based on jQuery.Event
 var Event = function ( source, options ) {
-  if ( source && source.type !== undefined ) {
-    var i = eventprops.length - 1,
-        key;
+  var i, key;
 
-    for ( ; i >= 0; --i ) {
-      if ( has( key = eventprops[ i ], source ) ) {
+  if ( source && source.type !== undefined ) {
+    for ( i = event_props.length - 1; i >= 0; --i ) {
+      key = event_props[ i ];
+
+      if ( has( key, source ) ) {
         this[ key ] = source[ key ];
       }
     }
@@ -2596,25 +2612,18 @@ var Event = function ( source, options ) {
       source.target.parentNode : source.target;
 
     this.which = event.which( source );
-  } else if ( typeof source == 'string' ) {
+  } else {
     this.type = source;
   }
 
   if ( options !== undefined ) {
-    assign( this, options, getKeys( options ) );
+    assign( this, options );
   }
 
   this.timeStamp = timestamp();
 };
 
 Event.prototype = {
-  constructor: Event,
-  originalEvent: null,
-  type: '',
-  timeStamp: 0,
-  returnValue: true,
-  cancelBubble: false,
-
   preventDefault: function () {
     var event = this.originalEvent;
 
@@ -2641,7 +2650,9 @@ Event.prototype = {
     }
 
     this.cancelBubble = event.cancelBubble;
-  }
+  },
+
+  constructor: Event
 };
 
 support.addEventListener = 'addEventListener' in window;
@@ -2651,7 +2662,8 @@ support.addEventListener = 'addEventListener' in window;
  * https://gist.github.com/jonathantneal/3748027
  */
 
-var __event_list = create( null );
+var __event_list = create( null ),
+    __event_list_types = [];
 
 var event = {
   /**
@@ -2708,6 +2720,8 @@ var event = {
       __event_list[ type ].push( item );
     } else {
       __event_list[ type ] = [ item ];
+      __event_list[ type ].index = __event_list_types.length;
+      __event_list_types.push( type );
     }
   },
 
@@ -2723,25 +2737,26 @@ var event = {
   // event.off( window );
 
   off: function ( target, type, listener, use_capture ) {
-    var i;
+    var i, remove_all, items, item;
 
     // remove all listeners.
+    // event.off( target );
     if ( type === undefined ) {
-      for ( i = types.length - 1; i >= 0; --i ) {
-        event.off( target, types[ i ] );
+      for ( i = __event_list_types.length - 1; i >= 0; --i ) {
+        event.off( target, __event_list_types[ i ] );
       }
 
       return;
     }
 
-        // event.off( target, type );
-    var remove_all = listener === undefined,
-        items = __event_list[ type ],
-        item;
+    items = __event_list[ type ];
 
     if ( !items ) {
       return;
     }
+
+    // event.off( target, type );
+    remove_all = listener === undefined;
 
     if ( use_capture === undefined ) {
       use_capture = false;
@@ -2758,10 +2773,11 @@ var event = {
         continue;
       }
 
-      items.splice( i--, 1 );
+      items.splice( i, 1 );
 
       if ( !items.length ) {
-        delete __event_list[ type ];
+        __event_list_types.splice( items.index, 1 );
+        __event_list[ type ] = null;
       }
 
       if ( support.addEventListener ) {
@@ -2795,28 +2811,24 @@ var event = {
     for ( ; i < items.length; ++i ) {
       item = items[ i ];
 
-      if ( item.target !== target && target !== null ) {
+      if ( item.target !== target && target ) {
         continue;
       }
 
       event = new Event( type, data );
-      event.target = target;
+      event.target = target || item.target;
       event.isTrusted = false;
       item.wrapper.call( target, event );
     }
   },
 
-  copy: function ( target, source, deep, types ) {
-    if ( !types ) {
-      types = getKeys( __event_list );
-    }
-
-    var i = types.length - 1,
+  copy: function ( target, source, deep ) {
+    var i = __event_list_types.length - 1,
         type, items, item, j, len,
         t_children, s_children;
 
     for ( ; i >= 0; --i ) {
-      items = __event_list[ type = types[ i ] ];
+      items = __event_list[ type = __event_list_types[ i ] ];
 
       if ( !items ) {
         continue;
@@ -2836,7 +2848,7 @@ var event = {
       s_children = source.childNodes;
 
       for ( i = t_children.length - 1; i >= 0; --i ) {
-        event.copy( t_children[ i ], s_children[ i ], deep, types );
+        event.copy( t_children[ i ], s_children[ i ], deep );
       }
     }
 
@@ -2859,17 +2871,27 @@ var event = {
 
     button = event.button;
 
-    // Add which for click: 1 === left; 2 === middle; 3 === right
-    if ( !event.which && button !== undefined &&
-      /^(?:mouse|pointer|contextmenu|drag|drop)|click/.test( event.type ) )
+    if ( event.which || button === undefined ||
+      !/^(?:mouse|pointer|contextmenu|drag|drop)|click/.test( event.type ) )
     {
-      return button & 1 ?
-        1 : button & 2 ?
-        3 : button & 4 ?
-        2 : 0;
+      return event.which;
     }
 
-    return event.which;
+    // Add which for click: 1 === left; 2 === middle; 3 === right
+
+    if ( button & 1 ) {
+      return 1;
+    }
+
+    if ( button & 2 ) {
+      return 3;
+    }
+
+    if ( button & 4 ) {
+      return 2;
+    }
+
+    return 0;
   },
 
   __fix_type: function ( type ) {
@@ -2970,7 +2992,7 @@ var getComputedStyle = window.getComputedStyle || function () {
       } else if ( name == 'height' ) {
         style[ name ] = element.offsetHeight + 'px';
       } else if ( style[ name ] != 'auto' && /(margin|padding|border).*W/.test( name ) ) {
-        style[ name ] = round( getComputedStylePixel( element, name, fontSize ) ) + 'px';
+        style[ name ] = math_round( getComputedStylePixel( element, name, fontSize ) ) + 'px';
       } else if ( !name.indexOf( 'outline' ) ) {
         try {
           // errors on checking outline
@@ -2989,7 +3011,7 @@ var getComputedStyle = window.getComputedStyle || function () {
     setShortStyleProperty( style, 'margin' );
     setShortStyleProperty( style, 'padding' );
     setShortStyleProperty( style, 'border' );
-    style.fontSize = round( fontSize ) + 'px';
+    style.fontSize = math_round( fontSize ) + 'px';
   };
 
   CSSStyleDeclaration.prototype = {
@@ -3876,9 +3898,9 @@ forOwnRight( {
 }, prototype );
 
 forOwnRight( {
-  on: 'on',
-  one: 'on',
-  off: 'off',
+  on     : 'on',
+  one    : 'on',
+  off    : 'off',
   trigger: 'trigger'
 }, function ( name, methodName ) {
   var one = methodName === 'one',
@@ -3890,10 +3912,6 @@ forOwnRight( {
         element, j, k;
 
     if ( !removeAll ) {
-      if ( !isString( types ) ) {
-        throw TypeError( ERR_STRING_EXPECTED );
-      }
-
       types = types.match( RE_NOT_WHITESPACES );
 
       if ( !types ) {
@@ -3906,16 +3924,18 @@ forOwnRight( {
     for ( ; i >= 0; --i ) {
       element = this[ i ];
 
-      if ( removeAll ) {
+      if ( !removeAll ) {
+        for ( j = 0; j < k; ++j ) {
+          event[ name ]( element, types[ j ], listener, useCapture, one );
+        }
+      } else {
         event[ name ]( element );
-      } else for ( j = 0; j < k; ++j ) {
-        event[ name ]( element, types[ j ], listener, useCapture, one );
       }
     }
 
     return this;
   };
-}, peako.fn );
+}, prototype );
 
 forOwnRight( {
   width: 'Width',
@@ -4658,16 +4678,23 @@ var Promise = window.Promise || function () {
     wrapper.handled = true;
 
     setImmediate( function () {
-      var temp,
-          containsValue = wrapper.state === 1,
+      var containsValue = wrapper.state === 1,
+          temp, callback;
 
-      callback = containsValue ?
-        deferred.onFulfilled : deferred.onRejected;
+      if ( containsValue ) {
+        callback = deferred.onFulfilled;
+      } else {
+        callback = deferred.onRejected;
+      }
 
       if ( !callback ) {
-        ( containsValue ?
-          resolve : reject )( deferred.promise, wrapper.value );
+        if ( containsValue ) {
+          callback = resolve;
+        } else {
+          callback = reject;
+        }
 
+        callback( deferred.promise, wrapper.value );
         return;
       }
 
@@ -4701,27 +4728,34 @@ baseForEach( [
   'touchcancel', 'load'
 ], function ( type ) {
   this[ type ] = function ( argument ) {
+    var len, i;
+
     if ( typeof argument != 'function' ) {
       return this.trigger( type, argument );
     }
 
-    baseForEach( arguments, function ( listener ) {
-      this.on( type, listener, false );
-    }, this );
+    for ( len = arguments.length - 1, i = 0; i < len; ++i ) {
+      this.on( type, arguments[ i ], false );
+    }
 
     return this;
   };
 }, prototype, true );
 
 baseForIn( {
-  appendTo: 'append',
-  prependTo: 'prepend',
+  appendTo    : 'append',
+  prependTo   : 'prepend',
   insertBefore: 'before',
-  insertAfter: 'after'
+  insertAfter : 'after'
 }, function ( based, name ) {
   this[ name ] = function ( element ) {
-    return ( element && element instanceof DOMWrapper ?
-      element : new DOMWrapper( element ) )[ based ]( this ), this;
+    if ( element instanceof DOMWrapper == false ) {
+      new DOMWrapper( element )[ based ]( this );
+    } else {
+      element[ based ]( this );
+    }
+
+    return this;
   };
 }, prototype, [ 'appendTo', 'prependTo', 'insertBefore', 'insertAfter' ], true );
 
@@ -5247,7 +5281,7 @@ peako.assignIn = assignIn;
 peako.before = before;
 peako.bind = bind;
 peako.bindFast = bindFast;
-peako.ceil = ceilnum;
+peako.ceil = ceil;
 peako.clamp = clamp;
 peako.clone = clone;
 peako.cloneArray = cloneArray;
@@ -5272,7 +5306,7 @@ peako.findIndex = findIndex;
 peako.findLast = findLast;
 peako.findLastIndex = findLastIndex;
 peako.flatten = flatten;
-peako.floor = floornum;
+peako.floor = floor;
 peako.forEach = forEach;
 peako.forEachRight = forEachRight;
 peako.forIn = forIn;
@@ -5331,7 +5365,7 @@ peako.reduce = reduce;
 peako.reduceRight = reduceRight;
 peako.reject = reject;
 peako.rejectIn = rejectIn;
-peako.round = roundnum;
+peako.round = round;
 peako.sample = sample;
 peako.sampleSize = sampleSize;
 peako.setPrototypeOf = setPrototypeOf;
@@ -5356,7 +5390,7 @@ peako.valuesIn = getValuesIn;
 peako.without = without;
 peako.fetch = fetch;
 peako.cssNumbers = cssNumbers;
-peako.eventProps = eventprops;
+peako.eventProps = event_props;
 peako.propNames = propNames;
 peako.support = support;
 peako.wrapMap = wrapMap;
