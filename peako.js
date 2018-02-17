@@ -29,10 +29,10 @@ var document = window.document,
     hasOwnProperty = obj.hasOwnProperty,
     isPrototypeOf = obj.isPrototypeOf,
     toString = obj.toString,
-    concat = arr.concat,
-    arrslice = arr.slice,
-    push = arr.push,
-    call = fn.call,
+    arr_concat = arr.concat,
+    arr_slice = arr.slice,
+    arr_push = arr.push,
+    fn_call = fn.call,
     math_floor = Math.floor,
     math_round = Math.round,
     math_ceil = Math.ceil,
@@ -40,8 +40,6 @@ var document = window.document,
     max = Math.max,
     min = Math.min,
     pow = Math.pow,
-    RE_NOT_WHITESPACES = /[^\s\uFEFF\xA0]+/g,
-    RE_DEEP_KEY = /(^|[^\\])(\\\\)*(\.|\[)/,
     ERR_INVALID_ARGS = 'Invalid arguments',
     ERR_FUNCTION_EXPECTED = 'Expected a function',
     ERR_STRING_EXPECTED = 'Expected a string',
@@ -53,20 +51,10 @@ var regexps = {
   property: /(^|\.)\s*([_a-z]\w*)\s*|\[\s*(\d+|\d*\.\d+|("|')(([^\\]\\(\\\\)*|[^\4])*)\4)\s*\]/gi,
   deep_key: /(^|[^\\])(\\\\)*(\.|\[)/,
   single_tag: /^(<([\w-]+)><\/[\w-]+>|<([\w-]+)(\s*\/)?>)$/,
-  not_whitespaces: /[^\s\uFEFF\xA0]+/g
+  not_spaces: /[^\s\uFEFF\xA0]+/g
 };
 
 var support = {};
-
-var cached = function ( getOutput, lastInput, lastOutput ) {
-  return function ( input ) {
-    if ( input !== lastInput ) {
-      lastOutput = getOutput( lastInput = input );
-    }
-
-    return lastOutput;
-  };
-};
 
 /**
  * Binds the function to `context`. Bound function
@@ -321,11 +309,13 @@ var fnToString = fn.toString,
 // _.isPlainObject( new function () {} ); // -> false
 
 var isPlainObject = function ( value ) {
+  var prototype;
+
   if ( !isObject( value ) ) {
     return false;
   }
 
-  var prototype = getPrototypeOf( value );
+  prototype = getPrototypeOf( value );
 
   return prototype === null ||
     hasOwnProperty.call( prototype, 'constructor' ) &&
@@ -374,6 +364,8 @@ var isSafeInteger = function ( value ) {
 // _.isDOMElement( document.createTextNode( '' ) ); // -> true
 
 var isDOMElement = function ( value ) {
+  var nodeType;
+
   if ( !isObjectLike( value ) ) {
     return false;
   }
@@ -382,7 +374,7 @@ var isDOMElement = function ( value ) {
     return true;
   }
 
-  var nodeType = value.nodeType;
+  nodeType = value.nodeType;
 
   return nodeType === 1 || // ELEMENT_NODE
          nodeType === 3 || // TEXT_NODE
@@ -530,12 +522,12 @@ var baseAssign = function ( object, expander, keys ) {
 /**
  * Polyfill for `Function.prototype.bind`.
  */
-var fnbind = fn.bind || function ( context ) {
-  var partial_args = arguments.length > 2 && arrslice.call( arguments, 2 ),
+var fn_bind = fn.bind || function ( context ) {
+  var partial_args = arguments.length > 2 && arr_slice.call( arguments, 2 ),
       target = this;
 
   return partial_args ? function () {
-    return apply( target, context, partial_args.concat( arrslice.call( arguments ) ) );
+    return apply( target, context, partial_args.concat( arr_slice.call( arguments ) ) );
   } : function () {
     return apply( target, context, arguments );
   };
@@ -974,7 +966,7 @@ var baseMerge = function ( iterable, expander ) {
 
   for ( ; i < length; ++i ) {
     if ( has( i, expander ) ) {
-      push.call( iterable, expander[ i ] );
+      arr_push.call( iterable, expander[ i ] );
     }
   }
 
@@ -1114,13 +1106,13 @@ var baseValues = function ( object, keys ) {
 
 var createAssign = function ( getKeys ) {
   return function ( object ) {
-    if ( object == null ) {
-      throw TypeError( ERR_UNDEFINED_OR_NULL );
-    }
-
     var i = 1,
         length = arguments.length,
         expander;
+
+    if ( object == null ) {
+      throw TypeError( ERR_UNDEFINED_OR_NULL );
+    }
 
     for ( ; i < length; ++i ) {
       expander = arguments[ i ];
@@ -1332,12 +1324,12 @@ var getLength = function ( iterable ) {
   return iterable == null ? 0 : iterable.length >>> 0;
 };
 
-var notwhite = function ( string ) {
-  if ( !isString( string ) ) {
+var toWords = function ( string ) {
+  if ( typeof string != 'string' ) {
     throw TypeError( ERR_STRING_EXPECTED );
   }
 
-  return string.match( RE_NOT_WHITESPACES ) || [];
+  return string.match( regexps.not_spaces ) || [];
 };
 
 var toCamelCase = function () {
@@ -1435,6 +1427,8 @@ var stringToPath = function ( string ) {
 };
 
 var isKey = function ( value ) {
+  var type;
+
   if ( !value ) {
     return true;
   }
@@ -1443,12 +1437,12 @@ var isKey = function ( value ) {
     return false;
   }
 
-  var type = typeof value;
+  type = typeof value;
 
   return type == 'number' ||
     type == 'symbol' ||
     type == 'boolean' ||
-    !RE_DEEP_KEY.test( value );
+    !regexps.deep_key.test( value );
 };
 
 var unescape = function ( string ) {
@@ -1469,8 +1463,11 @@ var toKey = function ( value ) {
 
   key = '' + value;
 
-  return key == '0' && 1 / value == -Infinity ?
-    '-0' : unescape( key );
+  if ( key == '0' && 1 / value == -Infinity ) {
+    return '-0';
+  }
+
+  return unescape( key );
 };
 
 var getStyle = function ( element, name, computed_style ) {
@@ -1479,7 +1476,11 @@ var getStyle = function ( element, name, computed_style ) {
 };
 
 var has = function ( key, object ) {
-  return object != null && ( object[ key ] !== undefined || key in object );
+  if ( object == null ) {
+    return false;
+  }
+
+  return object[ key ] !== undefined || key in object;
 };
 
 /**
@@ -1568,13 +1569,13 @@ var bind = function () {
     }
 
     if ( arguments.length < 3 ) {
-      return fnbind.call( target, context );
+      return fn_bind.call( target, context );
     }
 
-    partial_args = arrslice.call( arguments, 2 );
+    partial_args = arr_slice.call( arguments, 2 );
 
     if ( indexOf( partial_args, peako ) < 0 ) {
-      return call.apply( fnbind, arguments );
+      return fn_call.apply( fn_bind, arguments );
     }
 
     return function () {
@@ -1723,7 +1724,9 @@ var create = Object.create || function () {
 
     object = new Constructor();
 
-    if ( prototype === ( Constructor.prototype = null ) ) {
+    Constructor.prototype = null;
+
+    if ( prototype === null ) {
       setPrototypeOf( object, prototype );
     }
 
@@ -1957,11 +1960,11 @@ var timestamp = function () {
 }();
 
 var toPath = function ( value ) {
+  var parsed, len, i;
+
   if ( isKey( value ) ) {
     return [ toKey( value ) ];
   }
-
-  var parsed, len, i;
 
   if ( isArray( value ) ) {
     parsed = Array( len = value.length );
@@ -2164,7 +2167,7 @@ var merge = function ( iterable ) {
     if ( isArrayLikeObject( expander ) ) {
       baseMerge( iterable, expander );
     } else {
-      push.call( iterable, expander );
+      arr_push.call( iterable, expander );
     }
   }
 
@@ -2503,8 +2506,6 @@ var toPlainObject = function ( target ) {
   return assignIn( {}, toObject( target ) );
 };
 
-var getTypeCached = cached( getType, undefined, 'undefined' );
-
 var unique = function () {
   var unique = function ( value, i, iterable ) {
     return baseIndexOf( iterable, value ) == i;
@@ -2518,7 +2519,7 @@ var unique = function () {
 var without = function ( iterable ) {
   var i = 0,
       length = ( iterable = toObject( iterable ) ).length,
-      without = arrslice.call( arguments, 1 ),
+      without = arr_slice.call( arguments, 1 ),
       temp = [],
       value;
 
@@ -2548,8 +2549,8 @@ var assign = Object.assign || createAssign( getKeys ),
     filterIn = createFilter( false, getKeysIn ),
     reject = createFilter( true, getKeys ),
     rejectIn = createFilter( true, getKeysIn ),
-    find = arr.find ? bindFast( call, arr.find ) : createFind( false, false ),
-    findIndex = arr.findIndex ? bindFast( call, arr.findIndex ) : createFind( true, false ),
+    find = arr.find ? bindFast( fn_call, arr.find ) : createFind( false, false ),
+    findIndex = arr.findIndex ? bindFast( fn_call, arr.findIndex ) : createFind( true, false ),
     findLast = createFind( false, true ),
     findLastIndex = createFind( true, true ),
     floor = createRound( math_floor ),
@@ -2571,9 +2572,9 @@ var assign = Object.assign || createAssign( getKeys ),
     lowerFirst = createToCaseFirst( 'toLowerCase' ),
     toPairs = Object.entries || createToPairs( getKeys ),
     toPairsIn = createToPairs( getKeysIn ),
-    trim = str.trim ? bindFast( call, str.trim ) : createTrim( /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/ ),
-    trimStart = str.trimStart ? bindFast( call, str.trimStart ) : createTrim( /^[\s\uFEFF\xA0]+/ ),
-    trimEnd = str.trimEnd ? bindFast( call, str.trimEnd ) : createTrim( /[\s\uFEFF\xA0]+$/ ),
+    trim = str.trim ? bindFast( fn_call, str.trim ) : createTrim( /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/ ),
+    trimStart = str.trimStart ? bindFast( fn_call, str.trimStart ) : createTrim( /^[\s\uFEFF\xA0]+/ ),
+    trimEnd = str.trimEnd ? bindFast( fn_call, str.trimEnd ) : createTrim( /[\s\uFEFF\xA0]+$/ ),
     getValues = Object.values || createValues( getKeys ),
     getValuesIn = createValues( getKeysIn );
 
@@ -2983,7 +2984,7 @@ var getComputedStyle = window.getComputedStyle || function () {
         continue;
       }
 
-      push.call( style, name == 'styleFloat' ? 'float' : toDOMString( name ) );
+      arr_push.call( style, name == 'styleFloat' ? 'float' : toDOMString( name ) );
 
       if ( name == 'styleFloat' ) {
         style[ 'float' ] = currentStyle[ name ];
@@ -3314,7 +3315,7 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
           case all:
             element.className = ''; break;
           case re:
-            classList.removewithre( element, classes ); break;
+            classList.removeWithRegexp( element, classes ); break;
           case fn:
             classList.remove( element,
               classes.call( element, i, element.className ) );
@@ -3912,7 +3913,7 @@ forOwnRight( {
         element, j, k;
 
     if ( !removeAll ) {
-      types = types.match( RE_NOT_WHITESPACES );
+      types = types.match( regexps.not_spaces );
 
       if ( !types ) {
         return this;
@@ -4130,7 +4131,7 @@ var createFragment = function ( elements, context ) {
 };
 
 var manipulation = function ( collection, callback, args ) {
-  args = apply( concat, [], args );
+  args = apply( arr_concat, [], args );
 
   var i = 0,
       length = collection.length,
@@ -4321,7 +4322,7 @@ var removeAttr = function ( element, names ) {
     return;
   }
 
-  names = notwhite( names );
+  names = toWords( names );
 
   for ( var i = names.length - 1; i >= 0; --i ) {
     if ( support.getAttribute ) {
@@ -4333,7 +4334,7 @@ var removeAttr = function ( element, names ) {
 };
 
 var removeProp = function ( element, names ) {
-  var i = ( names = notwhite( names ) ).length - 1;
+  var i = ( names = toWords( names ) ).length - 1;
 
   for ( ; i >= 0; --i ) {
     delete element[ names[ i ] ];
@@ -4359,7 +4360,7 @@ forOwnRight( {
 
 var classList = {
   add: function ( element, classes ) {
-    classes = notwhite( classes );
+    classes = toWords( classes );
 
     if ( !classes.length ) {
       return;
@@ -4367,7 +4368,7 @@ var classList = {
 
     var i = 0,
         length = classes.length,
-        className = ' ' + this.get( element ).join( '' ) + ' ',
+        className = ' ' + classList.getAsArray( element ).join( ' ' ) + ' ',
         value;
 
     for ( ; i < length; ++i ) {
@@ -4382,14 +4383,14 @@ var classList = {
   },
 
   remove: function ( element, classes ) {
-    classes = notwhite( classes );
+    classes = toWords( classes );
 
     if ( !classes.length ) {
       return;
     }
 
     var i = classes.length - 1,
-        className = ' ' + this.get( element ).join( ' ' ) + ' ',
+        className = ' ' + classList.getAsArray( element ).join( ' ' ) + ' ',
         value;
 
     for ( ; i >= 0; --i ) {
@@ -4403,18 +4404,18 @@ var classList = {
     element.className = trim( className );
   },
 
-  removewithre: function () {
+  removeWithRegexp: function () {
     var test = function ( value ) {
-      return this.test( value );
+      return classList.test( value );
     };
 
     return function ( element, regexp ) {
-      element.className = reject( classList.get( element ), test, regexp ).join( ' ' );
+      element.className = reject( classList.getAsArray( element ), test, regexp ).join( ' ' );
     };
   }(),
 
   toggle: function ( element, classes ) {
-    classes = notwhite( classes );
+    classes = toWords( classes );
 
     if ( !classes.length ) {
       return;
@@ -4422,26 +4423,34 @@ var classList = {
 
     var i = 0,
         length = classes.length,
-        className = ' ' + this.get( element ).join( '' ) + ' ',
+        className = ' ' + classList.getAsArray( element ).join( ' ' ) + ' ',
         value;
 
     for ( ; i < length; ++i ) {
       value = classes[ i ];
-      this[ className.indexOf( ' ' + value + ' ' ) < 0 ? 'add' : 'remove' ]( element, value );
+
+      if ( className.indexOf( ' ' + value + ' ' ) < 0 ) {
+        classList.add( element, value );
+      } else {
+        classList.remove( element, value );
+      }
     }
   },
 
   has: function ( element, classes ) {
-    classes = notwhite( classes );
+    var className, i;
+
+    classes = toWords( classes );
 
     if ( !classes.length ) {
       return false;
     }
 
-    var i = classes.length - 1,
-        className = ' ' + this.get( element ).join( '' ) + ' ';
+    className = ' ' + classList
+      .getAsArray( element )
+      .join( ' ' ) + ' ';
 
-    for ( ; i >= 0; --i ) {
+    for ( i = classes.length - 1; i >= 0; --i ) {
       if ( className.indexOf( ' ' + classes[ i ] + ' ' ) < 0 ) {
         return false;
       }
@@ -4450,8 +4459,12 @@ var classList = {
     return true;
   },
 
-  get: function ( value ) {
-    return ( value = value.className ) && ( value.match( RE_NOT_WHITESPACES ) ) || [];
+  getAsArray: function ( element ) {
+    return toWords( element.className );
+  },
+
+  getAsString: function ( element ) {
+    return element.className.replace( regexps.not_spaces, ' ' );
   }
 };
 
@@ -4491,7 +4504,7 @@ var Promise = window.Promise || function () {
 
   assign( Promise, {
     all: function ( iterable ) {
-      var args = arrslice.call( iterable ),
+      var args = arr_slice.call( iterable ),
           remaining = args.length;
 
       return new Promise( function ( resolve, reject ) {
@@ -4734,7 +4747,7 @@ baseForEach( [
       return this.trigger( type, argument );
     }
 
-    for ( len = arguments.length - 1, i = 0; i < len; ++i ) {
+    for ( len = arguments.length, i = 0; i < len; ++i ) {
       this.on( type, arguments[ i ], false );
     }
 
@@ -5383,7 +5396,7 @@ peako.toPlainObject = toPlainObject;
 peako.trim = trim;
 peako.trimEnd = trimEnd;
 peako.trimStart = trimStart;
-peako.type = getTypeCached;
+peako.type = getType;
 peako.unique = unique;
 peako.values = getValues;
 peako.valuesIn = getValuesIn;
