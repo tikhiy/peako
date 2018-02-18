@@ -73,8 +73,11 @@ var support = {};
  *   alert( this.greeting );
  * };
  *
- * _.bindFast( hello, { greeting: 'goodbye.' } )();
- * // -> 'goodbye.'
+ * var goodbye = _.bindFast( hello, {
+ *   greeting: 'goodbye.'
+ * } );
+ *
+ * goodbye(); // -> 'goodbye.'
  */
 var bindFast = function ( target, context ) {
   if ( typeof target != 'function' ) {
@@ -103,10 +106,11 @@ var bindFast = function ( target, context ) {
 /**
  * Returns true if `value` is an Array instance.
  *
+ * @category Utility Methods
  * @method isArray
  * @memberOf _
  * @static
- * @param {*} value
+ * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
@@ -122,9 +126,10 @@ var isArray = Array.isArray || function ( value ) {
  * and Object values with a valid `length`
  * property is array-like.
  *
+ * @category Utility Methods
  * @memberOf _
  * @static
- * @param {*} value
+ * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
@@ -147,9 +152,10 @@ var isArrayLike = function ( value ) {
 /**
  * Returns true if `value` is an object and array-like.
  *
+ * @category Utility Methods
  * @memberOf _
  * @static
- * @param {*} value
+ * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
@@ -166,7 +172,7 @@ var isArrayLikeObject = function ( value ) {
  *
  * @memberOf _
  * @static
- * @param {*} value
+ * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
@@ -184,7 +190,7 @@ var isBoolean = function ( value ) {
  *
  * @memberOf _
  * @static
- * @param {*} value
+ * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
@@ -204,7 +210,7 @@ var isFinite = function ( value ) {
  *
  * @memberOf _
  * @static
- * @param {*} value
+ * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
@@ -224,7 +230,7 @@ support.HTMLElement = toString.call( body ).indexOf( 'HTML' ) > 0;
  *
  * @memberOf _
  * @static
- * @param {*} value
+ * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
@@ -245,11 +251,11 @@ var isElement = function ( value ) {
 };
 
 /**
- * Returns true if `value` is HTMLElement instance, but faster than `_.isElement`.
+ * Returns true if `value` is HTMLElement instance, but faster than `_.isElement()`.
  *
  * @memberOf _
  * @static
- * @param {*} value
+ * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
@@ -301,7 +307,7 @@ var MAX_ARRAY_LENGTH = 4294967295;
  *
  * @memberOf _
  * @static
- * @param {*} value
+ * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
@@ -321,7 +327,7 @@ var isLength = function ( value ) {
  *
  * @memberOf _
  * @static
- * @param {*} value
+ * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
@@ -339,7 +345,7 @@ var isNaN = function ( value ) {
  *
  * @memberOf _
  * @static
- * @param {*} value
+ * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
@@ -359,7 +365,7 @@ var isNumber = function ( value ) {
  *
  * @memberOf _
  * @static
- * @param {*} value
+ * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
@@ -377,7 +383,7 @@ var isObject = function ( value ) {
  *
  * @memberOf _
  * @static
- * @param {*} value
+ * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
@@ -397,7 +403,7 @@ var fnToString = fn.toString,
  *
  * @memberOf _
  * @static
- * @param {*} value
+ * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
@@ -424,7 +430,7 @@ var isPlainObject = function ( value ) {
  *
  * @memberOf _
  * @static
- * @param {*} value
+ * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
@@ -446,7 +452,7 @@ var MAX_SAFE_INT = 9007199254740991,
  *
  * @memberOf _
  * @static
- * @param {*} value
+ * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
@@ -469,7 +475,7 @@ var isSafeInteger = function ( value ) {
  *
  * @memberOf _
  * @static
- * @param {*} value
+ * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
@@ -503,7 +509,7 @@ var isDOMElement = function ( value ) {
  *
  * @memberOf _
  * @static
- * @param {*} value
+ * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
@@ -521,7 +527,7 @@ var isString = function ( value ) {
  *
  * @memberOf _
  * @static
- * @param {*} value
+ * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
@@ -546,7 +552,7 @@ var isSymbol = function ( value ) {
  *
  * @memberOf _
  * @static
- * @param {*} value
+ * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
@@ -558,11 +564,11 @@ var isWindow = function ( value ) {
 };
 
 /*
- * Returns true if `value` represents a Window instance, faster than `_.isWindow`.
+ * Returns true if `value` represents a Window instance, faster than `_.isWindow()`.
  *
  * @memberOf _
  * @static
- * @param {*} value
+ * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
@@ -657,7 +663,7 @@ var baseAssign = function ( object, expander, keys ) {
 };
 
 /**
- * Polyfill for `Function.prototype.bind`.
+ * Polyfill for `Function.prototype.bind()`.
  */
 var fn_bind = fn.bind || function ( context ) {
   var partial_args = arguments.length > 2 && arr_slice.call( arguments, 2 ),
@@ -709,7 +715,7 @@ support.defineProperty = function () {
 support.defineGetter = '__defineGetter__' in obj;
 
 /**
- * Base implementation of `Object.defineProperty` polyfill.
+ * Base implementation of `Object.defineProperty()` polyfill.
  */
 if ( support.defineProperty !== 2 ) {
   var baseDefineProperty = function ( object, key, descriptor ) {
@@ -757,7 +763,7 @@ if ( support.defineProperty !== 2 ) {
 
 /**
  * Filters the `iterable` array, leaving only
- * those elements for which the` iteratee`
+ * those elements for which the `iteratee`
  * function returns true. It creates a new array!
  */
 
@@ -791,7 +797,7 @@ var baseFilter = function ( iterable, iteratee, context, not ) {
 
 /**
  * Filters the `object`, leaving only those
- * elements for which the` iteratee` function
+ * elements for which the `iteratee` function
  * returns true. It creates a new object!
  */
 
@@ -1527,7 +1533,7 @@ var getIterable = function ( value ) {
     value : baseValues( value, getKeys( value ) );
 };
 
-var exec = function ( regexp, string ) {
+var baseExec = function ( regexp, string ) {
   var result = [],
       value;
 
@@ -1541,7 +1547,7 @@ var exec = function ( regexp, string ) {
 };
 
 var stringToPath = function ( string ) {
-  var path = exec( regexps.property, string ),
+  var path = baseExec( regexps.property, string ),
       i = path.length - 1,
       value;
 
@@ -1623,7 +1629,7 @@ var has = function ( key, object ) {
 };
 
 /**
- * `Date.now` polyfill.
+ * `Date.now()` polyfill.
  *
  * @method now
  * @memberOf _
@@ -1638,8 +1644,9 @@ var getTime = Date.now || function () {
 };
 
 /**
- * Returns a function that can only be called `n` times.
- * NOTE: Behave differently from Lodash `_.before`.
+ * Returns a function that can only be called `n`
+ * times. NOTE: Behave differently from Lodash
+ * `_.before()`.
  *
  * @memberOf _
  * @static
@@ -1704,11 +1711,13 @@ var bind = function () {
   /**
    * Binds the `target` function to the `context`.
    *
+   * @method bind
    * @memberOf _
    * @static
    * @param {Function} target
    * @param {*} context
-   * @param {*} partialArgs
+   * @param {...*} partialArgs
+   * @returns {Function} A function bound to the `context`.
    * @example
    *
    * var greet = function ( name, end ) {
@@ -1745,11 +1754,18 @@ var bind = function () {
 
 /**
  * Returns a number that doesn't go out of bounds `lower` and `upper`.
+ *
+ * @memberOf _
+ * @static
+ * @param {Number} value The number to clamp.
+ * @param {Number} lower The lower bound.
+ * @param {Number} upper The upper bound.
+ * @returns {Number} A number between the lower and upper bounds.
+ * @example
+ *
+ * _.clamp( -5, 0, 10 ); // -> 0
+ * _.clamp( 15, 0, 10 ); // -> 10
  */
-
-// _.clamp( -5, 0, 10 ); // -> 0
-// _.clamp( 15, 0, 10 ); // -> 10
-
 var clamp = function ( value, lower, upper ) {
   if ( value >= upper ) {
     return upper;
@@ -1764,23 +1780,29 @@ var clamp = function ( value, lower, upper ) {
 
 /**
  * Creates a clone of the `target` object.
+ *
+ * @memberOf _
+ * @static
+ * @param {Boolean} [deep=true] Recursively clone the target?
+ * @param {!*} target The target to clone.
+ * @example
+ *
+ * var Person = function ( greeting ) {
+ *   this.greeting = greeting;
+ *   this.person = this;
+ * };
+ *
+ * Person.prototype.greet = function () {
+ *   return this.greeting;
+ * };
+ *
+ * var person = new Person( 'Hello!' ),
+ *     clone = _.clone( person );
+ *
+ * clone.greet(); // -> 'Hello!'
+ * clone.person; // -> clone
+ * clone instanceof Person; // -> true
  */
-
-// var Person = function ( greeting ) {
-//  this.greeting = greeting;
-//  this.person = this;
-// };
-//
-// Person.prototype.greet = function () {
-//   return this.greeting;
-// };
-//
-// var person = new Person( 'Hello!' ),
-//     clone = _.clone( person );
-//
-// clone.greet(); // -> 'Hello!'
-// clone.person; // -> clone
-
 var clone = function ( deep, target, guard ) {
   var cln;
 
@@ -1805,20 +1827,26 @@ var clone = function ( deep, target, guard ) {
 };
 
 /**
- * Creates an array with elements from the `iterable` array.
- * NOTE: You can use `<Array>.slice()`, but in some situations
- * `_.cloneArray()` works much faster (for array-like objects).
+ * Creates an array with elements from the `iterable`
+ * array. NOTE: You can use `<Array>.slice()`, but in
+ * some situations `_.cloneArray()` works much faster
+ * (for array-like objects).
+ *
+ * @memberOf _
+ * @static
+ * @param {Array|Object|String} iterable The array-like value to clone.
+ * @returns {Array} The clone of `iterable`.
+ * @example
+ *
+ * var weirdObject = {
+ *   0: 'A',
+ *   1: 'Z',
+ *   length: 2
+ * };
+ *
+ * _.cloneArray( weirdObject );
+ * // -> [ 'A', 'Z' ]
  */
-
-// var weirdObject = {
-//   0: 'A',
-//   1: 'Z',
-//   length: 2
-// };
-//
-// _.cloneArray( weirdObject );
-// // -> [ 'A', 'B' ]
-
 var cloneArray = function ( iterable ) {
   if ( iterable == null ) {
     throw TypeError( ERR_UNDEFINED_OR_NULL );
@@ -1829,11 +1857,16 @@ var cloneArray = function ( iterable ) {
 
 /**
  * Returns array without falsy values.
+ *
+ * @memberOf _
+ * @static
+ * @param {Array|Object} iterable The array-like object to compact.
+ * @returns {Array} A new compacted array.
+ * @example
+ *
+ * _.compact( [ 'A', 0, null, '', 'Z' ] );
+ * // -> [ 'A', 'Z' ]
  */
-
-// _.compact( [ 'A', 0, null, '', 'Z' ] );
-// // -> [ 'A', 'Z' ]
-
 var compact = function ( iterable ) {
   var compacted = [],
       i = 0,
@@ -1857,22 +1890,31 @@ var constant = function ( value ) {
 
 /**
  * Polyfill for the `Object.create()` method.
+ *
+ * @method create
+ * @memberOf _
+ * @static
+ * @param {null|Object} prototype The prototype of a new object.
+ * @param {Object} [descriptors]
+ *   The descriptors to assign in the new object via
+ *   [`_.defineProperties()`]{@link _.defineProperties}.
+ * @returns {Array} A new created object with `prototype`.
+ * @example
+ *
+ * var prototype = null;
+ *
+ * var descriptors = {
+ *   one: {
+ *     get: _.constant( 1 )
+ *   }
+ * };
+ *
+ * var object = _.create( prototype, descriptors );
  */
-
-// var prototype = null;
-//
-// var descriptors = {
-//   one: {
-//     get: _.constant( 1 )
-//   }
-// };
-//
-// var object = _.create( prototype, descriptors );
-
 var create = Object.create || function () {
   var Constructor = function () {};
 
-  return function ( prototype, descriptors ) {
+  return function create ( prototype, descriptors ) {
     var object;
 
     if ( prototype !== null && isPrimitive( prototype ) ) {
@@ -1898,18 +1940,24 @@ var create = Object.create || function () {
 }();
 
 /**
- * Returns `value` or `defaultValue`.
+ * Returns `defaultValue` when `value` is `null`, `undefined`, or `NaN`.
+ *
+ * @memberOf _
+ * @static
+ * @param {*} value The value to check.
+ * @param {*} defaultValue The default value.
+ * @returns {*} Returns `value` or `defaultValue`.
+ * @example
+ *
+ * _.defaultTo( new Number( NaN ), 0 );
+ * // -> new Number( NaN )
+ * _.defaultTo( NaN, 0 );
+ * // -> 0
+ * _.defaultTo( null, {} );
+ * // -> {}
+ * _.defaultTo( 0, 100 );
+ * // -> 0
  */
-
-// _.defaultTo( new Number( NaN ), 0 );
-// // -> new Number( NaN )
-// _.defaultTo( NaN, 0 );
-// // -> 0
-// _.defaultTo( null, {} );
-// // -> {}
-// _.defaultTo( 0, 100 );
-// // -> 0
-
 var defaultTo = function ( value, defaultValue ) {
   if ( value != null && value === value ) {
     return value;
@@ -1920,22 +1968,29 @@ var defaultTo = function ( value, defaultValue ) {
 
 /**
  * Polyfill for the `Object.defineProperties()` method.
+ *
+ * @method defineProperties
+ * @memberOf _
+ * @static
+ * @param {Object} object The object to modificate.
+ * @param {Object} descriptors The descriptors to define.
+ * @returns {Object} The object in which properties were defined.
+ * @example
+ *
+ * var object = {};
+ *
+ * var descriptors = {
+ *   one: {
+ *     get: _.constant( 1 )
+ *   },
+ *
+ *   two: {
+ *     get: _.constant( 2 )
+ *   },
+ * };
+ *
+ * _.defineProperties( object, descriptors );
  */
-
-// var object = {};
-//
-// var descriptors = {
-//   one: {
-//     get: _.constant( 1 )
-//   },
-//
-//   two: {
-//     get: _.constant( 2 )
-//   },
-// };
-//
-// _.defineProperties( object, descriptors );
-
 var defineProperties = support.defineProperty === 2 ?
   Object.defineProperties :
 
@@ -1967,16 +2022,24 @@ function ( object, descriptors ) {
 
 /**
  * Polyfill for the `Object.defineProperty()` method.
+ *
+ * @method defineProperty
+ * @memberOf _
+ * @static
+ * @param {Object} object The object to modificate.
+ * @param {String} key The key of defined property.
+ * @param {Object} descriptor The descriptor to define.
+ * @returns {Object} The object in which property were defined.
+ * @example
+ *
+ * var person = {};
+ *
+ * var descriptors = {
+ *   value: 'Josh'
+ * };
+ *
+ * _.defineProperty( person, 'name', descriptor );
  */
-
-// var person = {};
-//
-// var descriptors = {
-//   value: 'Josh'
-// };
-//
-// _.defineProperty( person, 'name', descriptor );
-
 var defineProperty = support.defineProperty === 2 ?
   Object.defineProperty :
 
@@ -2003,19 +2066,23 @@ var equal = function ( a, b ) {
 };
 
 /**
- * It's like `<RegExp>.exec()`, but it works as `<String>.match()` with the global flag.
+ * It's like `<RegExp>.exec()`, but it works as
+ * `<String>.match()` with the global flag.
+ *
+ * @method exec
+ * @memberOf _
+ * @static
+ * @param {RegExp} regexp
+ * @param {String} string
+ * @returns {Array}
+ * @example
+ *
+ * _.exec( /f(o){2}/g, 'foobarfoo' );
+ * // -> [ [ 'foo', 'o' ], [ 'foo', 'o' ] ]
  */
-
-// _.exec( /f(o){2}/g, 'foobarfoo' );
-// // -> [ [ 'foo', 'o' ], [ 'foo', 'o' ] ]
-
-var globalExec = function ( regexp, string ) {
-  if ( getType( regexp ) != 'regexp' ) {
-    throw TypeError( 'Expected a regexp' );
-  }
-
+var exec = function ( regexp, string ) {
   if ( regexp.global ) {
-    return exec( regexp, '' + string );
+    return baseExec( regexp, '' + string );
   }
 
   return regexp.exec( string );
@@ -2094,7 +2161,7 @@ var fromPairs = function ( pairs ) {
 };
 
 /**
- * Polyfill for the `perfomance.now` method.
+ * Polyfill for the `perfomance.now()` method.
  */
 var timestamp = function () {
   var perfomance = window.perfomance,
@@ -2177,7 +2244,7 @@ var default_file_options = {
 /**
  * This function will be called when the file is
  * loaded successfully. `this` in this functios
- * will point to the &lt;XMLHttpRequest&gt; object
+ * will point to the <XMLHttpRequest> object
  * that was used to load the file.
  * @callback FileLoadedCallback
  * @param {String} data The content of the loaded file.
@@ -2188,7 +2255,7 @@ var default_file_options = {
 /**
  * This function will be called when the error
  * occur while loading the file. `this` in this
- * functios will point to the &lt;XMLHttpRequest&gt;
+ * functios will point to the <XMLHttpRequest>
  * object that was used to load the file.
  * @callback LoadingFileErrorCallback
  * @param {String} path The path of the file that failed to load.
@@ -2216,13 +2283,18 @@ var default_file_options = {
 
 /**
  * Returns the contents of the file at the path.
+ *
  * @memberOf _
  * @static
- * @param {String} [path] The path of the file to be loaded.
- * @param {FileOptions} [options] File load options.
+ *
+ * @param {String} [path]
+ *   The path of the file to be loaded.
+ * @param {FileOptions} [options]
+ *   File load options.
  * @returns {null|String}
  *   When the request wasn't asynchronous, it
  *   returns the contents of the file.
+ *
  * @example
  *
  * // Use cases:
@@ -2914,7 +2986,7 @@ Event.prototype = {
 support.addEventListener = 'addEventListener' in window;
 
 /**
- * Based on Jonathan Neal `addEventListener` polyfill.
+ * Based on Jonathan Neal `addEventListener()` polyfill.
  * https://gist.github.com/jonathantneal/3748027
  */
 
@@ -3343,7 +3415,7 @@ var timer = function () {
 
     timer.cancel = window.clearTimeout;
   } else {
-    // Instead of `bind`, manually create these functions.
+    // Instead of `bind()`, manually create these functions.
     timer.request = function ( frame ) {
       return request( frame );
     };
@@ -3483,9 +3555,8 @@ var DOMWrapper = function ( selector ) {
 };
 
 /**
- * @name _
+ * @class _
  * @alias peako
- * @constructor
  * @param {DOMElement|String|ArrayLikeObject|Function} selector
  * @returns {DOMWrapper}
  */
@@ -3835,7 +3906,7 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
       el = this[ i ];
 
       // .not( 'span' ); // .__filter( 'span', true )
-      // if the element is "span", then `is`
+      // if the element is "span", then `is()`
       // returns true, then it will be false,
       // and the element will not be added.
 
@@ -5055,7 +5126,7 @@ support.fetch = has( 'fetch', window ) &&
 
 if ( !support.fetch ) {
   /*
-   * based on Cam Song `fetch` polyfill from
+   * based on Cam Song `fetch()` polyfill from
    * https://github.com/camsong/fetch-ie8
    */
 
@@ -5578,7 +5649,7 @@ peako.each = each;
 peako.eachRight = eachRight;
 peako.equal = peako.eq = equal;
 peako.every = every;
-peako.exec = globalExec;
+peako.exec = exec;
 peako.file = file;
 peako.fill = fill;
 peako.filter = filter;
