@@ -1,4 +1,4 @@
-/**
+/*!
  * Copyright (c) 2017-2018 SILENT
  * Released under the MIT License.
  * Peako is a JavaScript Library.
@@ -50,7 +50,7 @@ var regexps = {
   selector: /^(?:#([\w-]+)|([\w-]+)|\.([\w-]+))$/,
   property: /(^|\.)\s*([_a-z]\w*)\s*|\[\s*(\d+|\d*\.\d+|("|')(([^\\]\\(\\\\)*|[^\4])*)\4)\s*\]/gi,
   deep_key: /(^|[^\\])(\\\\)*(\.|\[)/,
-  single_tag: /^(<([\w-]+)><\/[\w-]+>|<([\w-]+)(\s*\/)?>)$/,
+  single_tag: /^(<([\w-]+)><\/[\w-]+>|<([\w-]+)(?:\s*\/)?>)$/,
   not_spaces: /[^\s\uFEFF\xA0]+/g
 };
 
@@ -58,17 +58,24 @@ var support = {};
 
 /**
  * Binds the function to `context`. Bound function
- * will execute faster than if it was bound by `_.bind()`.
- * NOTE: In the `_.bindFast()` method you can't use partial arguments.
+ * will execute faster than if it was bound by
+ * `_.bind()`. NOTE: In the `_.bindFast()` method
+ * you can't use partial arguments.
+ *
+ * @memberOf _
+ * @static
+ * @param {Function} target The function that should be bound.
+ * @param {*} context The `this` value in the bound function.
+ * @returns {Function} A function bound to the `context`.
+ * @example
+ *
+ * var hello = function () {
+ *   alert( this.greeting );
+ * };
+ *
+ * _.bindFast( hello, { greeting: 'goodbye.' } )();
+ * // -> 'goodbye.'
  */
-
-// var hello = function () {
-//   alert( this.greeting );
-// };
-//
-// _.bindFast( hello, { greeting: 'goodbye.' } )();
-// // -> 'goodbye.'
-
 var bindFast = function ( target, context ) {
   if ( typeof target != 'function' ) {
     throw TypeError( ERR_FUNCTION_EXPECTED );
@@ -91,28 +98,40 @@ var bindFast = function ( target, context ) {
   };
 };
 
-/** 'is' methods */
+/* 'is' Methods */
 
 /**
  * Returns true if `value` is an Array instance.
+ *
+ * @method isArray
+ * @memberOf _
+ * @static
+ * @param {*} value
+ * @returns {Boolean}
+ * @example
+ *
+ * _.isArray( [] ); // -> true
+ * _.isArray( Array() ); // -> true
  */
- 
-// _.isArray( [] ); // -> true
-// _.isArray( Array() ) // -> true
-
 var isArray = Array.isArray || function ( value ) {
   return isObjectLike( value ) && isLength( value.length ) && toString.call( value ) == '[object Array]';
 };
 
 /**
- * Returns true if `value` is array-like. String is array-like.
- * Objects with a valid `length` property also array-like.
+ * Returns true if `value` is array-like. String
+ * and Object values with a valid `length`
+ * property is array-like.
+ *
+ * @memberOf _
+ * @static
+ * @param {*} value
+ * @returns {Boolean}
+ * @example
+ *
+ * _.isArrayLike( [] ); // -> true
+ * _.isArrayLike( _( window ) ); // -> true
+ * _.isArrayLike( new Float32Array() ); // -> true
  */
-
-// _.isArrayLike( [] ); // -> true
-// _.isArrayLike( _( window ) ) // -> true
-// _.isArrayLike( new Float32Array() ) // -> true
-
 var isArrayLike = function ( value ) {
   if ( value == null ) {
     return false;
@@ -127,46 +146,73 @@ var isArrayLike = function ( value ) {
 
 /**
  * Returns true if `value` is an object and array-like.
+ *
+ * @memberOf _
+ * @static
+ * @param {*} value
+ * @returns {Boolean}
+ * @example
+ *
+ * _.isArrayLikeObject( [] ); // -> true
+ * _.isArrayLikeObject( '' ); // -> false
+ * _.isArrayLikeObject( new String() ); // -> true
  */
-
-// _.isArrayLikeObject( [] ); // -> true
-// _.isArrayLikeObject( '' ); // -> false
-// _.isArrayLikeObject( new String() ) // -> true
-
 var isArrayLikeObject = function ( value ) {
   return isObjectLike( value ) && isLength( value.length ) && !isWindowLike( value );
 };
 
 /**
  * Returns true if `value` is a boolean primitive.
+ *
+ * @memberOf _
+ * @static
+ * @param {*} value
+ * @returns {Boolean}
+ * @example
+ *
+ * _.isBoolean( false );
+ * // -> true
+ * _.isBoolean( new Boolean() );
+ * // -> false (in older versions - true)
  */
-
-// _.isBoolean( false ); // -> true
-// _.isBoolean( new Boolean() ) // -> false (in older versions - true)
-
 var isBoolean = function ( value ) {
   return typeof value == 'boolean';
 };
 
 /**
  * Returns true if `value` is a finite number primitive.
+ *
+ * @memberOf _
+ * @static
+ * @param {*} value
+ * @returns {Boolean}
+ * @example
+ *
+ * _.isFinite( new Number() );
+ * // -> false (in older versions - true)
+ * _.isFinite( Infinity );
+ * // -> false
+ * _.isFinite( NaN );
+ * // -> false
  */
-
-// _.isFinite( new Number() ); // -> false (in older versions - true)
-// _.isFinite( Infinity ) // -> false
-// _.isFinite( NaN ) // -> false
-
 var isFinite = function ( value ) {
   return isNumber( value ) && window.isFinite( value );
 };
 
 /**
  * Returns true for all kinds of `function`.
+ *
+ * @memberOf _
+ * @static
+ * @param {*} value
+ * @returns {Boolean}
+ * @example
+ *
+ * _.isFunction( () => {} );
+ * // -> true
+ * _.isFunction( async () => {} );
+ * // -> true (in older versions - false)
  */
-
-// _.isFunction( () => {} ); // -> true
-// _.isFunction( async () => {} ); // -> true (in older versions - false)
-
 var isFunction = function ( value ) {
   return typeof value == 'function';
 };
@@ -174,13 +220,18 @@ var isFunction = function ( value ) {
 support.HTMLElement = toString.call( body ).indexOf( 'HTML' ) > 0;
 
 /**
- * Returns true if `value` is a HTMLElement instance.
+ * Returns true if `value` is HTMLElement instance.
+ *
+ * @memberOf _
+ * @static
+ * @param {*} value
+ * @returns {Boolean}
+ * @example
+ *
+ * _.isElement( document.createElement( 'span' ) ); // -> true
+ * _.isElement( document.body ); // -> true
+ * _.isElement( { nodeType: 1 } ); // -> false
  */
-
-// _.isElement( document.createElement( 'span' ) ) // -> true
-// _.isElement( document.body ); // -> true
-// _.isElement( { nodeType: 1 } ) // -> false
-
 var isElement = function ( value ) {
   if ( !isElementLike( value ) ) {
     return false;
@@ -194,32 +245,43 @@ var isElement = function ( value ) {
 };
 
 /**
- * Returns true if `value` is a HTMLElement instance, but faster than `_.isElement`.
+ * Returns true if `value` is HTMLElement instance, but faster than `_.isElement`.
+ *
+ * @memberOf _
+ * @static
+ * @param {*} value
+ * @returns {Boolean}
+ * @example
+ *
+ * _.isElementLike( document.createElement( 'span' ) ); // -> true
+ * _.isElementLike( document.body ); // -> true
+ * _.isElementLike( { nodeType: 1 } ); // -> true
  */
-
-// _.isElementLike( document.createElement( 'span' ) ) // -> true
-// _.isElementLike( document.body ); // -> true
-// _.isElementLike( { nodeType: 1 } ) // -> true
-
 var isElementLike = function ( value ) {
   return ( support.HTMLElement ? isObjectLike : isObject )( value ) && value.nodeType === 1;
 };
 
 /**
  * Returns true if `value` is a valid array-like index.
+ *
+ * @memberOf _
+ * @static
+ * @param {*} value The value to check.
+ * @param {Number} [length=Number.MAX_SAFE_INTEGER] Check for an array with a specific length.
+ * @returns {Boolean}
+ * @example
+ *
+ * // Without `length` parameter.
+ * _.isIndex( 0 ); // -> true
+ * _.isIndex( -1 ); // -> false
+ * _.isIndex( 0.1 ); // -> false
+ * _.isIndex( Infinity ); // -> false
+ * _.isIndex( new Number() ); // -> false
+ * // Using second parameter.
+ * var names = [ 'Josh', 'Jared' ];
+ * _.isIndex( 1, names.length ); // -> true
+ * _.isIndex( 10, names.length ); // -> false
  */
-
-// /** Without `length` parameter. */
-// _.isIndex( 0 ); // -> true
-// _.isIndex( -1 ); // -> false
-// _.isIndex( 0.1 ); // -> false
-// _.isIndex( Infinity ); // -> false
-// _.isIndex( new Number() ); // -> false
-// /** Using second parameter. */
-// var names = [ 'Josh', 'Jared' ];
-// _.isIndex( 1, names.length ); // -> true
-// _.isIndex( 10, names.length ); // -> false
-
 var isIndex = function ( value, length, guard ) {
   if ( guard || length === undefined ) {
     length = MAX_SAFE_INT;
@@ -236,12 +298,17 @@ var MAX_ARRAY_LENGTH = 4294967295;
 
 /**
  * Returns true if `value` is a valid Array instance length.
+ *
+ * @memberOf _
+ * @static
+ * @param {*} value
+ * @returns {Boolean}
+ * @example
+ *
+ * _.isLength( 0 ); // -> true
+ * _.isLength( -0.1 ); // -> false
+ * _.isLength( new Number() ); // -> false
  */
-
-// _.isLength( 0 ); // -> true
-// _.isLength( -0.1 ); // -> false
-// _.isLength( new Number() ); // -> false
-
 var isLength = function ( value ) {
   return typeof value == 'number' &&
     value >= 0 &&
@@ -251,35 +318,55 @@ var isLength = function ( value ) {
 
 /**
  * Checks if `value` is NaN.
+ *
+ * @memberOf _
+ * @static
+ * @param {*} value
+ * @returns {Boolean}
+ * @example
+ *
+ * _.isNaN( NaN );
+ * // -> true
+ * _.isNaN( new Number( NaN ) );
+ * // -> false (in older versions - true)
  */
-
-// _.isNaN( NaN ); // -> true
-// _.isNaN( new Number( NaN ) ); // -> false (in older versions - true)
-
 var isNaN = function ( value ) {
   return value !== value;
 };
 
 /**
  * Returns true if `value` is a number primitive.
+ *
+ * @memberOf _
+ * @static
+ * @param {*} value
+ * @returns {Boolean}
+ * @example
+ *
+ * _.isNumber( 0 );
+ * // -> true
+ * _.isNumber( NaN );
+ * // -> true
+ * _.isNumber( new Number( Infinity ) );
+ * // -> false (in older versions - true)
  */
-
-// _.isNumber( 0 ); // -> true
-// _.isNumber( NaN ); // -> true
-// _.isNumber( new Number( Infinity ) ); // -> false (in older versions - true)
-
 var isNumber = function ( value ) {
   return typeof value == 'number';
 };
 
 /**
  * Returns true if `value` is an Object instance.
+ *
+ * @memberOf _
+ * @static
+ * @param {*} value
+ * @returns {Boolean}
+ * @example
+ *
+ * _.isObject( {} ); // -> true
+ * _.isObject( [] ); // -> false
+ * _.isObject( new function () {} ); // -> true
  */
-
-// _.isObject( {} ); // -> true
-// _.isObject( [] ); // -> false
-// _.isObject( new function () {} ); // -> true
-
 var isObject = function ( value ) {
   return isObjectLike( value ) &&
     toString.call( value ) == '[object Object]';
@@ -287,12 +374,17 @@ var isObject = function ( value ) {
 
 /**
  * Returns true if `value` is object-like.
+ *
+ * @memberOf _
+ * @static
+ * @param {*} value
+ * @returns {Boolean}
+ * @example
+ *
+ * _.isObjectLike( {} ); // -> true
+ * _.isObjectLike( [] ); // -> true (in `_.isObject()` - false)
+ * _.isObjectLike( new function () {} ); // -> true
  */
-
-// _.isObjectLike( {} ); // -> true
-// _.isObjectLike( [] ); // -> true (in `isObject` - false)
-// _.isObjectLike( new function () {} ); // -> true
-
 var isObjectLike = function ( value ) {
   return !!value && typeof value == 'object';
 };
@@ -302,12 +394,17 @@ var fnToString = fn.toString,
 
 /**
  * Returns true if `value` is a plain object.
+ *
+ * @memberOf _
+ * @static
+ * @param {*} value
+ * @returns {Boolean}
+ * @example
+ *
+ * _.isPlainObject( {} ); // -> true
+ * _.isPlainObject( [] ); // -> false
+ * _.isPlainObject( new function () {} ); // -> false
  */
-
-// _.isPlainObject( {} ); // -> true
-// _.isPlainObject( [] ); // -> false
-// _.isPlainObject( new function () {} ); // -> false
-
 var isPlainObject = function ( value ) {
   var prototype;
 
@@ -324,12 +421,17 @@ var isPlainObject = function ( value ) {
 
 /**
  * Returns true if `value` is a primitive.
+ *
+ * @memberOf _
+ * @static
+ * @param {*} value
+ * @returns {Boolean}
+ * @example
+ *
+ * _.isPrimitive( null ); // -> true
+ * _.isPrimitive( Symbol() ); // -> true
+ * _.isPrimitive( new Boolean() ); // -> false
  */
-
-// _.isPrimitive( null ); // -> true
-// _.isPrimitive( Symbol() ); // -> true
-// _.isPrimitive( new Boolean() ); // -> false
-
 var isPrimitive = function ( value ) {
   return !value ||
     typeof value != 'object' &&
@@ -341,12 +443,20 @@ var MAX_SAFE_INT = 9007199254740991,
 
 /**
  * Returns true if `value` is a safe integer primitive.
+ *
+ * @memberOf _
+ * @static
+ * @param {*} value
+ * @returns {Boolean}
+ * @example
+ *
+ * _.isSafeInteger( new Number() );
+ * // -> false (in older versions - true)
+ * _.isSafeInteger( Number.MIN_SAFE_INTEGER );
+ * // -> true
+ * _.isSafeInteger( Number.MIN_VALUE );
+ * // -> false
  */
-
-// _.isSafeInteger( new Number() ); // -> false (in older versions - true)
-// _.isSafeInteger( Number.MIN_SAFE_INTEGER ); // -> true
-// _.isSafeInteger( Number.MIN_VALUE ); // -> false
-
 var isSafeInteger = function ( value ) {
   return isFinite( value ) &&
     value <= MAX_SAFE_INT &&
@@ -356,13 +466,18 @@ var isSafeInteger = function ( value ) {
 
 /**
  * Returns true if `value` represents a DOM element.
+ *
+ * @memberOf _
+ * @static
+ * @param {*} value
+ * @returns {Boolean}
+ * @example
+ *
+ * _.isDOMElement( window ); // -> true
+ * _.isDOMElement( document ); // -> true
+ * _.isDOMElement( document.body ); // -> true
+ * _.isDOMElement( document.createTextNode( '' ) ); // -> true
  */
-
-// _.isDOMElement( window ); // -> true
-// _.isDOMElement( document ); // -> true
-// _.isDOMElement( document.body ); // -> true
-// _.isDOMElement( document.createTextNode( '' ) ); // -> true
-
 var isDOMElement = function ( value ) {
   var nodeType;
 
@@ -385,27 +500,39 @@ var isDOMElement = function ( value ) {
 
 /**
  * Returns true if `value` represents a string primitive.
+ *
+ * @memberOf _
+ * @static
+ * @param {*} value
+ * @returns {Boolean}
+ * @example
+ *
+ * _.isString( '' );
+ * // -> true
+ * _.isString( new String() );
+ * // -> false (in older versions - true)
  */
-
-// _.isString( '' ); // -> true
-// _.isString( new String() ) // -> false (in older versions - true)
-
 var isString = function ( value ) {
   return typeof value == 'string';
 };
 
 /**
  * Returns true if `value` represents a symbol primitive or object.
+ *
+ * @memberOf _
+ * @static
+ * @param {*} value
+ * @returns {Boolean}
+ * @example
+ *
+ * _.isSymbol( Symbol() ); // -> true
+ * _.isSymbol( Object( Symbol() ) ); // -> true
  */
-
-// _.isSymbol( Symbol() ); // -> true
-// _.isSymbol( Object( Symbol() ) ) // -> true
-
 var isSymbol = function ( value ) {
   // disable "Invalid typeof value 'symbol' (W122)" (esversion: 3)
-  /* jshint -W122 */
+  // jshint -W122
   if ( typeof value == 'symbol' ) {
-  /* jshint +W122 */
+  // jshint +W122
     return true;
   }
 
@@ -416,27 +543,37 @@ var isSymbol = function ( value ) {
 
 /**
  * Returns true if `value` represents a Window instance.
+ *
+ * @memberOf _
+ * @static
+ * @param {*} value
+ * @returns {Boolean}
+ * @example
+ *
+ * _.isWindow( window ); // -> true
+ * _.isWindow( new function () { this.window = this; } ) // -> false
  */
-
-// _.isWindow( window ); // -> true
-// _.isWindow( new function () { this.window = this; } ) // -> false
-
 var isWindow = function ( value ) {
   return isWindowLike( value ) && toString.call( value ) == '[object Window]';
 };
 
 /*
  * Returns true if `value` represents a Window instance, faster than `_.isWindow`.
+ *
+ * @memberOf _
+ * @static
+ * @param {*} value
+ * @returns {Boolean}
+ * @example
+ *
+ * _.isWindowLike( window ); // -> true
+ * _.isWindowLike( new function () { this.window = this; } ) // -> true
  */
-
-// _.isWindowLike( window ); // -> true
-// _.isWindowLike( new function () { this.window = this; } ) // -> true
-
 var isWindowLike = function ( value ) {
   return isObjectLike( value ) && value.window === value;
 };
 
-/** private 'base' methods */
+/* Private 'base' Methods */
 
 /**
  * Copies elements from the `source` array to the `target` array.
@@ -1102,7 +1239,7 @@ var baseValues = function ( object, keys ) {
   return values;
 };
 
-/** private 'create' methods */
+/* Private 'create' Methods */
 
 var createAssign = function ( getKeys ) {
   return function ( object ) {
@@ -1301,13 +1438,15 @@ var createValues = function ( getKeys ) {
 
 var createRound = function ( round ) {
   return function ( value, precision, guard ) {
-    return guard || precision === undefined /* || precision === 0 */ ?
-      round( value ) :
-      round( value * ( precision = pow( 10, precision ) ) ) / precision;
+    if ( guard || precision === undefined /* || precision === 0 */ ) {
+      return round( value );
+    }
+
+    return round( value * ( precision = pow( 10, precision ) ) ) / precision;
   };
 };
 
-/** Other methods */
+/* Other Methods */
 
 var apply = function ( target, context, args ) {
   switch ( args.length ) {
@@ -1485,6 +1624,14 @@ var has = function ( key, object ) {
 
 /**
  * `Date.now` polyfill.
+ *
+ * @method now
+ * @memberOf _
+ * @static
+ * @returns {Number}
+ * @example
+ *
+ * _.now(); // -> 1518766578121
  */
 var getTime = Date.now || function () {
   return new Date().getTime();
@@ -1493,17 +1640,23 @@ var getTime = Date.now || function () {
 /**
  * Returns a function that can only be called `n` times.
  * NOTE: Behave differently from Lodash `_.before`.
+ *
+ * @memberOf _
+ * @static
+ * @param {Number} n
+ * @param {Function} target
+ * @returns {Function}
+ * @example
+ *
+ * Math.weirdFunc = _.before( 2, function () {
+ *   return this.floor( this.random() * 100 );
+ * } );
+ *
+ * Math.weirdFunc(); // -> 87
+ * Math.weirdFunc(); // -> 21
+ * Math.weirdFunc(); // -> 21
+ * Math.weirdFunc(); // -> 21...
  */
-
-// Math.weirdFunc = _.before( 2, function () {
-//   return this.floor( this.random() * 100 );
-// } );
-
-// Math.weirdFunc(); // -> 87
-// Math.weirdFunc(); // -> 21
-// Math.weirdFunc(); // -> 21
-// Math.weirdFunc(); // -> 21...
-
 var before = function ( n, target ) {
   var value;
 
@@ -1550,18 +1703,24 @@ var bind = function () {
 
   /**
    * Binds the `target` function to the `context`.
+   *
+   * @memberOf _
+   * @static
+   * @param {Function} target
+   * @param {*} context
+   * @param {*} partialArgs
+   * @example
+   *
+   * var greet = function ( name, end ) {
+   *   alert( this.greeting + ', ' + name + end );
+   * };
+   *
+   * _.bind( greet, { greeting: 'Hi' }, _, '!' )( 'Josh' );
+   * // -> 'Hi, Josh!'
+   * _.bind( greet, { greeting: 'Hello' }, 'Mike' )( '.' );
+   * // -> 'Hello, Mike.'
    */
-
-  // var greet = function ( name, end ) {
-  //   alert( this.greeting + ', ' + name + end );
-  // };
-  //
-  // _.bind( greet, { greeting: 'Hi' }, _, '!' )( 'Josh' );
-  // // -> 'Hi, Josh!'
-  // _.bind( greet, { greeting: 'Hello' }, 'Mike' )( '.' );
-  // // -> 'Hello, Mike.'
-
-  return function ( target, context ) {
+  return function bind ( target, context ) {
     var partial_args;
 
     if ( typeof target != 'function' ) {
@@ -2016,25 +2175,65 @@ var default_file_options = {
 };
 
 /**
- * Returns the contents of the file at the path.
- * The following values are passed to the option:
- * [async] Use an asynchronous request.
- * [onload] Will be execute when the data is loaded.
- * [onerror] Will be execute when an error occur.
- * [timeout=60000] At the end of the time, the download will be canceled.
+ * This function will be called when the file is
+ * loaded successfully. `this` in this functios
+ * will point to the &lt;XMLHttpRequest&gt; object
+ * that was used to load the file.
+ * @callback FileLoadedCallback
+ * @param {String} data The content of the loaded file.
+ * @param {String} path The path of the loaded file.
+ * @param {FileOptions} options The options that given into the `_.file()` method.
  */
 
-// _.file( [path], [options] );
-//
-// // Use cases:
-//
-// // 1. async = false
-// _.file( path );
-// // 2. async = options.async || true
-// _.file( path, options );
-// // 3. async = options.async || true
-// _.file( options );
+/**
+ * This function will be called when the error
+ * occur while loading the file. `this` in this
+ * functios will point to the &lt;XMLHttpRequest&gt;
+ * object that was used to load the file.
+ * @callback LoadingFileErrorCallback
+ * @param {String} path The path of the file that failed to load.
+ * @param {FileOptions} options The options that given into the `_.file()` method.
+ */
 
+/**
+ * This options used in [`_.file()`]{@link _.file}.
+ * @typedef FileOptions
+ * @type {Object}
+ * @property {String} [path]
+ *   The path of the file to be loaded.
+ * @property {Boolean} [async]
+ *   Use an asynchronous request?
+ * @property {FileLoadedCallback} [onload]
+ *   This function will be called when the file
+ *   is loaded successfully.
+ * @property {LoadingFileErrorCallback} [onerror]
+ *   This function will be called when the error
+ *   occur while loading the file.
+ * @property {Number} [timeout=60000]
+ *   If the load time for the file needs more
+ *   than this limit, it will be canceled.
+ */
+
+/**
+ * Returns the contents of the file at the path.
+ * @memberOf _
+ * @static
+ * @param {String} [path] The path of the file to be loaded.
+ * @param {FileOptions} [options] File load options.
+ * @returns {null|String}
+ *   When the request wasn't asynchronous, it
+ *   returns the contents of the file.
+ * @example
+ *
+ * // Use cases:
+ *
+ * // 1. async = false
+ * _.file( path );
+ * // 2. async = options.async || true
+ * _.file( path, options );
+ * // 3. async = options.async || true
+ * _.file( options );
+ */
 var file = function ( path, options ) {
 
   var data = null,
@@ -2096,6 +2295,9 @@ var file = function ( path, options ) {
 
 };
 
+/**
+ * The `Object.getPrototypeOf()` polyfill.
+ */
 var getPrototypeOf = Object.getPrototypeOf || function ( target ) {
   var prototype, constructor;
 
@@ -2121,6 +2323,14 @@ var identity = function ( value ) {
   return value;
 };
 
+/**
+ * Returns true when the object contains the value (see `Array.prototype.includes()`).
+ */
+
+// _.includes( [ 0, NaN, 2 ], NaN ); // -> true
+// _.includes( { z: 'A', A: 'z' }, 'z' ); // -> true
+// _.includes( 'abcdef', 'b' ); // -> true
+
 var includes = function ( object, value ) {
   if ( typeof object == 'string' ) {
     return object.indexOf( value ) >= 0;
@@ -2133,13 +2343,44 @@ var includes = function ( object, value ) {
   return indexOf( object, value ) >= 0;
 };
 
+/**
+ * Creates an object whose keys and values ​​are inverted.
+ */
+
+// _.invert( { one: 1, two: 2 } );
+// // -> { 1: 'one', 2: 'two' }
+
 var invert = function ( target ) {
   return baseInvert( target = toObject( target ), getKeys( target ) );
 };
 
+/**
+ * The ES5 `Object.keys()` polyfill.
+ */
+
+// var object = {
+//   a: 'b',
+//   b: 'c'
+// };
+//
+// object.constructor.prototype.c = 'a';
+// _.keys( object ); // -> [ 'a', 'b' ]
+
 var getKeys = support.keys !== 2 ? function ( object ) {
   return baseKeys( toObject( object ) );
 } : Object.keys;
+
+/**
+ * Same as `_.keys()`, but also includes the names of inherited properties.
+ */
+
+// var object = {
+//   a: 'b',
+//   b: 'c'
+// };
+//
+// object.constructor.prototype.c = 'a';
+// _.keys( object ); // -> [ 'a', 'b', 'c' ]
 
 var getKeysIn = function ( target ) {
   var keys = [],
@@ -2153,6 +2394,13 @@ var getKeysIn = function ( target ) {
 
   return keys;
 };
+
+/**
+ * Merges the `iterable` array with the values after it.
+ */
+
+// _.merge( [ 0, 1 ], 2, [ 3, 4 ] );
+// // -> [ 0, 1, 2, 3, 4 ]
 
 var merge = function ( iterable ) {
   var i = 1,
@@ -2178,18 +2426,22 @@ var merge = function ( iterable ) {
 
 var method = function ( path ) {
   var len = ( path = toPath( path ) ).length,
-      args = len && slice.call( arguments, 1 ),
+      args = slice.call( arguments, 1 ),
       key;
+
+  if ( !len ) {
+    throw Error( 'An empty _.method() path' );
+  }
 
   return len > 1 ? ( key = path[ path.length - 1 ], function ( object ) {
     if ( object != null && ( object = baseAccessor( object, path, 1 ) ) != null ) {
       return apply( object[ key ], object, args );
     }
-  } ) : len ? function ( object ) {
+  } ) : function ( object ) {
     if ( object != null ) {
       return apply( object[ path ], object, args );
     }
-  } : noop;
+  };
 };
 
 var mixin = function ( deep, target ) {
@@ -2416,6 +2668,9 @@ var sampleSize = function ( object, size ) {
   return baseShuffle( object, size );
 };
 
+/**
+ * The `Object.setPrototypeOf()` polyfill.
+ */
 var setPrototypeOf = Object.setPrototypeOf || function ( target, prototype ) {
   if ( target == null ) {
     throw TypeError( ERR_UNDEFINED_OR_NULL );
@@ -2924,8 +3179,7 @@ var getComputedStyle = window.getComputedStyle || function () {
     // to read currentStyle until the
     // element's document is accessed.
     var value = element.currentStyle[ name ]
-      .match( /([\d.]+)(em|%|cm|in|mm|pc|pt|)/ ) || [ 0, 0, '' ],
-
+          .match( /([\d.]+)(em|%|cm|in|mm|pc|pt|)/ ) || [ 0, 0, '' ],
         size = value[ 1 ],
         suffix = value[ 2 ],
         rootSize, parent;
@@ -2933,13 +3187,20 @@ var getComputedStyle = window.getComputedStyle || function () {
     if ( fontSize === undefined ) {
       parent = element.parentElement;
 
-      fontSize = parent && ( suffix === '%' || suffix === 'em' ) ?
-        getComputedStylePixel( parent, 'fontSize' ) : 16;
+      if ( !parent || suffix !== '%' && suffix !== 'em' ) {
+        fontSize = 16;
+      } else {
+        fontSize = getComputedStylePixel( parent, 'fontSize' );
+      }
     }
 
-    rootSize = name == 'fontSize' ?
-      fontSize : /width/i.test( name ) ?
-      element.clientWidth : element.clientHeight;
+    if ( name == 'fontSize' ) {
+      rootSize = fontSize;
+    } else if ( /width/i.test( name ) ) {
+      rootSize = element.clientWidth;
+    } else {
+      rootSize = element.clientHeight;
+    }
 
     return suffix === 'em' ?
       size * fontSize : suffix === '%' ?
@@ -3032,7 +3293,7 @@ var getComputedStyle = window.getComputedStyle || function () {
     setProperty: noop
   };
 
-  return function ( element ) {
+  return function getComputedStyle ( element ) {
     return new CSSStyleDeclaration( element );
   };
 }();
@@ -3082,6 +3343,7 @@ var timer = function () {
 
     timer.cancel = window.clearTimeout;
   } else {
+    // Instead of `bind`, manually create these functions.
     timer.request = function ( frame ) {
       return request( frame );
     };
@@ -3102,12 +3364,12 @@ var matches = window.Element && (
   Element.prototype.webkitMatchesSelector ) ||
 
 function ( selector ) {
-  if ( !isString( selector ) ) {
-    throw TypeError( ERR_STRING_EXPECTED );
-  }
-
   var element = this,
       elements, i;
+
+  if ( typeof selector != 'string' ) {
+    throw TypeError( ERR_STRING_EXPECTED );
+  }
 
   if ( selector.charAt( 0 ) === '#' && !/\s/.test( selector ) ) {
     return '#' + element.id === selector;
@@ -3220,6 +3482,13 @@ var DOMWrapper = function ( selector ) {
   }
 };
 
+/**
+ * @name _
+ * @alias peako
+ * @constructor
+ * @param {DOMElement|String|ArrayLikeObject|Function} selector
+ * @returns {DOMWrapper}
+ */
 var peako = function ( input ) {
   return new DOMWrapper( input );
 };
@@ -3573,9 +3842,9 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
       // disable the "Confusing use of '!'. (W018)" warning,
       // because "a != b" and "!a == b" behave differently.
       // we need to convert "a" to a boolean value.
-      /* jshint -W018 */
+      // jshint -W018
       if ( !is( el, selector, i ) == inverse ) {
-      /* jshint +W018 */
+      // jshint +W018
         els[ els.length++ ] = el;
       }
     }
@@ -3866,7 +4135,7 @@ forOwnRight( {
         continue;
       }
 
-      /** Skip some weird stuff (spaces, comments, whatever...) */
+      // Skip some weird stuff (spaces, comments, whatever...)
       while ( ( sibling = el[ nextSibling ] ) && sibling.nodeType !== 1 );
 
       if ( sibling && ( !selector || is( sibling, selector, i ) ) ) {
@@ -4253,23 +4522,23 @@ var getDefaultVisibleDisplay = function ( target ) {
       doc, el;
 
   if ( !display ) {
-    /** Get the document in which now is `target`. */
+    // Get the document in which now is `target`.
     doc = target.ownerDocument;
-    /** Create the same element as the `target`. Add it to the `document`. */
+    // Create the same element as the `target`. Add it to the `document`.
     el = doc.body.appendChild( doc.createElement( nodeName ) );
-    /** Get it 'display' style. */
+    // Get it 'display' style.
     display = getComputedStyle( el ).display;
-    /** This element is no longer needed. */
+    // This element is no longer needed. */
     doc.body.removeChild( el );
-    /** IE can don't to delete element from the memory? */
+    // IE can don't to delete element from the memory? */
     el = doc = null;
 
-    /** Force the `target` to show. */
+    // Force the `target` to show.
     if ( display === 'none' ) {
       display = 'block';
     }
 
-    /** Caching results. */
+    // Caching results.
     defaultVisibleDisplayMap[ nodeName ] = display;
   }
 
@@ -4468,7 +4737,7 @@ var classList = {
   }
 };
 
-/**
+/*
  * Based on Taylor Hakes Promise polyfill.
  * https://github.com/taylorhakes/promise-polyfill
  */
@@ -4785,7 +5054,7 @@ support.fetch = has( 'fetch', window ) &&
   has( 'Response', window );
 
 if ( !support.fetch ) {
-  /**
+  /*
    * based on Cam Song `fetch` polyfill from
    * https://github.com/camsong/fetch-ie8
    */
