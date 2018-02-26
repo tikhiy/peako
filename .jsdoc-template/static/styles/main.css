@@ -1,0 +1,76 @@
+/**
+ * 1. Reset click style.
+ */
+html,
+body,
+canvas,
+button,
+select {
+  -webkit-tap-highlight-color: transparent; /* 1 */
+  -webkit-focus-ring-color: transparent; /* 1 */
+}
+
+body {
+  word-break: break-all;
+}
+
+.subsection-title {
+  margin: 24px 48px;
+}
+
+.doclet {
+  margin: 24px 0;
+}
+
+.doclet-header {
+  padding: 24px;
+  background: #efefef;
+  color: rgba( 0, 0, 0, 0.87 );
+  font: 700 20px UbuntuMonoFont, monospace;
+}
+
+.doclet-subheader,
+.doclet p,
+hr {
+  margin: 24px 48px;
+}
+
+.doclet-type {
+  font-style: italic;
+}
+
+.doclet-attrs {
+  margin: 16px 48px;
+}
+
+.doclet-attrs span {
+  display: inline-block;
+  height: 32px;
+  min-width: 64px;
+  font: 700 13px / 32px UbuntuMonoFont, monospace;
+  border-radius: 2px;
+  text-align: center;
+  padding: 0 12px;
+  text-transform: uppercase;
+  margin: 4px 0;
+  border: 1px solid;
+}
+
+.prettyprint li {
+  transition: background 0.25s;
+}
+
+.prettyprint li.selected {
+  background: rgba( 255, 255, 255, 0.3 );
+}
+
+.prettyprint {
+  padding: 24px;
+  font-size: 16px;
+  color: initial;
+}
+
+.signature-attrs {
+  color: rgba( 0, 0, 0, 0.54 );
+  font-size: 75%;
+}

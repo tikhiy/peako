@@ -1,0 +1,279 @@
+<!-- saved from url=(0014)about:internet -->
+
+<!DOCTYPE html>
+
+<html lang="en-US">
+
+<head>
+  <title>Global - Documentation</title>
+  <!-- Set page charset. -->
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <!-- Weird bullshit. -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Tells the browser that the page is optimized for mobile devices. -->
+  <meta name="HandheldFriendly" content="True" />
+  <!-- Disables automatic conversion of phone numbers and emails into links. -->
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="format-detection" content="adress=no" />
+  <!-- Some Mobile Web Application stuff ("add to home screen"). -->
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="application-name" content="Global - Documentation" />
+  <meta name="apple-mobile-web-app-title" content="Global - Documentation" />
+  <meta name="msapplication-starturl" content="index.html" />
+  <!-- Action Bar background color. -->
+  <meta name="theme-color" content="#000" />
+  <meta name="msapplication-navbutton-color" content="#000" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <!-- Adaptation for mobile devices. -->
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui, shrink-to-fit=no" />
+  <!-- Some SEO and copyright stuff.  -->
+  <meta name="description" content="Global - Documentation" />
+  <meta name="keywords" content="global,documentation,docs" />
+  <meta name="author" content="" />
+  <meta name="copyright" content="" />
+  <!-- Import the fonts and set them before importing the CSS libraries. -->
+  <style>
+    @font-face {
+      font-family: UbuntuFont;
+      font-weight: 500;
+      src: url( 'fonts/Ubuntu-Medium.ttf' );
+    }
+
+    @font-face {
+      font-family: UbuntuFont;
+      font-weight: 400;
+      src: url( 'fonts/Ubuntu-Regular.ttf' );
+    }
+
+    @font-face {
+      font-family: UbuntuMonoFont;
+      font-weight: 700;
+      src: url( 'fonts/UbuntuMono-Bold.ttf' );
+    }
+
+    @font-face {
+      font-family: UbuntuMonoFont;
+      font-weight: 400;
+      src: url( 'fonts/UbuntuMono-Regular.ttf' );
+    }
+
+    @font-face {
+      font-family: UbuntuMonoFont;
+      font-weight: 700;
+      font-style: italic;
+      src: url( 'fonts/UbuntuMono-BoldItalic.ttf' );
+    }
+
+    @font-face {
+      font-family: UbuntuMonoFont;
+      font-weight: 400;
+      font-style: italic;
+      src: url( 'fonts/UbuntuMono-RegularItalic.ttf' );
+    }
+
+    body {
+      font: 400 14px / 1.6 UbuntuFont, sans-serif;
+    }
+    
+    pre {
+      font: 400 14px / 1.75 UbuntuMonoFont, monospace;
+    }
+  </style>
+  <!-- Import styles and Web App Manifest. -->
+  <link rel="stylesheet" href="styles/normalize.css" />
+  <link rel="stylesheet" href="styles/md-components.css" />
+  <link rel="stylesheet" href="styles/tomorrow-night-eighties.min.css" />
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="manifest" href="manifest.json" />
+  <!-- Import icons. -->
+  <link rel="icon" type="image/png" sizes="48x48" href="drawables/icon-48.png" />
+  <link rel="apple-touch-icon" type="image/png" sizes="48x48" href="drawables/icon-48.png" />
+  <link rel="icon" type="image/png" sizes="96x96" href="drawables/icon-96.png" />
+  <link rel="apple-touch-icon" type="image/png" sizes="96x96" href="drawables/icon-96.png" />
+  <link rel="icon" type="image/png" sizes="144x144" href="drawables/icon-144.png" />
+  <link rel="apple-touch-icon" type="image/png" sizes="144x144" href="drawables/icon-144.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="drawables/icon-192.png" />
+  <link rel="apple-touch-icon" type="image/png" sizes="192x192" href="drawables/icon-192.png" />
+  <!-- ??? -->
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+
+<body class="mobile">
+
+  <div id="main">
+    <h1 class="page-title">Global</h1>
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2></h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+        
+
+<dl class="details">
+</dl>
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        
+                <div class="doclet">
+  <pre class="doclet-header">FileLoadedCallback<span class="signature">( data, path, options )</span></pre>
+
+  
+
+<dl class="details"><div class="doclet-attrs"><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2370">line 2370</a></span></div>
+</dl><p>This function will be called when the file is loaded successfully. <code>this</code>
+in this function will point to the &lt;XMLHttpRequest&gt; object that was
+used to load the file.</p>
+    <h6 class="doclet-subheader">Parameters</h6>
+    
+  <p><code>data</code> <code class="doclet-type">(String)</code> - The content of the loaded file.</p>
+
+  <p><code>path</code> <code class="doclet-type">(String)</code> - The path of the loaded file.</p>
+
+  <p><code>options</code> <code class="doclet-type">(FileOptions)</code> - The options that given into the <code>_.file()</code>
+ method.</p>
+
+  
+</div>
+<hr />
+            
+                
+<h4 class="name" id="FileOptions">FileOptions</h4>
+
+
+
+
+<div class="description">
+    <p>This options used in <a href="-_.html#.file"><code><code>_.file()</code></code></a>.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            Object
+        </li>
+    </ul>
+
+
+
+  <h5 class="subsection-title">Properties</h5>
+  
+
+
+<dl class="details"><div class="doclet-attrs"><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2391">line 2391</a></span></div>
+</dl>
+
+
+
+
+
+            
+                <div class="doclet">
+  <pre class="doclet-header">LoadingFileErrorCallback<span class="signature">( path, options )</span></pre>
+
+  
+
+<dl class="details"><div class="doclet-attrs"><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2381">line 2381</a></span></div>
+</dl><p>This function will be called when the error occur while loading the file.
+<code>this</code> in this function will point to the &lt;XMLHttpRequest&gt; object
+that was used to load the file.</p>
+    <h6 class="doclet-subheader">Parameters</h6>
+    
+  <p><code>path</code> <code class="doclet-type">(String)</code> - The path of the file that failed to load.</p>
+
+  <p><code>options</code> <code class="doclet-type">(FileOptions)</code> - The options that given into the <code>_.file()</code>
+ method.</p>
+
+  
+</div>
+<hr />
+            
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+  </div>
+
+  <div id="nav">
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="-_.html">_</a></li><li><a href="-_.DOMWrapper.html">DOMWrapper</a></li></ul><h3><a href="global.html">Global</a></h3>
+  </div>
+
+  <div id="footer">Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on 27 February 2018 (Wednesday)</div>
+
+  <!-- JSDoc stuff. -->
+  <script src="scripts/prettify/prettify.js"></script>
+  <!-- Peako library. -->
+  <script src="../peako.js"> </script>
+  <!-- Main script. -->
+  <script src="scripts/main.js"></script>
+
+  <!-- Register the Service Worker ("add to home screen", caching). -->
+  <script>
+    // For development, better to disable it.
+    var __USE_CACHE = false;
+
+    if ( __USE_CACHE && 'serviceWorker' in navigator ) {
+      navigator.serviceWorker.register( 'service-worker.js' )
+        .then( function ( registration ) {
+          console.log( 'Registration succeeded. Scope is ' + registration.scope );
+        }, function ( ex ) {
+          console.log( 'Registration failed with ' + ex );
+        } );
+    }
+
+    if ( 'ontouchend' in window == false ) {
+      _( document.body )
+        .removeClass( 'mobile' )
+        .addClass( 'desktop' );
+    }
+  </script>
+
+</body>
+
+</html>

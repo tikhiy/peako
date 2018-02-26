@@ -1,0 +1,19 @@
+<% for ( let param of obj ) { %>
+  <p><%
+
+  if ( param.name ) {
+    print( '<code>' + param.name + '</code> ' );
+  }
+
+  if ( param.type && param.type.names ) {
+    print( '<code class="doclet-type">(' + this.partial( 'type.tmpl', param.type.names ) + ')</code>' );
+  }
+
+  if ( param.description ) {
+    if ( param.name || param.type && param.type.names ) {
+      print( ' - ' );
+    }
+
+    print( param.description.replace( /^<[\w\-]+>|<\/[\w\-]+>$/g, '' ) );
+  } %></p>
+<% } %>

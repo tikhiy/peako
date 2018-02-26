@@ -13,8 +13,3 @@ This is easy and only one (not only) way to do it:
 <!-- Import local file. -->
 <script src="peako.js"></script>
 ```
-
-## ...
-I, like everyone else, knew about jQuery. And of course, I wanted to write my own jQuery.
-
-jQuery and Lodash libraries have recently begun to have a huge impact on Peako.
