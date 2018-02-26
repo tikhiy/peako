@@ -1,7 +1,7 @@
 /*!
  * Copyright (c) 2017-2018 SILENT
  * Released under the MIT License.
- * Peako is a JavaScript Library.
+ * Peako 0.1.4 Library.
  * https://github.com/silent-tempest/Peako
  * Based on jQuery:
  * https://github.com/jquery/jquery
@@ -57,13 +57,14 @@ var regexps = {
 var support = {};
 
 /**
- * Binds the function to `context`. Bound function
- * will execute faster than if it was bound by
- * `_.bind()`. NOTE: In the `_.bindFast()` method
- * you can't use partial arguments.
+ * Binds the function to `context`. Bound function will execute faster than
+ * if it was bound by `_.bind()`. NOTE: In the `_.bindFast()` method you
+ * can't use partial arguments.
  *
- * @memberOf _
+ * @category Function
+ * @memberof _
  * @static
+ * @since 0.0.5
  * @param {Function} target The function that should be bound.
  * @param {*} context The `this` value in the bound function.
  * @returns {Function} A function bound to the `context`.
@@ -106,36 +107,40 @@ var bindFast = function ( target, context ) {
 /**
  * Returns true if `value` is an Array instance.
  *
- * @category Utility Methods
  * @method isArray
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.0.4
  * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
- * _.isArray( [] ); // -> true
- * _.isArray( Array() ); // -> true
+ * _.isArray( [] );
+ * // -> true
+ * _.isArray( Array() );
+ * // -> true
  */
 var isArray = Array.isArray || function ( value ) {
   return isObjectLike( value ) && isLength( value.length ) && toString.call( value ) == '[object Array]';
 };
 
 /**
- * Returns true if `value` is array-like. String
- * and Object values with a valid `length`
- * property is array-like.
+ * Returns true if `value` is array-like. String and Object values with a
+ * valid `length` property is array-like.
  *
- * @category Utility Methods
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.0.1
  * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
- * _.isArrayLike( [] ); // -> true
- * _.isArrayLike( _( window ) ); // -> true
- * _.isArrayLike( new Float32Array() ); // -> true
+ * _.isArrayLike( [] );
+ * // -> true
+ * _.isArrayLike( _( window ) );
+ * // -> true
+ * _.isArrayLike( new Float32Array() );
+ * // -> true
  */
 var isArrayLike = function ( value ) {
   if ( value == null ) {
@@ -152,16 +157,19 @@ var isArrayLike = function ( value ) {
 /**
  * Returns true if `value` is an object and array-like.
  *
- * @category Utility Methods
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.1.4
  * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
- * _.isArrayLikeObject( [] ); // -> true
- * _.isArrayLikeObject( '' ); // -> false
- * _.isArrayLikeObject( new String() ); // -> true
+ * _.isArrayLikeObject( [] );
+ * // -> true
+ * _.isArrayLikeObject( '' );
+ * // -> false
+ * _.isArrayLikeObject( new String() );
+ * // -> true
  */
 var isArrayLikeObject = function ( value ) {
   return isObjectLike( value ) && isLength( value.length ) && !isWindowLike( value );
@@ -170,8 +178,9 @@ var isArrayLikeObject = function ( value ) {
 /**
  * Returns true if `value` is a boolean primitive.
  *
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.0.4
  * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
@@ -188,8 +197,9 @@ var isBoolean = function ( value ) {
 /**
  * Returns true if `value` is a finite number primitive.
  *
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.0.4
  * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
@@ -208,8 +218,9 @@ var isFinite = function ( value ) {
 /**
  * Returns true for all kinds of `function`.
  *
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.0.4
  * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
@@ -228,15 +239,19 @@ support.HTMLElement = toString.call( body ).indexOf( 'HTML' ) > 0;
 /**
  * Returns true if `value` is HTMLElement instance.
  *
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.0.1
  * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
- * _.isElement( document.createElement( 'span' ) ); // -> true
- * _.isElement( document.body ); // -> true
- * _.isElement( { nodeType: 1 } ); // -> false
+ * _.isElement( document.createElement( 'span' ) );
+ * // -> true
+ * _.isElement( document.body );
+ * // -> true
+ * _.isElement( { nodeType: 1 } );
+ * // -> false
  */
 var isElement = function ( value ) {
   if ( !isElementLike( value ) ) {
@@ -251,17 +266,22 @@ var isElement = function ( value ) {
 };
 
 /**
- * Returns true if `value` is HTMLElement instance, but faster than `_.isElement()`.
+ * Returns true if `value` is HTMLElement instance, but faster than
+ * `_.isElement()`.
  *
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.1.4
  * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
- * _.isElementLike( document.createElement( 'span' ) ); // -> true
- * _.isElementLike( document.body ); // -> true
- * _.isElementLike( { nodeType: 1 } ); // -> true
+ * _.isElementLike( document.createElement( 'span' ) );
+ * // -> true
+ * _.isElementLike( document.body );
+ * // -> true
+ * _.isElementLike( { nodeType: 1 } );
+ * // -> true
  */
 var isElementLike = function ( value ) {
   return ( support.HTMLElement ? isObjectLike : isObject )( value ) && value.nodeType === 1;
@@ -270,20 +290,22 @@ var isElementLike = function ( value ) {
 /**
  * Returns true if `value` is a valid array-like index.
  *
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.1.0
  * @param {*} value The value to check.
- * @param {Number} [length=Number.MAX_SAFE_INTEGER] Check for an array with a specific length.
+ * @param {Number} [length=Number.MAX_SAFE_INTEGER] Check for an array with a
+ *  specific length.
  * @returns {Boolean}
- * @example
  *
- * // Without `length` parameter.
+ * @example <caption>Without `length` parameter</caption>
  * _.isIndex( 0 ); // -> true
  * _.isIndex( -1 ); // -> false
  * _.isIndex( 0.1 ); // -> false
  * _.isIndex( Infinity ); // -> false
  * _.isIndex( new Number() ); // -> false
- * // Using second parameter.
+ *
+ * @example <caption>Using second parameter</caption>
  * var names = [ 'Josh', 'Jared' ];
  * _.isIndex( 1, names.length ); // -> true
  * _.isIndex( 10, names.length ); // -> false
@@ -305,15 +327,19 @@ var MAX_ARRAY_LENGTH = 4294967295;
 /**
  * Returns true if `value` is a valid Array instance length.
  *
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.0.9
  * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
- * _.isLength( 0 ); // -> true
- * _.isLength( -0.1 ); // -> false
- * _.isLength( new Number() ); // -> false
+ * _.isLength( 0 );
+ * // -> true
+ * _.isLength( -0.1 );
+ * // -> false
+ * _.isLength( new Number() );
+ * // -> false
  */
 var isLength = function ( value ) {
   return typeof value == 'number' &&
@@ -325,8 +351,9 @@ var isLength = function ( value ) {
 /**
  * Checks if `value` is NaN.
  *
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.0.4
  * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
@@ -343,8 +370,9 @@ var isNaN = function ( value ) {
 /**
  * Returns true if `value` is a number primitive.
  *
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.0.1
  * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
@@ -363,15 +391,19 @@ var isNumber = function ( value ) {
 /**
  * Returns true if `value` is an Object instance.
  *
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.0.4
  * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
- * _.isObject( {} ); // -> true
- * _.isObject( [] ); // -> false
- * _.isObject( new function () {} ); // -> true
+ * _.isObject( {} );
+ * // -> true
+ * _.isObject( [] );
+ * // -> false
+ * _.isObject( new function () {} );
+ * // -> true
  */
 var isObject = function ( value ) {
   return isObjectLike( value ) &&
@@ -381,15 +413,19 @@ var isObject = function ( value ) {
 /**
  * Returns true if `value` is object-like.
  *
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.1.4
  * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
- * _.isObjectLike( {} ); // -> true
- * _.isObjectLike( [] ); // -> true (in `_.isObject()` - false)
- * _.isObjectLike( new function () {} ); // -> true
+ * _.isObjectLike( {} );
+ * // -> true
+ * _.isObjectLike( [] );
+ * // -> true (in `_.isObject()` - false)
+ * _.isObjectLike( new function () {} );
+ * // -> true
  */
 var isObjectLike = function ( value ) {
   return !!value && typeof value == 'object';
@@ -401,15 +437,19 @@ var fnToString = fn.toString,
 /**
  * Returns true if `value` is a plain object.
  *
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.0.4
  * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
- * _.isPlainObject( {} ); // -> true
- * _.isPlainObject( [] ); // -> false
- * _.isPlainObject( new function () {} ); // -> false
+ * _.isPlainObject( {} );
+ * // -> true
+ * _.isPlainObject( [] );
+ * // -> false
+ * _.isPlainObject( new function () {} );
+ * // -> false
  */
 var isPlainObject = function ( value ) {
   var prototype;
@@ -428,15 +468,19 @@ var isPlainObject = function ( value ) {
 /**
  * Returns true if `value` is a primitive.
  *
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.0.4
  * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
- * _.isPrimitive( null ); // -> true
- * _.isPrimitive( Symbol() ); // -> true
- * _.isPrimitive( new Boolean() ); // -> false
+ * _.isPrimitive( null );
+ * // -> true
+ * _.isPrimitive( Symbol() );
+ * // -> true
+ * _.isPrimitive( new Boolean() );
+ * // -> false
  */
 var isPrimitive = function ( value ) {
   return !value ||
@@ -450,8 +494,9 @@ var MAX_SAFE_INT = 9007199254740991,
 /**
  * Returns true if `value` is a safe integer primitive.
  *
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.0.4
  * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
@@ -473,16 +518,21 @@ var isSafeInteger = function ( value ) {
 /**
  * Returns true if `value` represents a DOM element.
  *
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.0.4
  * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
- * _.isDOMElement( window ); // -> true
- * _.isDOMElement( document ); // -> true
- * _.isDOMElement( document.body ); // -> true
- * _.isDOMElement( document.createTextNode( '' ) ); // -> true
+ * _.isDOMElement( window );
+ * // -> true
+ * _.isDOMElement( document );
+ * // -> true
+ * _.isDOMElement( document.body );
+ * // -> true
+ * _.isDOMElement( document.createTextNode( '' ) );
+ * // -> true
  */
 var isDOMElement = function ( value ) {
   var nodeType;
@@ -507,8 +557,9 @@ var isDOMElement = function ( value ) {
 /**
  * Returns true if `value` represents a string primitive.
  *
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.0.4
  * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
@@ -525,14 +576,17 @@ var isString = function ( value ) {
 /**
  * Returns true if `value` represents a symbol primitive or object.
  *
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.1.0
  * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
- * _.isSymbol( Symbol() ); // -> true
- * _.isSymbol( Object( Symbol() ) ); // -> true
+ * _.isSymbol( Symbol() );
+ * // -> true
+ * _.isSymbol( Object( Symbol() ) );
+ * // -> true
  */
 var isSymbol = function ( value ) {
   // disable "Invalid typeof value 'symbol' (W122)" (esversion: 3)
@@ -550,30 +604,37 @@ var isSymbol = function ( value ) {
 /**
  * Returns true if `value` represents a Window instance.
  *
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.0.6
  * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
- * _.isWindow( window ); // -> true
- * _.isWindow( new function () { this.window = this; } ) // -> false
+ * _.isWindow( window );
+ * // -> true
+ * _.isWindow( new function () { this.window = this; } );
+ * // -> false
  */
 var isWindow = function ( value ) {
   return isWindowLike( value ) && toString.call( value ) == '[object Window]';
 };
 
-/*
- * Returns true if `value` represents a Window instance, faster than `_.isWindow()`.
+/**
+ * Returns true if `value` represents a Window instance, faster than
+ * `_.isWindow()`.
  *
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.1.4
  * @param {*} value The value to check.
  * @returns {Boolean}
  * @example
  *
- * _.isWindowLike( window ); // -> true
- * _.isWindowLike( new function () { this.window = this; } ) // -> true
+ * _.isWindowLike( window );
+ * // -> true
+ * _.isWindowLike( new function () { this.window = this; } );
+ * // -> true
  */
 var isWindowLike = function ( value ) {
   return isObjectLike( value ) && value.window === value;
@@ -762,9 +823,8 @@ if ( support.defineProperty !== 2 ) {
 }
 
 /**
- * Filters the `iterable` array, leaving only
- * those elements for which the `iteratee`
- * function returns true. It creates a new array!
+ * Filters the `iterable` array, leaving only those elements for which the
+ * `iteratee` function returns true. It creates a new array!
  */
 
 // var values = [ 0, '1', '2', 3 ];
@@ -796,9 +856,8 @@ var baseFilter = function ( iterable, iteratee, context, not ) {
 };
 
 /**
- * Filters the `object`, leaving only those
- * elements for which the `iteratee` function
- * returns true. It creates a new object!
+ * Filters the `object`, leaving only those elements for which the `iteratee`
+ * function returns true. It creates a new object!
  */
 
 // var weirdData = {
@@ -837,8 +896,7 @@ var baseFilterObject = function ( object, iteratee, context, keys, not ) {
 };
 
 /**
- * Flattens a multidimensional array into a less
- * multidimensional array.
+ * Flattens a multidimensional array into a less multidimensional array.
  * Taken from someone, but I do not remember from whom (sorry).
  */
 
@@ -912,10 +970,9 @@ support.indexOf = !!arr.indexOf;
 support.lastIndexOf = !!arr.lastIndexOf;
 
 /**
- * Returns the first (or last) position of the
- * found `search` element in the `iterable`
- * array. Unlike the standard implementation
- * of ES5, this method can find NaN.
+ * Returns the first (or last) position of the found `search` element in the
+ * `iterable` array. Unlike the standard implementation of ES5, this method
+ * can find NaN.
  */
 var baseIndexOf = function ( iterable, search, fromIndex, fromRight ) {
   if ( support.indexOf && search === search ) {
@@ -958,8 +1015,8 @@ var baseIndexOf = function ( iterable, search, fromIndex, fromRight ) {
 };
 
 /**
- * Creates a new object with keys from `object`
- * values ​​and values ​​from `object` keys.
+ * Creates a new object with keys from `object` values ​​and values ​​from
+ * `object` keys.
  */
 
 // baseInvert( { a: 1, b: 2 } );
@@ -1033,8 +1090,9 @@ if ( support.keys !== 2 ) {
 }
 
 /**
- * Base implementation of `_.map` and `_mapRight` (works only with array-like objects).
- * `_.mapRight()` reverses the array, but doesn't loop through it reversibly!
+ * Base implementation of `_.map` and `_.mapRight` (works only with array-like
+ * objects). `_.mapRight()` reverses the array, but doesn't loop through it
+ * reversibly!
  */
 var baseMap = function ( iterable, iteratee, context, fromRight ) {
   var length, result, j, i;
@@ -1117,9 +1175,8 @@ var baseMerge = function ( iterable, expander ) {
 };
 
 /**
- * Base implementation of `_.range` and `_.rangeRight`.
- * Returns an array with a range of numbers
- * from `start` to` end` with the `step`.
+ * Base implementation of `_.range` and `_.rangeRight`. Returns an array with
+ * a range of numbers from `start` to` end` with the `step`.
  */
 
 // baseRange( false, 0, 5, 2 )
@@ -1173,9 +1230,8 @@ var baseShuffle = function ( iterable, size ) {
 };
 
 /**
- * Executes the `callback` function
- * `times` times, and returns an array
- * with the results of its execution.
+ * Executes the `callback` function `times` times, and returns an array with
+ * the results of its execution.
  */
 var baseTimes = function ( times, callback ) {
   var i = 0,
@@ -1189,8 +1245,8 @@ var baseTimes = function ( times, callback ) {
 };
 
 /**
- * Returns a valid index for an array with
- * the `length` length from the `value`.
+ * Returns a valid index for an array with the `length` length from the
+ * `value`.
  */
 
 // baseToIndex( -1, 10 ); // -> 9
@@ -1228,7 +1284,7 @@ var baseToPairs = function ( object, keys ) {
 };
 
 /**
- * Retruns values of the `object`.
+ * Returns values of the `object`.
  */
 
 // baseValues( { a: 10, b: 20 }, [ 'a', 'b' ] );
@@ -1489,8 +1545,9 @@ var toCamelCase = function () {
   };
 }();
 
+/** @todo Compare (in perfomance) with the old version. */
 var getType = function ( value ) {
-  var type;
+  var type, tag;
 
   if ( value === null ) {
     return 'null';
@@ -1506,13 +1563,13 @@ var getType = function ( value ) {
     return type;
   }
 
-  type = types[ type = toString.call( value ) ];
+  type = types[ tag = toString.call( value ) ];
 
   if ( type ) {
     return type;
   }
 
-  return ( types[ type ] = type.slice( 8, -1 ).toLowerCase() );
+  return ( types[ tag ] = tag.slice( 8, -1 ).toLowerCase() );
 };
 
 var getIteratee = function ( value ) {
@@ -1631,9 +1688,11 @@ var has = function ( key, object ) {
 /**
  * `Date.now()` polyfill.
  *
+ * @category Utility Methods
  * @method now
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.0.4
  * @returns {Number}
  * @example
  *
@@ -1644,12 +1703,13 @@ var getTime = Date.now || function () {
 };
 
 /**
- * Returns a function that can only be called `n`
- * times. NOTE: Behave differently from Lodash
- * `_.before()`.
+ * Returns a function that can only be called `n` times. NOTE: Behave
+ * differently from Lodash `_.before()`.
  *
- * @memberOf _
+ * @category Function
+ * @memberof _
  * @static
+ * @since 0.1.0
  * @param {Number} n
  * @param {Function} target
  * @returns {Function}
@@ -1711,9 +1771,11 @@ var bind = function () {
   /**
    * Binds the `target` function to the `context`.
    *
+   * @category Function
    * @method bind
-   * @memberOf _
+   * @memberof _
    * @static
+   * @since 0.0.4
    * @param {Function} target
    * @param {*} context
    * @param {...*} partialArgs
@@ -1755,8 +1817,10 @@ var bind = function () {
 /**
  * Returns a number that doesn't go out of bounds `lower` and `upper`.
  *
- * @memberOf _
+ * @category Number
+ * @memberof _
  * @static
+ * @since 0.0.1
  * @param {Number} value The number to clamp.
  * @param {Number} lower The lower bound.
  * @param {Number} upper The upper bound.
@@ -1781,10 +1845,12 @@ var clamp = function ( value, lower, upper ) {
 /**
  * Creates a clone of the `target` object.
  *
- * @memberOf _
+ * @category Object
+ * @memberof _
  * @static
+ * @since 0.0.1
  * @param {Boolean} [deep=true] Recursively clone the target?
- * @param {!*} target The target to clone.
+ * @param {!*} target The object to clone.
  * @example
  *
  * var Person = function ( greeting ) {
@@ -1799,9 +1865,12 @@ var clamp = function ( value, lower, upper ) {
  * var person = new Person( 'Hello!' ),
  *     clone = _.clone( person );
  *
- * clone.greet(); // -> 'Hello!'
- * clone.person; // -> clone
- * clone instanceof Person; // -> true
+ * clone.greet();
+ * // -> 'Hello!'
+ * clone.person;
+ * // -> clone
+ * clone instanceof Person;
+ * // -> true
  */
 var clone = function ( deep, target, guard ) {
   var cln;
@@ -1827,14 +1896,15 @@ var clone = function ( deep, target, guard ) {
 };
 
 /**
- * Creates an array with elements from the `iterable`
- * array. NOTE: You can use `<Array>.slice()`, but in
- * some situations `_.cloneArray()` works much faster
- * (for array-like objects).
+ * Creates an array with elements from the `iterable` array. NOTE: You can
+ * use `<Array>.slice()`, but in some situations `_.cloneArray()` works much
+ * faster (for array-like objects).
  *
- * @memberOf _
+ * @category Collection
+ * @memberof _
  * @static
- * @param {Array|Object|String} iterable The array-like value to clone.
+ * @since 0.0.4
+ * @param {Object|String} iterable The array-like value to clone.
  * @returns {Array} The clone of `iterable`.
  * @example
  *
@@ -1858,9 +1928,11 @@ var cloneArray = function ( iterable ) {
 /**
  * Returns array without falsy values.
  *
- * @memberOf _
+ * @category Collection
+ * @memberof _
  * @static
- * @param {Array|Object} iterable The array-like object to compact.
+ * @since 0.0.4
+ * @param {Object} iterable The array-like object to compact.
  * @returns {Array} A new compacted array.
  * @example
  *
@@ -1891,13 +1963,14 @@ var constant = function ( value ) {
 /**
  * Polyfill for the `Object.create()` method.
  *
+ * @category Object
  * @method create
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.0.4
  * @param {null|Object} prototype The prototype of a new object.
- * @param {Object} [descriptors]
- *   The descriptors to assign in the new object via
- *   [`_.defineProperties()`]{@link _.defineProperties}.
+ * @param {Object} [descriptors] The descriptors to assign in the new object
+ *  via [`_.defineProperties()`]{@link _.defineProperties}.
  * @returns {Array} A new created object with `prototype`.
  * @example
  *
@@ -1942,8 +2015,10 @@ var create = Object.create || function () {
 /**
  * Returns `defaultValue` when `value` is `null`, `undefined`, or `NaN`.
  *
- * @memberOf _
+ * @category Utility Methods
+ * @memberof _
  * @static
+ * @since 0.1.0
  * @param {*} value The value to check.
  * @param {*} defaultValue The default value.
  * @returns {*} Returns `value` or `defaultValue`.
@@ -1969,9 +2044,11 @@ var defaultTo = function ( value, defaultValue ) {
 /**
  * Polyfill for the `Object.defineProperties()` method.
  *
+ * @category Object
  * @method defineProperties
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.0.4
  * @param {Object} object The object to modificate.
  * @param {Object} descriptors The descriptors to define.
  * @returns {Object} The object in which properties were defined.
@@ -2023,9 +2100,11 @@ function ( object, descriptors ) {
 /**
  * Polyfill for the `Object.defineProperty()` method.
  *
+ * @category Object
  * @method defineProperty
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.0.4
  * @param {Object} object The object to modificate.
  * @param {String} key The key of defined property.
  * @param {Object} descriptor The descriptor to define.
@@ -2066,12 +2145,13 @@ var equal = function ( a, b ) {
 };
 
 /**
- * It's like `<RegExp>.exec()`, but it works as
- * `<String>.match()` with the global flag.
+ * It's like `<RegExp>.exec()`, but it works as `<String>.match()` with the
+ * global flag.
  *
  * @method exec
- * @memberOf _
+ * @memberof _
  * @static
+ * @since 0.1.0
  * @param {RegExp} regexp
  * @param {String} string
  * @returns {Array}
@@ -2098,13 +2178,23 @@ var defaultIndex = function ( value, length, defaultValue ) {
 
 /**
  * Fill the `iterable` array from `start` to `end` index with `value`.
+ *
+ * @category Collection
+ * @memberof _
+ * @static
+ * @since 0.0.4
+ * @param {Object} iterable The array to fill the values in it.
+ * @param {*} value The value that should be in the array.
+ * @param {Number} [start=0] From where will be started filling the array?
+ * @param {Number} [end=iterable.length] Up to where fill the array?
+ * @returns {Object}
+ * @example
+ *
+ * _.fill( Array( 5 ), 0 );
+ * // -> [ 0, 0, 0, 0, 0 ]
+ * _.fill( [ 'a', null, null, null, 'z' ], '.', 1, -1 );
+ * // -> [ 'a', '.', '.', '.', 'z' ]
  */
-
-// _.fill( Array( 5 ), 0 );
-// // -> [ 0, 0, 0, 0, 0 ]
-// _.fill( [ 'a', null, null, null, 'z' ], '.', 1, -1 );
-// // -> [ 'a', '.', '.', '.', 'z' ]
-
 var fill = function ( iterable, value, start, end ) {
   var length = getLength( iterable = toObject( iterable ) );
 
@@ -2119,35 +2209,52 @@ var fill = function ( iterable, value, start, end ) {
 };
 
 /**
- * Flattens the `iterable` array by reduce the number of
- * dimensions in it on `depth` value (default - Infinity).
+ * Flattens the `iterable` array by reduce the number of dimensions in it on
+ * `depth` value (default - Infinity).
+ *
+ * @category Collection
+ * @memberof _
+ * @static
+ * @since 0.0.5
+ * @param {Object} iterable The array to flatten.
+ * @param {Number} [depth=Infinity] How many levels to remove?
+ * @returns {Object}
+ * @example
+ *
+ * var weirdArray = [
+ *   [ [ [ "I'm in the array!" ] ] ]
+ * ];
+ *
+ * _.flatten( weirdArray );
+ * // -> [ "I'm in the array!" ];
+ * _.flatten( weirdArray, 2 );
+ * // -> [ [ "I'm in the array!" ] ];
  */
-
-// var weirdArray = [
-//   [ [ "I'm in the array!" ] ]
-// ];
-//
-// _.flatten( weirdArray );
-// // -> [ "I'm in the array!" ];
-// _.flatten( weirdArray, 1 );
-// // -> [ [ "I'm in the array!" ] ];
-
 var flatten = function ( iterable, depth ) {
   return baseFlatten( toObject( iterable ), [], defaultTo( depth, Infinity ) );
 };
 
 /**
- * Makes an object from the pairs (see `_.toPairs()`).
+ * Makes an object from the pairs.
+ *
+ * @category Object
+ * @memberof _
+ * @static
+ * @since 0.1.0
+ * @param {Array} pairs The array of pairs that contains the values like: [ key, value ].
+ * @returns {Object}
+ * @example
+ *
+ * _.fromPairs( [
+ *   [ 'name', 'Josh' ]
+ * ] );
+ * // -> { name: 'Josh' }
+ *
+ * _.fromPairs( _.toPairs( { one: 1 } ) );
+ * // -> { one: 1 }
+ *
+ * @see _.toPairs
  */
-
-// _.fromPairs( [
-//   [ 'name', 'Josh' ]
-// ] );
-// // -> { name: 'Josh' }
-//
-// _.fromPairs( _.toPairs( { one: 1 } ) );
-// // -> { one: 1 }
-
 var fromPairs = function ( pairs ) {
   var i = 0,
       length = pairs.length,
@@ -2162,6 +2269,12 @@ var fromPairs = function ( pairs ) {
 
 /**
  * Polyfill for the `perfomance.now()` method.
+ *
+ * @category Utility Methods
+ * @method timestamp
+ * @memberof _
+ * @static
+ * @returns {Number}
  */
 var timestamp = function () {
   var perfomance = window.perfomance,
@@ -2206,9 +2319,8 @@ var toPath = function ( value ) {
 };
 
 /**
- * Returns the value at path of the object. If the
- * third argument passed, it will be set to the path,
- * if the path doesn't exists, it will be created.
+ * Returns the value at path of the object. If the third argument passed, it
+ * will be set to the path, if the path doesn't exists, it will be created.
  */
 
 // var object = {},
@@ -2242,62 +2354,51 @@ var default_file_options = {
 };
 
 /**
- * This function will be called when the file is
- * loaded successfully. `this` in this functios
- * will point to the <XMLHttpRequest> object
- * that was used to load the file.
+ * This function will be called when the file is loaded successfully. `this`
+ * in this function will point to the &lt;XMLHttpRequest&gt; object that was
+ * used to load the file.
  * @callback FileLoadedCallback
  * @param {String} data The content of the loaded file.
  * @param {String} path The path of the loaded file.
- * @param {FileOptions} options The options that given into the `_.file()` method.
+ * @param {FileOptions} options The options that given into the `_.file()`
+ *  method.
  */
 
 /**
- * This function will be called when the error
- * occur while loading the file. `this` in this
- * functios will point to the <XMLHttpRequest>
- * object that was used to load the file.
+ * This function will be called when the error occur while loading the file.
+ * `this` in this function will point to the &lt;XMLHttpRequest&gt; object
+ * that was used to load the file.
  * @callback LoadingFileErrorCallback
  * @param {String} path The path of the file that failed to load.
- * @param {FileOptions} options The options that given into the `_.file()` method.
+ * @param {FileOptions} options The options that given into the `_.file()`
+ *  method.
  */
 
 /**
  * This options used in [`_.file()`]{@link _.file}.
  * @typedef FileOptions
  * @type {Object}
- * @property {String} [path]
- *   The path of the file to be loaded.
- * @property {Boolean} [async]
- *   Use an asynchronous request?
- * @property {FileLoadedCallback} [onload]
- *   This function will be called when the file
- *   is loaded successfully.
- * @property {LoadingFileErrorCallback} [onerror]
- *   This function will be called when the error
- *   occur while loading the file.
- * @property {Number} [timeout=60000]
- *   If the load time for the file needs more
- *   than this limit, it will be canceled.
+ * @property {String} [path] The path of the file to be loaded.
+ * @property {Boolean} [async] Use an asynchronous request?
+ * @property {FileLoadedCallback} [onload] This function will be called when
+ *  the file is loaded successfully.
+ * @property {LoadingFileErrorCallback} [onerror] This function will be
+ *  called when the error occur while loading the file.
+ * @property {Number} [timeout=60000] If the load time for the file needs
+ *  more than this limit, it will be canceled.
  */
 
 /**
  * Returns the contents of the file at the path.
  *
- * @memberOf _
+ * @category Utility Methods
+ * @memberof _
  * @static
- *
- * @param {String} [path]
- *   The path of the file to be loaded.
- * @param {FileOptions} [options]
- *   File load options.
- * @returns {null|String}
- *   When the request wasn't asynchronous, it
- *   returns the contents of the file.
- *
- * @example
- *
- * // Use cases:
+ * @param {String} [path=options.path] The path of the file to be loaded.
+ * @param {FileOptions} [options] File load options.
+ * @returns {null|String} When the request wasn't asynchronous, it returns
+ *  the contents of the file.
+ * @example <caption>Use Cases</caption>
  *
  * // 1. async = false
  * _.file( path );
@@ -2305,6 +2406,8 @@ var default_file_options = {
  * _.file( path, options );
  * // 3. async = options.async || true
  * _.file( options );
+ *
+ * @see _.fetch
  */
 var file = function ( path, options ) {
 
@@ -2369,6 +2472,8 @@ var file = function ( path, options ) {
 
 /**
  * The `Object.getPrototypeOf()` polyfill.
+ *
+ * @category Object
  */
 var getPrototypeOf = Object.getPrototypeOf || function ( target ) {
   var prototype, constructor;
@@ -2505,13 +2610,15 @@ var method = function ( path ) {
     throw Error( 'An empty _.method() path' );
   }
 
-  return len > 1 ? ( key = path[ path.length - 1 ], function ( object ) {
+  key = path[ path.length - 1 ];
+
+  return len > 1 ? function ( object ) {
     if ( object != null && ( object = baseAccessor( object, path, 1 ) ) != null ) {
       return apply( object[ key ], object, args );
     }
-  } ) : function ( object ) {
+  } : function ( object ) {
     if ( object != null ) {
-      return apply( object[ path ], object, args );
+      return apply( object[ key ], object, args );
     }
   };
 };
@@ -2936,11 +3043,17 @@ var Event = function ( source, options ) {
 
     this.originalEvent = source;
 
-    this.target = source.target && source.target.nodeType === 3 ?
-      source.target.parentNode : source.target;
+    if ( source.target ) {
+      if ( source.target.nodeType === 3 ) {
+        this.target = source.target.parentNode;
+      } else {
+        this.target = source.target;
+      }
+    }
 
     this.which = event.which( source );
   } else {
+    this.isTrusted = false;
     this.type = source;
   }
 
@@ -2997,7 +3110,7 @@ var event = {
   /**
    * Adds the event listener to the target,  with considering IE.
    */
-  on: function ( target, type, listener, use_capture, one ) {
+  on: function ( target, type, selector, listener, use_capture, one ) {
     var item;
 
     if ( use_capture === undefined ) {
@@ -3007,34 +3120,42 @@ var event = {
     item = {
       use_capture: use_capture,
       listener: listener,
+      selector: selector,
       target: target,
       one: one
     };
 
     if ( support.addEventListener ) {
-      if ( one ) {
-        item.wrapper = function ( ev ) {
-          event.off( target, type, listener, use_capture );
-          listener.call( target, ev );
-        };
-      } else {
-        item.wrapper = listener;
-      }
-
-      target.addEventListener( type, item.wrapper, use_capture );
-    } else if ( typeof listener == 'function' ) {
-      item.wrapper = function ( ev ) {
-        if ( type === 'DOMContentLoaded' && target.readyState !== 'complete' ) {
+      // el to call from trigger
+      item.wrapper = function ( ev, el ) {
+        if ( selector && !el && !( el = closestNode( ev.target, selector ) ) ) {
           return;
         }
 
         if ( one ) {
-          event.off( target, type, listener, use_capture );
+          event.off( target, type, selector, listener, use_capture );
+        }
+
+        listener.call( el || target, new Event( ev ) );
+      };
+
+      target.addEventListener( type, item.wrapper, use_capture );
+    } else if ( typeof listener == 'function' ) {
+      // el to call from trigger
+      item.wrapper = function ( ev, el ) {
+        if ( selector && !el && !( el = closestNode( ev.target, selector ) ) ||
+             type === 'DOMContentLoaded' && target.readyState !== 'complete' )
+        {
+          return;
+        }
+
+        if ( one ) {
+          event.off( target, type, selector, listener, use_capture );
         }
 
         ev = new Event( ev || window.event );
         ev.type = type;
-        listener.call( target, ev );
+        listener.call( el || target, ev );
       };
 
       target.attachEvent(
@@ -3064,14 +3185,14 @@ var event = {
   // // remove all listeners:
   // event.off( window );
 
-  off: function ( target, type, listener, use_capture ) {
+  off: function ( target, type, selector, listener, use_capture ) {
     var i, remove_all, items, item;
 
     // remove all listeners.
     // event.off( target );
     if ( type === undefined ) {
       for ( i = __event_list_types.length - 1; i >= 0; --i ) {
-        event.off( target, __event_list_types[ i ] );
+        event.off( target, __event_list_types[ i ], selector );
       }
 
       return;
@@ -3130,7 +3251,7 @@ var event = {
   trigger: function ( target, type, data ) {
     var i = 0,
         items = __event_list[ type ],
-        item, event;
+        item, clos;
 
     if ( !items ) {
       return;
@@ -3139,15 +3260,28 @@ var event = {
     for ( ; i < items.length; ++i ) {
       item = items[ i ];
 
-      if ( item.target !== target && target ) {
+      if ( target ) {
+        clos = closestNode( target, item.selector || item.target );
+      } else if ( item.selector ) {
+        new DOMWraper( item.selector ).each( function () {
+          item.wrapper( event.__create( type, data, this ), this );
+        } );
+
         continue;
+      } else {
+        clos = item.target;
       }
 
-      event = new Event( type, data );
-      event.target = target || item.target;
-      event.isTrusted = false;
-      item.wrapper.call( target, event );
+      if ( clos ) {
+        item.wrapper( event.__create( type, data, target || clos ), clos );
+      }
     }
+  },
+
+  __create: function ( type, data, target ) {
+    var ev = new Event( type, data );
+    ev.target = target;
+    return ev;
   },
 
   copy: function ( target, source, deep ) {
@@ -3166,7 +3300,7 @@ var event = {
         item = items[ j ];
 
         if ( item.target === source ) {
-          event.on( target, type, item.listener, item.use_capture, item.one );
+          event.on( target, type, null, item.listener, item.use_capture, item.one );
         }
       }
     }
@@ -3474,6 +3608,25 @@ function ( selector ) {
   return null;
 };
 
+var closestNode = function ( el, clos ) {
+  if ( typeof clos == 'string' ) {
+    // we can get document or window from event.trigger
+    if ( el.nodeType !== 1 ) {
+      return null;
+    }
+
+    return closest.call( el, clos );
+  }
+
+  do {
+    if ( el === clos ) {
+      return el;
+    }
+  } while ( ( el = el.parentNode ) );
+
+  return null;
+};
+
 var parseHTML = function ( data, context ) {
   var match = regexps.single_tag.exec( data );
 
@@ -3488,6 +3641,35 @@ var parseHTML = function ( data, context ) {
 
 support.getElementsByClassName = 'getElementsByClassName' in document;
 
+/**
+ * This class representing a wrapper for the DOM elements.
+ *
+ * @class DOMWrapper
+ * @memberof _
+ * @static
+ * @param {DOMElement}      selector This element
+ *  will be added to the new object.
+ * @param {String}          selector When the
+ *  selector string contains HTML content, it will
+ *  be parsed and added to the new object, if it
+ *  doesn't, then will be added elements selected
+ *  by the CSS selector.
+ * @param {ArrayLikeObject} selector Elements
+ *  from `selector` will be copied to the new
+ *  object.
+ * @param {Function}        selector It's the
+ *  shorthand for `_( document ).ready()`.
+ *
+ * @example <caption>Handle the page loaded event</caption>
+ *
+ * var onready = function () {
+ *   _( '#element' ).text( 'The page is loaded' );
+ * };
+ *
+ * // Two lines below will do the same things.
+ * _( document ).ready( onready );
+ * _( onready );
+ */
 var DOMWrapper = function ( selector ) {
   var match, list, i;
 
@@ -3558,7 +3740,7 @@ var DOMWrapper = function ( selector ) {
  * @class _
  * @alias peako
  * @param {DOMElement|String|ArrayLikeObject|Function} selector
- * @returns {DOMWrapper}
+ * @returns {_.DOMWrapper}
  */
 var peako = function ( input ) {
   return new DOMWrapper( input );
@@ -3570,13 +3752,51 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
     this.length = 1;
   },
 
-  get: function ( i ) {
-    return i === undefined ?
-      baseCloneArray( this ) : this[ i < 0 ? this.length + i : i ];
+  /**
+   * Returns the element at the `index` position
+   * (may be negative for counting from the end).
+   * If `index` isn't passed, then the built-in
+   * array with all elements of this object will
+   * be returned.
+   * @memberof _.DOMWrapper
+   * @param {Number} [index] The position of the
+   * needed element.
+   * @returns {DOMElement|Array} Returns the
+   * picked element or array of all elements.
+   *
+   * @example <caption>Pick a specific element</caption>
+   * var $div = _( 'div' ),
+   *     $firstDiv = $div.get( 0 ),
+   *     $lastDiv = $div.get( -1 );
+   *
+   * @example <caption>Get all elements</caption>
+   * // Get all elements and use bulit-in array method.
+   * var selected = _( 'div' ).get().find( function ( div ) {
+   *   return /stuff-\d+-selected/.test( div.className );
+   * } );
+   */
+  get: function ( index ) {
+    if ( index === undefined ) {
+      return baseCloneArray( this );
+    }
+
+    if ( index < 0 ) {
+      return this[ this.length + index ];
+    }
+
+    return this[ index ];
   },
 
-  eq: function ( i ) {
-    return this.pushStack( i === undefined ? this : [ this.get( i ) ] );
+  eq: function ( index ) {
+    if ( index === undefined ) {
+      return this.pushStack( this );
+    }
+
+    if ( index < 0 ) {
+      return this.pushStack( [ this[ this.length + index ] ] );
+    }
+
+    return this.pushStack( [ this[ index ] ] );
   },
 
   each: function ( iteratee ) {
@@ -3593,31 +3813,34 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   },
 
   style: function ( name, value ) {
-    var addUnit = 0;
+    var state = 0;
 
-    if ( isString( name ) ) {
+    if ( value !== undefined && typeof name == 'string' ) {
       if ( !cssNumbers[ toCamelCase( name ) ] ) {
-        if ( typeof value == 'function' ) {
-          addUnit = 1;
-        } else if ( isNumber( value ) ) {
+        if ( typeof value == 'number' ) {
+          // Change the value immediately.
           value += 'px';
+        } else if ( typeof value == 'function' ) {
+          // We will check the value later.
+          state = 1;
         }
       }
     } else if ( isObject( name ) ) {
-      addUnit = 2;
+      // Also check the value later.
+      state = 2;
     }
 
-    return access( this, function ( element, name, value, setStyle ) {
+    return access( this, function ( element, name, value, set ) {
       if ( element.nodeType !== 1 ) {
         return null;
       }
 
-      if ( !setStyle ) {
+      if ( !set ) {
         return getStyle( element, name );
       }
 
-      if ( ( addUnit === 2 ? !cssNumbers[ toCamelCase( name ) ] : addUnit === 1 ) &&
-        isNumber( value ) )
+      if ( typeof value == 'number' &&
+        ( state === 1 || state === 2 && !cssNumbers[ toCamelCase( name ) ] ) )
       {
         value += 'px';
       }
@@ -3626,42 +3849,42 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
     }, name, value, arguments.length > 1, null );
   },
 
+  /**
+   * Add classes to all elements.
+   *
+   * @memberof _.DOMWrapper.prototype
+   * @chainable
+   * @param {String|Function} classes The classes
+   * that should be added to the elements, or the
+   * function that will be called (with the
+   * element index and current element classes)
+   * once for each element, and returns the
+   * classes that need to be added.
+   *
+   * @example <caption>Using a string</caption>
+   * _( 'div' ).addClass( 'something blue' );
+   * _( document.body ).addClass( 'mobile' );
+   *
+   * @example <caption>Using a function</caption>
+   * _( 'tr' ).addClass( function ( rowIndex, className ) {
+   *   if ( rowIndex % 2 ) {
+   *     return 'light';
+   *   }
+   *
+   *   return 'light-grey';
+   * } );
+   */
   addClass: function ( classes ) {
-    var raw = typeof classes != 'function',
+    var callable = typeof classes == 'function',
         i = this.length - 1,
-        element;
+        el;
 
     for ( ; i >= 0; --i ) {
-      if ( ( element = this[ i ] ).nodeType === 1 ) {
-        classList.add( element, raw ?
-          classes :
-          classes.call( element, i, element.className ) );
-      }
-    }
-
-    return this;
-  },
-
-  removeClass: function ( classes ) {
-    var all = classes === undefined,
-        fn = !all && typeof classes === 'function',
-        re = !fn && getType( classes ) === 'regexp',
-        i = this.length - 1,
-        element;
-
-    for ( ; i >= 0; --i ) {
-      if ( ( element = this[ i ] ).nodeType === 1 ) {
-        switch ( true ) {
-          case all:
-            element.className = ''; break;
-          case re:
-            classList.removeWithRegexp( element, classes ); break;
-          case fn:
-            classList.remove( element,
-              classes.call( element, i, element.className ) );
-            break;
-          default:
-            classList.remove( element, classes );
+      if ( ( el = this[ i ] ).nodeType === 1 ) {
+        if ( callable ) {
+          classList.add( el, classes.call( el, i, el.className ) );
+        } else {
+          classList.add( el, classes );
         }
       }
     }
@@ -3669,20 +3892,118 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
     return this;
   },
 
-  toggleClass: function ( classes, state ) {
-    if ( state !== undefined ) {
-      return this[ state ? 'addClass' : 'removeClass' ]( classes );
-    }
-
-    var raw = typeof classes != 'function',
+  /**
+   * @memberof _.DOMWrapper.prototype
+   * @chainable
+   *   @param {String} [classes] The classes that
+   * should be removed from the elements.
+   *   @param {Function} [classes] The function that
+   * will be called (with the element index and
+   * current element classes) once for each
+   * element, and returns which classes should be
+   * removed.
+   *   @param {RegExp} [classes] You can remove
+   * classes that match the RegEx pattern.
+   *
+   * @example <caption>Using a string</caption>
+   * _( 'div' ).removeClass( 'something blue' );
+   * _( document.body ).removeClass( 'mobile' );
+   *
+   * @example <caption>Using a function</caption>
+   * _( 'div' ).removeClass( function ( divIndex, className ) {
+   *   if ( divIndex > 0 ) {
+   *     return 'one';
+   *   }
+   *
+   *   return 'two';
+   * } );
+   *
+   * @example <caption>Using a pattern</caption>
+   * _( 'div' ).removeClass( /stuff-\d+/ );
+   *
+   * @example <caption>Remove all classes</caption>
+   * _( 'div' ).removeClass();
+   */
+  removeClass: function ( classes ) {
+    var all = classes === undefined,
+        fn = !all && typeof classes === 'function',
+        re = !fn && getType( classes ) === 'regexp',
         i = this.length - 1,
-        element;
+        el;
 
     for ( ; i >= 0; --i ) {
-      if ( ( element = this[ i ] ).nodeType === 1 ) {
-        classList.toggle( element, raw ?
-          classes :
-          classes.call( element, i, element.className ) );
+      if ( ( el = this[ i ] ).nodeType === 1 ) {
+        switch ( true ) {
+          case all:
+            el.className = '';
+            break;
+          case re:
+            classList.removeWithRegexp( el, classes );
+            break;
+          case fn:
+            classList.remove( el, classes.call( el, i, el.className ) );
+            break;
+          default:
+            classList.remove( el, classes );
+        }
+      }
+    }
+
+    return this;
+  },
+
+  /**
+   * @memberof _.DOMWrapper.prototype
+   * @chainable
+   *   @param {String} [classes] The classes that
+   * should be removed from the elements.
+   *   @param {Function} [classes] The function that
+   * will be called (with the element index and
+   * current element classes) once for each
+   * element, and returns which classes should be
+   * removed.
+   *   @param {RegExp} [classes] You can remove
+   * classes that match the RegEx pattern.
+   *
+   * @example <caption>Using a string</caption>
+   * _( 'div' ).removeClass( 'something blue' );
+   * _( document.body ).removeClass( 'mobile' );
+   *
+   * @example <caption>Using a function</caption>
+   * _( 'div' ).removeClass( function ( divIndex, className ) {
+   *   if ( divIndex > 0 ) {
+   *     return 'one';
+   *   }
+   *
+   *   return 'two';
+   * } );
+   *
+   * @example <caption>Using a pattern</caption>
+   * _( 'div' ).removeClass( /stuff-\d+/ );
+   *
+   * @example <caption>Remove all classes</caption>
+   * _( 'div' ).removeClass();
+   */
+  toggleClass: function ( classes, state ) {
+    var callable, i, el;
+
+    if ( state !== undefined ) {
+      if ( state ) {
+        return this.addClass( classes );
+      }
+      
+      return this.removeClass( classes );
+    }
+
+    callable = typeof classes == 'function';
+
+    for ( i = this.length - 1; i >= 0; --i ) {
+      if ( ( el = this[ i ] ).nodeType === 1 ) {
+        if ( callable ) {
+          classList.toggle( el, classes.call( el, i, el.className ) );
+        } else {
+          classList.toggle( el, classes );
+        }
       }
     }
 
@@ -3691,12 +4012,10 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
 
   hasClass: function ( classes ) {
     var i = this.length - 1,
-        element;
+        el;
 
     for ( ; i >= 0; --i ) {
-      if ( ( element = this[ i ] ).nodeType === 1 &&
-        classList.has( element, classes ) )
-      {
+      if ( ( el = this[ i ] ).nodeType === 1 && classList.has( el, classes ) ) {
         return true;
       }
     }
@@ -3705,27 +4024,27 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   },
 
   offset: function ( options ) {
-    var element, document, root, body,
-        offset, byCallback, i, style, win;
+    var el, doc, root, body,
+        off, callable, i, style, win;
 
-    if ( !arguments.length ) {
-      element = this[ 0 ];
+    if ( options == null ) {
+      el = this[ 0 ];
 
-      if ( !element || element.nodeType !== 1 ) {
+      if ( !el || el.nodeType !== 1 ) {
         return null;
       }
 
-      document = element.ownerDocument;
-      root = document.documentElement;
-      body = document.body;
-      win = document.defaultView;
-      offset = element.getBoundingClientRect();
+      doc = el.ownerDocument;
+      root = doc.docElement;
+      body = doc.body;
+      win = doc.defaultView;
+      off = el.getBoundingClientRect();
 
       return {
-        top: offset.top +
+        top: off.top +
           ( win.pageYOffset || root.scrollTop || body.scrollTop ) -
           ( root.clientTop || body.clientTop || 0 ),
-        left: offset.left +
+        left: off.left +
           ( win.pageXOffset || root.scrollLeft || body.scrollLeft ) -
           ( root.clientLeft || body.clientLeft || 0 )
       };
@@ -3735,24 +4054,26 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
       throw TypeError( ERR_INVALID_ARGS );
     }
 
-    byCallback = typeof options == 'function';
+    callable = typeof options == 'function';
 
     for ( i = this.length - 1; i >= 0; --i ) {
-      element = this[ i ];
+      el = this[ i ];
 
-      if ( element.nodeType !== 1 ) {
+      if ( el.nodeType !== 1 ) {
         continue;
       }
 
-      offset = byCallback ?
-        options.call( element, i, new DOMWrapper( element ).offset() ) :
-        options;
+      if ( callable ) {
+        off = options.call( el, i, new DOMWrapper( el ).offset() );
+      } else {
+        off = options;
+      }
 
-      style = element.style;
-      style.top = offset.top + 'px';
-      style.left = offset.left +'px';
+      style = el.style;
+      style.top = off.top + 'px';
+      style.left = off.left +'px';
 
-      if ( getStyle( element, 'position' ) === 'static' ) {
+      if ( getStyle( el, 'position' ) === 'static' ) {
         style.position = 'relative';
       }
     }
@@ -3760,6 +4081,9 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
     return this;
   },
 
+  /**
+   *
+   */
   is: function ( selector ) {
     for ( var i = this.length - 1; i >= 0; --i ) {
       if ( is( this[ i ], selector, i ) ) {
@@ -3923,6 +4247,10 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
     return els;
   },
 
+  filter: function ( selector ) {
+    return this.__filter( selector, false );
+  },
+
   not: function ( selector ) {
     return this.__filter( selector, true );
   },
@@ -4009,8 +4337,7 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
         nodeType === 3 ||
         nodeType === 8 ||
         nodeType === 9 ||
-        nodeType === 11
-      ) && ( parentNode = this.parentNode ) )
+        nodeType === 11 ) && ( parentNode = this.parentNode ) )
       {
         parentNode.removeChild( this );
       }
@@ -4018,35 +4345,32 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   },
 
   ready: function ( callback ) {
-    var document = this[ 0 ],
-        readyState;
+    var doc = this[ 0 ],
+        state;
 
-    if ( !document || document.nodeType !== 9 ) {
+    if ( !doc || doc.nodeType !== 9 ) {
       return this;
     }
 
-    readyState = document.readyState;
+    state = document.readyState;
 
-    if ( document.attachEvent ?
-      readyState === 'complete' :
-      readyState !== 'loading' )
-    {
-      callback( peako );
-    } else {
-      event.on( document, 'DOMContentLoaded', function () {
+    if ( doc.attachEvent ? state !== 'complete' : state === 'loading' ) {
+      event.on( doc, 'DOMContentLoaded', null, function () {
         callback( peako );
       }, false, true );
+    } else {
+      callback( peako );
     }
 
     return this;
   },
 
-  pushStack: function ( elements ) {
+  pushStack: function ( els ) {
     var wrapper = new DOMWrapper();
 
-    if ( elements ) {
-      baseCopyArray( wrapper, elements );
-      wrapper.length = elements.length;
+    if ( els ) {
+      baseCopyArray( wrapper, els );
+      wrapper.length = els.length;
     }
 
     wrapper.prevObject = this;
@@ -4055,10 +4379,6 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
 
   end: function () {
     return this.prevObject || new DOMWrapper();
-  },
-
-  filter: function ( selector ) {
-    return this.__filter( selector, false );
   },
 
   first: function () {
@@ -4070,28 +4390,30 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   },
 
   map: function ( callback ) {
-    var i = 0,
-        length = this.length,
-        temp = new DOMWrapper(),
-        element;
+    var els = this.pushStack(),
+        len = this.length,
+        el, i;
 
-    temp.length = this.length;
+    els.length = this.length;
 
-    for ( ; i < length; ++i ) {
-      temp[ i ] = callback.call( element = this[ i ], i, element );
+    for ( i = 0; i < len; ++i ) {
+      els[ i ] = callback.call( el = this[ i ], i, el );
     }
 
-    return temp;
+    return els;
   },
 
   clone: function ( deep ) {
-    if ( !arguments.length ) {
+    if ( deep === undefined ) {
       deep = true;
     }
 
     return this.map( function ( element ) {
-      return element.nodeType === 1 ?
-        cloneNode( element, deep ) : element;
+      if ( element.nodeType === 1 ) {
+        return cloneNode( element, deep );
+      }
+
+      return element;
     } );
   },
 
@@ -4145,9 +4467,7 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   toggle: function ( state ) {
     return this.each( function () {
       if ( this.nodeType === 1 ) {
-        if ( state === undefined ?
-          getStyle( this, 'display' ) === 'none' : state )
-        {
+        if ( state === undefined ? getStyle( this, 'display' ) === 'none' : state ) {
           show.call( this );
         } else {
           hide.call( this );
@@ -4162,12 +4482,15 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
         target, id;
 
     if ( delay === undefined ) {
-      delay = ontouch || touch === undefined ?
-        300 : touch;
+      if ( ontouch || touch === undefined ) {
+        delay = 300;
+      } else {
+        delay = touch;
+      }
     }
 
     return this
-      .touchstart( function ( event ) {
+      .on( 'touchstart', function ( event ) {
         target = this;
 
         id = window.setTimeout( function () {
@@ -4175,7 +4498,7 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
           longtouch.call( target, event );
         }, delay );
       } )
-      .touchend( function ( event ) {
+      .on( 'touchend', function ( event ) {
         window.clearTimeout( id );
 
         if ( ontouch && touched ) {
@@ -4193,11 +4516,11 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
 forOwnRight( {
   next: 'nextSibling',
   prev: 'previousSibling'
-}, function ( nextSibling, name ) {
+}, function ( sibling, name ) {
   this[ name ] = function ( selector ) {
     var els = this.pushStack(),
         len = this.length,
-        sibling, el, i;
+        sib, el, i;
 
     for ( i = 0; i < len; ++i ) {
       el = this[ i ];
@@ -4207,10 +4530,10 @@ forOwnRight( {
       }
 
       // Skip some weird stuff (spaces, comments, whatever...)
-      while ( ( sibling = el[ nextSibling ] ) && sibling.nodeType !== 1 );
+      while ( ( sib = el[ sibling ] ) && sib.nodeType !== 1 );
 
-      if ( sibling && ( !selector || is( sibling, selector, i ) ) ) {
-        els[ els.length++ ] = sibling;
+      if ( sib && ( !selector || is( sib, selector, i ) ) ) {
+        els[ els.length++ ] = sib;
       }
     }
 
@@ -4220,21 +4543,26 @@ forOwnRight( {
 
 forOwnRight( {
   value: 'value',
-  text: 'textContent' in body ? 'textContent' : 'innerText',
-  html: 'innerHTML'
+  /* todo make it cross-browser */
+  text : 'textContent' in body ? 'textContent' : 'innerText',
+  html : 'innerHTML'
 }, function ( name, methodName ) {
-  this[ methodName ] = function ( value ) {
-    return access( this, function ( element, name, value, chainable ) {
-      if ( element.nodeType !== 1 ) {
-        return null;
+  this[ methodName ] = function ( val ) {
+    var el, i;
+
+    if ( val === undefined ) {
+      if ( ( el = this[ 0 ] ) && el.nodeType === 1 ) {
+        return el[ name ];
       }
 
-      if ( !chainable ) {
-        return element[ name ];
-      }
+      return null;
+    }
 
-      element[ name ] = value;
-    }, name, value, !!arguments.length, null );
+    for ( i = this.length - 1; i >= 0; --i ) {
+      if ( ( el = this[ 0 ] ).nodeType === 1 ) {
+        el[ name ] = val;
+      }
+    }
   };
 }, prototype );
 
@@ -4244,120 +4572,141 @@ forOwnRight( {
   off    : 'off',
   trigger: 'trigger'
 }, function ( name, methodName ) {
-  var one = methodName === 'one',
-      off = methodName === 'off';
-
-  this[ methodName ] = function ( types, listener, useCapture ) {
-    var removeAll = off && !arguments.length,
-        i = this.length - 1,
-        element, j, k;
+  this[ methodName ] = function ( types, selector, listener, useCapture ) {
+    var removeAll = name === 'off' && !arguments.length,
+        el, i, j, k;
 
     if ( !removeAll ) {
-      types = types.match( regexps.not_spaces );
-
-      if ( !types ) {
+      if ( !( types = types.match( regexps.not_spaces ) ) ) {
         return this;
       }
 
       k = types.length;
     }
 
-    for ( ; i >= 0; --i ) {
-      element = this[ i ];
+    // on( 'click', function () {}, false )
+    // on( 'click', function () {} )
+    if ( name !== 'trigger' && typeof listener != 'function' ) {
+      if ( listener != null ) {
+        useCapture = listener;
+      }
+
+      listener = selector;
+      selector = null;
+    }
+
+    for ( i = this.length - 1; i >= 0; --i ) {
+      el = this[ i ];
 
       if ( !removeAll ) {
         for ( j = 0; j < k; ++j ) {
-          event[ name ]( element, types[ j ], listener, useCapture, one );
+          event[ name ]( el, types[ j ], selector, listener, useCapture, methodName === 'one' );
         }
       } else {
-        event[ name ]( element );
+        event.off( el );
       }
     }
 
     return this;
-  };
+  };      
 }, prototype );
 
 forOwnRight( {
-  width: 'Width',
+  width : 'Width',
   height: 'Height'
 }, function ( name, methodName ) {
-  this[ methodName ] = function ( value ) {
-    var element, body, root;
+  this[ methodName ] = function ( val ) {
+    var el, body, root;
 
-    if ( arguments.length ) {
-      return this.style( methodName, value );
+    if ( val !== undefined ) {
+      return this.style( methodName, val );
     }
 
-    element = this[ 0 ];
+    if ( !( el = this[ 0 ] ) ) {
+      val = null;
+    // if it's window
+    } else if ( el.window === el ) {
+      val = max( el[ 'inner' + name ] || 0,
+        el.document.documentElement[ 'client' + name ] );
+    // if it's document
+    } else if ( el.nodeType === 9 ) {
+      body = el.body;
+      root = el.documentElement;
 
-    if ( !element ) {
-      value = null;
-    } else if ( element.window === element ) {
-      value = max(
-        element.document.documentElement[ 'client' + name ],
-        element[ 'inner' + name ] || 0 );
-    } else if ( element.nodeType === 9 ) {
-      body = element.body;
-      root = element.documentElement;
-
-      value = max(
+      val = max(
         body[ 'scroll' + name ],
         root[ 'scroll' + name ],
         body[ 'offset' + name ],
         root[ 'offset' + name ],
         body[ 'client' + name ],
         root[ 'client' + name ] );
+    // possibly it's html element
     } else {
-      value = element[ 'client' + name ];
+      val = el[ 'client' + name ];
     }
 
-    return value;
+    return val;
   };
 }, prototype );
 
-var getWindow = function ( element ) {
-  return element.window === element ?
-    element : element.nodeType === 9 ?
-    document.defaultView || document.parentWindow : false;
+var getWindow = function ( el ) {
+  // if it's window
+  if ( el.window === el ) {
+    return el;
+  }
+
+  // if it's document
+  if ( el.nodeType === 9 ) {
+    // window > document
+    // reverse is
+    // document > defaultView
+    return el.defaultView || el.parentWindow;
+  }
+
+  return null;
 };
 
 forOwnRight( {
-  scrollTop: 'pageYOffset',
+  scrollTop : 'pageYOffset',
   scrollLeft: 'pageXOffset'
-}, function ( offset, name ) {
-  var top = name === 'scrollTop';
+}, function ( off, name ) {
+  this[ name ] = function ( val ) {
+    var i, el, win, x, y;
 
-  this[ name ] = function ( value ) {
-    var i, element, window, x, y;
-
-    if ( arguments.length ) {
-      for ( i = this.length - 1; i >= 0; --i ) {
-        element = this[ i ];
-        window = getWindow( element );
-
-        if ( window ) {
-          if ( top ) {
-            x = window.pageXOffset || window.document.body.scrollLeft || 0;
-            y = value;
-          } else {
-            x = value;
-            y = window.pageYOffset || window.document.body.scrollTop || 0;
-          }
-
-          window.scrollTo( x, y );
-        } else {
-          element[ name ] = value;
-        }
+    if ( val === undefined ) {
+      if ( !( el = this[ 0 ] ) ) {
+        return null;
       }
 
-      return this;
+      if ( ( win = getWindow( el ) ) ) {
+        return win[ off ] || win.document.body[ name ] || 0;
+      }
+
+      return el[ name ];
     }
 
-    return ( element = this[ 0 ] ) ?
-      ( window = getWindow( element ) ) ?
-        window[ offset ] || window.document.body[ name ] || 0 : element[ name ] : null;
+    for ( i = this.length - 1; i >= 0; --i ) {
+      win = getWindow( el = this[ i ] );
+
+      if ( win ) {
+        if ( scrollTop ) {
+          x = win.pageXOffset || win.document.body.scrollLeft || 0;
+          y = val;
+        } else {
+          x = val;
+          y = win.pageYOffset || win.document.body.scrollTop || 0;
+        }
+
+        win.scrollTo( x, y );
+      } else {
+        el[ name ] = val;
+      }
+    }
+
+    return this;
   };
+
+  var scrollTop = name === 'scrollTop';
 }, prototype );
 
 var hide = function () {
@@ -4384,29 +4733,33 @@ var show = function () {
   }
 };
 
-forOwnRight( { hide: hide, show: show }, function ( method, name ) {
-  this[ name ] = function () {
-    return this.each( method );
-  };
-}, prototype );
+prototype.hide = function () {
+  return this.each( hide );
+};
 
-var toggle = function ( element, name, state, setState ) {
+prototype.show = function () {
+  return this.each( show );
+};
+
+var toggle = function ( element, name, state, set ) {
   if ( element.nodeType !== 1 ) {
     return null;
   }
 
-  if ( !setState ) {
+  if ( !set ) {
     return element[ name ];
   }
 
   element[ name ] = state;
 };
 
-baseForEach( [ 'checked', 'disabled' ], function ( methodName ) {
-  this[ methodName ] = function ( state ) {
-    return access( this, toggle, methodName, state, arguments.length > 0, null );
-  };
-}, prototype, true );
+prototype.disabled = function ( state ) {
+  return access( this, toggle, 'disabled', state, state !== undefined, null );
+};
+
+prototype.checked = function ( state ) {
+  return access( this, toggle, 'checked', state, state !== undefined, null );
+};
 
 var cloneNode = function ( element, deep ) {
   return event.copy( element.cloneNode( deep ), element, deep );
@@ -4599,9 +4952,9 @@ var getDefaultVisibleDisplay = function ( target ) {
     el = doc.body.appendChild( doc.createElement( nodeName ) );
     // Get it 'display' style.
     display = getComputedStyle( el ).display;
-    // This element is no longer needed. */
+    // This element is no longer needed.
     doc.body.removeChild( el );
-    // IE can don't to delete element from the memory? */
+    // IE can don't to delete element from the memory?
     el = doc = null;
 
     // Force the `target` to show.
@@ -4616,87 +4969,100 @@ var getDefaultVisibleDisplay = function ( target ) {
   return display;
 };
 
-support.getAttribute = function () {
-  var span = document.createElement( 'span' ),
-      name = 'name';
+( function ( access ) {
+  var support_attrs = support.getAttribute = function () {
+    var span = document.createElement( 'span' ),
+        name = 'name';
 
-  try {
-    span.setAttribute( name, name );
-    return span.getAttribute( name ) === name;
-  } catch ( e ) {}
+    try {
+      span.setAttribute( name, name );
+      return span.getAttribute( name ) === name;
+    } catch ( e ) {}
 
-  return false;
-}();
+    return false;
+  }();
 
-var propNames = {
-  'for': 'htmlFor',
-  'class': 'className'
-};
+  var propFix = peako.propFix = {
+    'for'  : 'htmlFor',
+    'class': 'className'
+  };
 
-var attr = function ( element, name, value, setValue ) {
-  if ( element.nodeType !== 1 ) {
-    return null;
-  }
-
-  if ( propNames[ name ] || !support.getAttribute ) {
-    return prop( element, propNames[ name ] || name, value, setValue );
-  }
-
-  if ( !setValue ) {
-    return element.getAttribute( name );
-  }
-
-  element.setAttribute( name, value );
-};
-
-var prop = function ( element, name, value, setValue ) {
-  if ( !setValue ) {
-    return element[ name ];
-  }
-
-  element[ name ] = value;
-};
-
-var removeAttr = function ( element, names ) {
-  if ( element.nodeType !== 1 ) {
-    return;
-  }
-
-  names = toWords( names );
-
-  for ( var i = names.length - 1; i >= 0; --i ) {
-    if ( support.getAttribute ) {
-      element.removeAttribute( names[ i ] );
-    } else {
-      delete element[ propNames[ names[ i ] ] || names[ i ] ];
+  var attr = function ( el, name, val, set ) {
+    if ( el.nodeType !== 1 ) {
+      return null;
     }
-  }
-};
 
-var removeProp = function ( element, names ) {
-  var i = ( names = toWords( names ) ).length - 1;
+    if ( propFix[ name ] || !support_attrs ) {
+      return prop( el, propFix[ name ] || name, val, set );
+    }
 
-  for ( ; i >= 0; --i ) {
-    delete element[ names[ i ] ];
-  }
-};
+    if ( !set ) {
+      return el.getAttribute( name );
+    }
 
-forOwnRight( { attr: attr, prop: prop }, function ( method, methodName ) {
-  this[ methodName ] = function ( name, value ) {
-    return access( this, method, name, value, arguments.length > 1, null );
+    el.setAttribute( name, val );
   };
-}, prototype );
 
-forOwnRight( {
-  removeAttr: removeAttr,
-  removeProp: removeProp
-}, function ( method, methodName ) {
-  this[ methodName ] = function ( names ) {
-    return this.each( function () {
-      method( this, names );
-    } );
+  var prop = function ( el, name, val, set ) {
+    if ( !set ) {
+      return el[ name ];
+    }
+
+    el[ name ] = val;
   };
-}, prototype );
+
+  prototype.removeAttr = function ( names ) {
+    var i = this.length - 1,
+        j, last_name_index, el;
+
+    names = toWords( names );
+    last_name_index = names.length - 1;
+
+    for ( ; i >= 0; --i ) {
+      el = this[ i ];
+
+      if ( el.nodeType !== 1 ) {
+        continue;
+      }
+
+      for ( j = last_name_index; j >= 0; --j ) {
+        if ( support_attrs ) {
+          el.removeAttribute( names[ j ] );
+        } else {
+          delete el[ propFix[ names[ j ] ] || names[ j ] ];
+        }
+      }
+    }
+    
+    return this;
+  };
+
+  prototype.removeProp = function ( names ) {
+    var i = this.length - 1,
+        j, last_name_index, el;
+
+    names = toWords( names );
+    last_name_index = names.length - 1;
+
+    for ( ; i >= 0; --i ) {
+      el = this[ i ];
+
+      for ( j = last_name_index; j >= 0; --j ) {
+        delete el[ names[ j ] ];
+      }
+    }
+    
+    return this;
+  };
+
+  prototype.attr = function ( name, value ) {
+    return access( this, attr, name, value, value !== undefined, null );
+  };
+
+  prototype.prop = function ( name, value ) {
+    return access( this, prop, name, value, value !== undefined, null );
+  };
+} )( access );
 
 var classList = {
   add: function ( element, classes ) {
@@ -4755,6 +5121,7 @@ var classList = {
   }(),
 
   toggle: function ( element, classes ) {
+    
     classes = toWords( classes );
 
     if ( !classes.length ) {
@@ -5468,7 +5835,7 @@ if ( !support.fetch ) {
       return Promise.resolve( new Blob( [ this._text ] ) );
     };
 
-    Request.prototype.text = Response.prototype.text = function() {
+    Request.prototype.text = Response.prototype.text = function () {
       var value = consumed( this );
 
       if ( value ) {
@@ -5486,7 +5853,7 @@ if ( !support.fetch ) {
       return Promise.resolve( this._text );
     };
 
-    Request.prototype.arrayBuffer = Response.prototype.arrayBuffer = function() {
+    Request.prototype.arrayBuffer = Response.prototype.arrayBuffer = function () {
       return this.blob().then( read_blob_as_array_buffer );
     };
   } else {
@@ -5547,7 +5914,8 @@ if ( !support.fetch ) {
 
   fetch = function ( url, options ) {
     return new Promise( function ( resolve, reject ) {
-      var request = !options && isPrototypeOf.call( Request.prototype, url ) ? url : new Request( url, options ),
+      var request = !options && isPrototypeOf.call( Request.prototype, url ) ?
+            url : new Request( url, options ),
           xhr = new XMLHttpRequest(),
           loaded = false;
           // ^ for what uses this flag?
@@ -5744,7 +6112,6 @@ peako.without = without;
 peako.fetch = fetch;
 peako.cssNumbers = cssNumbers;
 peako.eventProps = event_props;
-peako.propNames = propNames;
 peako.support = support;
 peako.wrapMap = wrapMap;
 peako.event = event;
