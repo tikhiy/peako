@@ -726,14 +726,14 @@ var baseAssign = function ( object, expander, keys ) {
 /**
  * Polyfill for `Function.prototype.bind()`.
  */
-var fn_bind = fn.bind || function ( context ) {
-  var partial_args = arguments.length > 2 && arr_slice.call( arguments, 2 ),
-      target = this;
+var fn_bind = fn.bind || function ( ctx ) {
+  var args = arguments.length > 2 && arr_slice.call( arguments, 2 ),
+      func = this;
 
-  return partial_args ? function () {
-    return apply( target, context, partial_args.concat( arr_slice.call( arguments ) ) );
+  return args ? function () {
+    return apply( func, ctx, args.concat( arr_slice.call( arguments ) ) );
   } : function () {
-    return apply( target, context, arguments );
+    return apply( func, ctx, arguments );
   };
 };
 
@@ -2241,7 +2241,8 @@ var flatten = function ( iterable, depth ) {
  * @memberof _
  * @static
  * @since 0.1.0
- * @param {Array} pairs The array of pairs that contains the values like: [ key, value ].
+ * @param {Array} pairs The array that contains "key-value" pairs, e.g.
+ * `[ 'key', 'value' ]`.
  * @returns {Object}
  * @example
  *
@@ -2501,7 +2502,8 @@ var identity = function ( value ) {
 };
 
 /**
- * Returns true when the object contains the value (see `Array.prototype.includes()`).
+ * Returns true when the object contains the value, see
+ * `Array.prototype.includes()`.
  */
 
 // _.includes( [ 0, NaN, 2 ], NaN ); // -> true
@@ -2612,13 +2614,13 @@ var method = function ( path ) {
 
   key = path[ path.length - 1 ];
 
-  return len > 1 ? function ( object ) {
-    if ( object != null && ( object = baseAccessor( object, path, 1 ) ) != null ) {
-      return apply( object[ key ], object, args );
+  return len > 1 ? function ( obj ) {
+    if ( obj != null && ( obj = baseAccessor( obj, path, 1 ) ) != null ) {
+      return apply( obj[ key ], obj, args );
     }
-  } : function ( object ) {
-    if ( object != null ) {
-      return apply( object[ key ], object, args );
+  } : function ( obj ) {
+    if ( obj != null ) {
+      return apply( obj[ key ], obj, args );
     }
   };
 };
@@ -3108,7 +3110,7 @@ var __event_list = create( null ),
 
 var event = {
   /**
-   * Adds the event listener to the target,  with considering IE.
+   * Adds the event listener to the target, with considering IE.
    */
   on: function ( target, type, selector, listener, use_capture, one ) {
     var item;
@@ -3144,7 +3146,7 @@ var event = {
       // el to call from trigger
       item.wrapper = function ( ev, el ) {
         if ( selector && !el && !( el = closestNode( ev.target, selector ) ) ||
-             type === 'DOMContentLoaded' && target.readyState !== 'complete' )
+          type === 'DOMContentLoaded' && target.readyState !== 'complete' )
         {
           return;
         }
@@ -3178,8 +3180,10 @@ var event = {
    * Removes the event listener (or listeners) of the target, with considering IE.
    */
 
+  // // remove delegated click alert listener:
+  // event.off( window, 'click', document.body, alert );
   // // remove click alert listener:
-  // event.off( window, 'click', alert );
+  // event.off( window, 'click', null, alert );
   // // remove all click listeners:
   // event.off( window, 'click' );
   // // remove all listeners:
@@ -3214,10 +3218,8 @@ var event = {
     for ( i = items.length - 1; i >= 0; --i ) {
       item = items[ i ];
 
-      if ( item.target !== target ||
-        !remove_all && (
-          item.listener !== listener ||
-          item.use_capture !== use_capture ) )
+      if ( item.target !== target || ( item.selector || selector ) && item.selector !== selector ||
+        !remove_all && ( item.listener !== listener || item.use_capture !== use_capture ) )
       {
         continue;
       }
@@ -3263,9 +3265,14 @@ var event = {
       if ( target ) {
         clos = closestNode( target, item.selector || item.target );
       } else if ( item.selector ) {
-        new DOMWraper( item.selector ).each( function () {
+        // Disable "Functions declared within loops referencing an outer scoped
+        // variable may lead to confusing semantics.". Possibly it's temporary
+        // solution.
+        // jshint -W083
+        new DOMWrapper( item.selector ).each( function () {
           item.wrapper( event.__create( type, data, this ), this );
         } );
+        // jshint +W083
 
         continue;
       } else {
@@ -3681,7 +3688,7 @@ var DOMWrapper = function ( selector ) {
   // _( window );
   if ( isDOMElement( selector ) ) {
     this.__set_one( selector );
-    return this;
+    return;
   }
 
   if ( typeof selector == 'string' ) {
@@ -3694,9 +3701,7 @@ var DOMWrapper = function ( selector ) {
 
       // _( '#id' );
       } else if ( match[ 1 ] ) {
-        list = document.getElementById( match[ 1 ] );
-
-        if ( list ) {
+        if ( ( list = document.getElementById( match[ 1 ] ) ) ) {
           this.__set_one( list );
         }
 
@@ -3716,7 +3721,7 @@ var DOMWrapper = function ( selector ) {
       list = parseHTML( selector );
     }
 
-  // _( _( ... ) );
+  // _( [ ... ] );
   } else if ( isArrayLikeObject( selector ) ) {
     list = selector;
 
@@ -3753,16 +3758,14 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   },
 
   /**
-   * Returns the element at the `index` position
-   * (may be negative for counting from the end).
-   * If `index` isn't passed, then the built-in
-   * array with all elements of this object will
-   * be returned.
+   * Returns the element at the `index` position (may be negative for
+   * counting from the end). If `index` isn't passed, then the built-in
+   * array with all elements of this object will be returned.
+   *
    * @memberof _.DOMWrapper
-   * @param {Number} [index] The position of the
-   * needed element.
-   * @returns {DOMElement|Array} Returns the
-   * picked element or array of all elements.
+   * @param {Number} [index] The position of the needed element.
+   * @returns {DOMElement|Array} Returns the picked element or array of all
+   * elements.
    *
    * @example <caption>Pick a specific element</caption>
    * var $div = _( 'div' ),
@@ -3854,12 +3857,10 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
    *
    * @memberof _.DOMWrapper.prototype
    * @chainable
-   * @param {String|Function} classes The classes
-   * that should be added to the elements, or the
-   * function that will be called (with the
-   * element index and current element classes)
-   * once for each element, and returns the
-   * classes that need to be added.
+   * @param {String|Function} classes The classes that should be added to the
+   * elements, or the function that will be called (with the element index and
+   * current element classes) once for each element, and returns the classes
+   * that need to be added.
    *
    * @example <caption>Using a string</caption>
    * _( 'div' ).addClass( 'something blue' );
@@ -3895,15 +3896,13 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   /**
    * @memberof _.DOMWrapper.prototype
    * @chainable
-   *   @param {String} [classes] The classes that
-   * should be removed from the elements.
-   *   @param {Function} [classes] The function that
-   * will be called (with the element index and
-   * current element classes) once for each
-   * element, and returns which classes should be
-   * removed.
-   *   @param {RegExp} [classes] You can remove
-   * classes that match the RegEx pattern.
+   *   @param {String} [classes] The classes that should be removed from the
+   * elements.
+   *   @param {Function} [classes] The function that will be called (with the
+   * element index and current element classes) once for each element, and
+   * returns which classes should be removed.
+   *   @param {RegExp} [classes] You can remove classes that match the RegEx
+   * pattern.
    *
    * @example <caption>Using a string</caption>
    * _( 'div' ).removeClass( 'something blue' );
@@ -3952,38 +3951,6 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
     return this;
   },
 
-  /**
-   * @memberof _.DOMWrapper.prototype
-   * @chainable
-   *   @param {String} [classes] The classes that
-   * should be removed from the elements.
-   *   @param {Function} [classes] The function that
-   * will be called (with the element index and
-   * current element classes) once for each
-   * element, and returns which classes should be
-   * removed.
-   *   @param {RegExp} [classes] You can remove
-   * classes that match the RegEx pattern.
-   *
-   * @example <caption>Using a string</caption>
-   * _( 'div' ).removeClass( 'something blue' );
-   * _( document.body ).removeClass( 'mobile' );
-   *
-   * @example <caption>Using a function</caption>
-   * _( 'div' ).removeClass( function ( divIndex, className ) {
-   *   if ( divIndex > 0 ) {
-   *     return 'one';
-   *   }
-   *
-   *   return 'two';
-   * } );
-   *
-   * @example <caption>Using a pattern</caption>
-   * _( 'div' ).removeClass( /stuff-\d+/ );
-   *
-   * @example <caption>Remove all classes</caption>
-   * _( 'div' ).removeClass();
-   */
   toggleClass: function ( classes, state ) {
     var callable, i, el;
 
@@ -4081,9 +4048,6 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
     return this;
   },
 
-  /**
-   *
-   */
   is: function ( selector ) {
     for ( var i = this.length - 1; i >= 0; --i ) {
       if ( is( this[ i ], selector, i ) ) {
@@ -4095,46 +4059,37 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   },
 
   closest: function ( selector ) {
-    var i = 0,
-        length = this.length,
-        list = [],
-        element, temp;
+    var els = this.pushStack(),
+        len = this.length,
+        el, clos, i;
 
-    for ( ; i < length; ++i ) {
-      element = this[ i ];
+    for ( i = 0; i < len; ++i ) {
+      clos = ( el = this[ i ] ).nodeType === 1 && closest.call( el, selector );
 
-      temp = element.nodeType === 1 &&
-        closest.call( element, selector );
-
-      if ( temp && baseIndexOf( list, temp ) < 0 ) {
-        list.push( temp );
+      if ( clos && baseIndexOf( els, clos ) < 0 ) {
+        els[ els.length++ ] = clos;
       }
     }
 
-    return this.pushStack( list );
+    return els;
   },
 
   parent: function ( selector ) {
-    var select = !!arguments.length,
-        i = 0,
-        length = this.length,
-        list = [],
-        element, parent;
+    var els = this.pushStack(),
+        len = this.length,
+        el, par, i;
 
-    for ( ; i < length; ++i ) {
-      element = this[ i ];
+    for ( i = 0; i < len; ++i ) {
+      par = ( el = this[ i ] ).nodeType === 1 && el.parentElement;
 
-      parent = element.nodeType === 1 &&
-        element.parentElement;
-
-      if ( parent && baseIndexOf( list, parent ) < 0 &&
-        ( !select || matches.call( parent, selector ) ) )
+      if ( par && baseIndexOf( els, par ) < 0 &&
+        ( !selector || matches.call( par, selector ) ) )
       {
-        list.push( parent );
+        els[ els.length++ ] = par;
       }
     }
 
-    return this.pushStack( list );
+    return els;
   },
 
   siblings: function ( selector ) {
@@ -4182,9 +4137,9 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
       }
 
       for ( j = 0; j < c_len; ++j ) {
-        child = children[ j ];
-
-        if ( child.nodeType === 1 && ( !arguments.length || matches.call( child, selector ) ) ) {
+        if ( ( child = children[ j ] ).nodeType === 1 &&
+          ( !selector || matches.call( child, selector ) ) )
+        {
           els[ els.length++ ] = child;
         }
       }
@@ -4193,7 +4148,8 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
     return els;
   },
 
-  find: function ( selector ) {
+  // Need a normal solution, so this is private now.
+  __find: function ( selector ) {
     var i = 0,
         length = this.length,
         list = [],
@@ -4227,18 +4183,11 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
         el, i;
 
     for ( i = 0; i < len; ++i ) {
-      el = this[ i ];
-
-      // .not( 'span' ); // .__filter( 'span', true )
-      // if the element is "span", then `is()`
-      // returns true, then it will be false,
-      // and the element will not be added.
-
-      // disable the "Confusing use of '!'. (W018)" warning,
-      // because "a != b" and "!a == b" behave differently.
-      // we need to convert "a" to a boolean value.
+      // disable the "Confusing use of '!'. (W018)" warning, because "a != b"
+      // and "!a == b" behave differently. we need to convert "a" to a boolean
+      // value.
       // jshint -W018
-      if ( !is( el, selector, i ) == inverse ) {
+      if ( !is( el = this[ i ], selector, i ) == inverse ) {
       // jshint +W018
         els[ els.length++ ] = el;
       }
@@ -4464,18 +4413,6 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
     return this.pushStack( slice( this, start, end ) );
   },
 
-  toggle: function ( state ) {
-    return this.each( function () {
-      if ( this.nodeType === 1 ) {
-        if ( state === undefined ? getStyle( this, 'display' ) === 'none' : state ) {
-          show.call( this );
-        } else {
-          hide.call( this );
-        }
-      }
-    } );
-  },
-
   longtouch: function ( longtouch, touch, delay ) {
     var ontouch = typeof touch == 'function',
         touched = true,
@@ -4542,10 +4479,12 @@ forOwnRight( {
 }, prototype );
 
 forOwnRight( {
-  value: 'value',
+  value   : 'value',
   /* todo make it cross-browser */
-  text : 'textContent' in body ? 'textContent' : 'innerText',
-  html : 'innerHTML'
+  text    : 'textContent' in body ? 'textContent' : 'innerText',
+  html    : 'innerHTML',
+  checked : 'checked',
+  disabled: 'disabled'
 }, function ( name, methodName ) {
   this[ methodName ] = function ( val ) {
     var el, i;
@@ -4584,9 +4523,9 @@ forOwnRight( {
       k = types.length;
     }
 
-    // on( 'click', function () {}, false )
-    // on( 'click', function () {} )
-    if ( name !== 'trigger' && typeof listener != 'function' ) {
+    // off( types, listener, useCapture )
+    // off( types, listener )
+    if ( name !== 'trigger' && typeof selector == 'function' ) {
       if ( listener != null ) {
         useCapture = listener;
       }
@@ -4657,9 +4596,6 @@ var getWindow = function ( el ) {
 
   // if it's document
   if ( el.nodeType === 9 ) {
-    // window > document
-    // reverse is
-    // document > defaultView
     return el.defaultView || el.parentWindow;
   }
 
@@ -4709,57 +4645,59 @@ forOwnRight( {
   var scrollTop = name === 'scrollTop';
 }, prototype );
 
-var hide = function () {
-  if ( this.nodeType === 1 ) {
-    this.style.display = 'none';
-  }
-};
+( function ( getStyle ) {
+  var show = function ( force ) {
+    var style;
 
-var show = function () {
-  var style;
+    if ( !force && this.nodeType !== 1 ) {
+      return;
+    }
 
-  if ( this.nodeType !== 1 ) {
-    return;
-  }
+    if ( ( style = this.style ).display === 'none' ) {
+      style.display = '';
+    }
 
-  style = this.style;
+    if ( getComputedStyle( this ).display === 'none' ) {
+      style.display = getDefaultVisibleDisplay( this );
+    }
+  };
 
-  if ( style.display === 'none' ) {
-    style.display = '';
-  }
+  var hide = function ( force ) {
+    if ( force || this.nodeType === 1 ) {
+      this.style.display = 'none';
+    }
+  };
 
-  if ( getComputedStyle( this ).display === 'none' ) {
-    style.display = getDefaultVisibleDisplay( this );
-  }
-};
+  var toggle = function () {
+    if ( this.nodeType === 1 ) {
+      if ( getStyle( this, 'display' ) === 'none' ) {
+        show.call( this, true );
+      } else {
+        hide.call( this, true );
+      }
+    }
+  };
 
-prototype.hide = function () {
-  return this.each( hide );
-};
+  prototype.toggle = function ( state ) {
+    if ( state === undefined ) {
+      return this.each( toggle );
+    }
 
-prototype.show = function () {
-  return this.each( show );
-};
+    if ( state ) {
+      return this.each( show );
+    }
 
-var toggle = function ( element, name, state, set ) {
-  if ( element.nodeType !== 1 ) {
-    return null;
-  }
+    return this.each( hide );
+  };
 
-  if ( !set ) {
-    return element[ name ];
-  }
+  prototype.show = function () {
+    return this.each( show );
+  };
 
-  element[ name ] = state;
-};
-
-prototype.disabled = function ( state ) {
-  return access( this, toggle, 'disabled', state, state !== undefined, null );
-};
-
-prototype.checked = function ( state ) {
-  return access( this, toggle, 'checked', state, state !== undefined, null );
-};
+  prototype.hide = function () {
+    return this.each( hide );
+  };
+} )( getStyle );
 
 var cloneNode = function ( element, deep ) {
   return event.copy( element.cloneNode( deep ), element, deep );
@@ -4771,14 +4709,11 @@ var wrapMap = {
   defaults: [ 0, '', '' ]
 };
 
-wrapMap.optgroup =
-  wrapMap.option = [ 1, '<select multiple="multiple">', '</select>' ];
+wrapMap.optgroup = wrapMap.option =
+  [ 1, '<select multiple="multiple">', '</select>' ];
 
-wrapMap.tbody =
-  wrapMap.tfoot =
-  wrapMap.colgroup =
-  wrapMap.caption =
-  wrapMap.thead = [ 1, '<table>', '</table>' ];
+wrapMap.tbody = wrapMap.tfoot = wrapMap.colgroup =
+  wrapMap.caption = wrapMap.thead = [ 1, '<table>', '</table>' ];
 
 wrapMap.th = wrapMap.td = [ 3, '<table><tbody><tr>', '</tr></tbody></table>' ];
 
