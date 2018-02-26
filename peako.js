@@ -19,6 +19,15 @@
 
 'use strict';
 
+/**
+ * @alias _
+ * @param {Node|String|ArrayLikeObject|Function} selector
+ * @returns {_.DOMWrapper}
+ */
+var peako = function ( selector ) {
+  return new DOMWrapper( selector );
+};
+
 var document = window.document,
     console = window.console,
     body = document.body || document.createElement( 'body' ),
@@ -1328,7 +1337,7 @@ var createAssign = function ( getKeys ) {
 var createEach = function ( fromRight ) {
   return function ( iterable, iteratee, context ) {
     iterable = toObject( iterable );
-    iteratee = getIteratee( iteratee );
+    iteratee = peako.iteratee( iteratee );
 
     return isArrayLike( iterable ) ?
       baseForEach( iterable, iteratee, context, fromRight ) :
@@ -1339,7 +1348,7 @@ var createEach = function ( fromRight ) {
 var createEverySome = function ( every ) {
   return function ( iterable, iteratee, context ) {
     iterable = getIterable( toObject( iterable ) );
-    iteratee = getIteratee( iteratee );
+    iteratee = peako.iteratee( iteratee );
 
     var i = 0,
         length = getLength( iterable );
@@ -1358,7 +1367,7 @@ var createEverySome = function ( every ) {
 
 var createFilter = function ( not, getKeys ) {
   return function ( iterable, iteratee, context ) {
-    iteratee = getIteratee( iteratee );
+    iteratee = peako.iteratee( iteratee );
 
     if ( isArrayLike( iterable ) ) {
       return baseFilter( iterable, iteratee, context, not );
@@ -1402,7 +1411,7 @@ var createForEach = function ( fromRight ) {
   return function ( iterable, iteratee, context ) {
     return baseForEach(
       getIterable( toObject( iterable ) ),
-      getIteratee( iteratee ),
+      peako.iteratee( iteratee ),
       context,
       fromRight );
   };
@@ -1427,14 +1436,14 @@ var createIndexOf = function ( fromRight ) {
 
 var createMap = function ( fromRight, getKeys ) {
   return function ( iterable, iteratee, context ) {
-    iteratee = getIteratee( iteratee );
+    iteratee = peako.iteratee( iteratee );
 
     if ( isArrayLike( iterable ) ) {
       return baseMap( iterable, iteratee, context, fromRight );
     }
 
     if ( fromRight ) {
-      throw TypeError( "_.mapRight for non-arrays not implemented" );
+      throw TypeError( "Can't call _.mapRight on non-array object" );
     }
 
     return baseMapObject(
@@ -1545,7 +1554,7 @@ var toCamelCase = function () {
   };
 }();
 
-/** @todo Compare (in perfomance) with the old version. */
+/* todo compare (in perfomance) with the old version. */
 var getType = function ( value ) {
   var type, tag;
 
@@ -1572,7 +1581,7 @@ var getType = function ( value ) {
   return ( types[ tag ] = tag.slice( 8, -1 ).toLowerCase() );
 };
 
-var getIteratee = function ( value ) {
+peako.iteratee = function ( value ) {
   if ( typeof value == 'function' ) {
     return value;
   }
@@ -1614,11 +1623,9 @@ var stringToPath = function ( string ) {
     // .name
     if ( value[ 2 ] ) {
       path[ i ] = value[ 2 ];
-
     // [ "" ] || [ '' ]
     } else if ( value[ 5 ] != null ) {
       path[ i ] = unescape( value[ 5 ] );
-
     // [ 0 ]
     } else {
       path[ i ] = value[ 3 ];
@@ -2332,26 +2339,29 @@ var toPath = function ( value ) {
 // _.access( object, path );
 // // -> 3
 
-var accessor = function ( object, path, value ) {
+var access = function ( obj, path, val ) {
   var len = ( path = toPath( path ) ).length,
-      setValue = arguments.length > 2;
+      set = arguments.length > 2;
 
-  object = toObject( object );
+  obj = toObject( obj );
 
-  if ( len ) {
-    return len > 1 ?
-      baseAccessor( object, path, 0, value, setValue ) : setValue ?
-      object[ path[ 0 ] ] = value :
-      object[ path[ 0 ] ];
+  if ( len > 1 ) {
+    return baseAccessor( obj, path, 0, val, set );
   }
+
+  if ( set ) {
+    return ( obj[ path[ 0 ] ] = val );
+  }
+
+  return obj[ path[ 0 ] ];
 };
 
 var default_file_options = {
-  onerror: function () {
-    throw Error();
+  onerror: function ( path ) {
+    throw Error( "Can't load " + path + ' file, status: ' + this.status );
   },
 
-  timeout: 6e4
+  timeout: 1000 * 60
 };
 
 /**
@@ -2775,7 +2785,7 @@ var random = function ( lower, upper, floating ) {
 
 var reduce = function ( iterable, iteratee, value ) {
   iterable = getIterable( toObject( iterable ) );
-  iteratee = getIteratee( iteratee );
+  iteratee = peako.iteratee( iteratee );
 
   var i = 0,
       length = getLength( iterable );
@@ -2803,7 +2813,7 @@ var reduce = function ( iterable, iteratee, value ) {
 
 var reduceRight = function ( iterable, iteratee, value ) {
   iterable = getIterable( toObject( iterable ) );
-  iteratee = getIteratee( iteratee );
+  iteratee = peako.iteratee( iteratee );
 
   var length = getLength( iterable ),
       i = length - 1;
@@ -3634,7 +3644,7 @@ var closestNode = function ( el, clos ) {
   return null;
 };
 
-var parseHTML = function ( data, context ) {
+var parseHTML = function ( data, ctx ) {
   var match = regexps.single_tag.exec( data );
 
   if ( match ) {
@@ -3643,7 +3653,7 @@ var parseHTML = function ( data, context ) {
     ];
   }
 
-  return baseCloneArray( createFragment( [ data ], context || document ).childNodes );
+  return baseCloneArray( jqBuildFrag( [ data ], ctx || document ).childNodes );
 };
 
 support.getElementsByClassName = 'getElementsByClassName' in document;
@@ -3654,18 +3664,13 @@ support.getElementsByClassName = 'getElementsByClassName' in document;
  * @class DOMWrapper
  * @memberof _
  * @static
- * @param {DOMElement}      selector This element
- *  will be added to the new object.
- * @param {String}          selector When the
- *  selector string contains HTML content, it will
- *  be parsed and added to the new object, if it
- *  doesn't, then will be added elements selected
- *  by the CSS selector.
- * @param {ArrayLikeObject} selector Elements
- *  from `selector` will be copied to the new
- *  object.
- * @param {Function}        selector It's the
- *  shorthand for `_( document ).ready()`.
+ * @param {Node} selector This element will be added to the new object.
+ * @param {String} selector When the selector string contains HTML content, it
+ *  will be parsed and added to the new object, if it doesn't, then will be
+ *  added elements selected by the CSS selector.
+ * @param {ArrayLikeObject} selector Elements from `selector` will be copied to
+ *  the new object.
+ * @param {Function} selector It's the shorthand for `_( document ).ready()`.
  *
  * @example <caption>Handle the page loaded event</caption>
  *
@@ -3741,16 +3746,6 @@ var DOMWrapper = function ( selector ) {
   }
 };
 
-/**
- * @class _
- * @alias peako
- * @param {DOMElement|String|ArrayLikeObject|Function} selector
- * @returns {_.DOMWrapper}
- */
-var peako = function ( input ) {
-  return new DOMWrapper( input );
-};
-
 var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   __set_one: function ( element ) {
     this[ 0 ] = element;
@@ -3764,7 +3759,7 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
    *
    * @memberof _.DOMWrapper
    * @param {Number} [index] The position of the needed element.
-   * @returns {DOMElement|Array} Returns the picked element or array of all
+   * @returns {Node|Array} Returns the picked element or array of all
    * elements.
    *
    * @example <caption>Pick a specific element</caption>
@@ -3833,7 +3828,7 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
       state = 2;
     }
 
-    return access( this, function ( element, name, value, set ) {
+    return jqAccess( this, function ( element, name, value, set ) {
       if ( element.nodeType !== 1 ) {
         return null;
       }
@@ -4367,13 +4362,13 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   },
 
   append: function () {
-    return manipulation( this, function ( element, content ) {
+    return jqDomManip( this, function ( element, content ) {
       element.appendChild( content );
     }, arguments );
   },
 
   prepend: function () {
-    return manipulation( this, function ( element, content ) {
+    return jqDomManip( this, function ( element, content ) {
       var firstChild = element.firstChild;
 
       if ( firstChild ) {
@@ -4385,7 +4380,7 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   },
 
   after: function () {
-    return manipulation( this, function ( element, content ) {
+    return jqDomManip( this, function ( element, content ) {
       var parentNode = element.parentNode,
           nextSibling;
 
@@ -4400,7 +4395,7 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   },
 
   before: function () {
-    return manipulation( this, function ( element, content ) {
+    return jqDomManip( this, function ( element, content ) {
       var parentNode = element.parentNode;
 
       if ( parentNode ) {
@@ -4717,127 +4712,155 @@ wrapMap.tbody = wrapMap.tfoot = wrapMap.colgroup =
 
 wrapMap.th = wrapMap.td = [ 3, '<table><tbody><tr>', '</tr></tbody></table>' ];
 
-var RE_HTML = /<|&#?\w+;/,
-    RE_TAG_NAME = /<([a-z][^\s>]*)/i;
-
-var createFragment = function ( elements, context ) {
-  var i = 0,
-      length = elements.length,
-      fragment = context.createDocumentFragment(),
+var jqBuildFrag = function ( els, ctx ) {
+  var frag = ctx.createDocumentFragment(),
+      len = els.length,
       nodes = [],
-      element, temp, tag, wrap, j;
+      wrap, tmp, tag, el, j, i;
 
-  for ( ; i < length; ++i ) {
-    if ( isObjectLike( element = elements[ i ] ) ) {
-      baseMerge( nodes, 'nodeType' in element ? [ element ] : element );
-    } else if ( RE_HTML.test( element ) ) {
-      if ( !temp ) {
-        temp = context.createElement( 'div' );
+  for ( i = 0; i < len; ++i ) {
+    // Add nodes directly
+    if ( isObjectLike( el = els[ i ] ) ) {
+      if ( 'nodeType' in el ) {
+        nodes.push( el );
+      } else {
+        baseMerge( nodes, el );
       }
 
-      wrap = wrapMap[ ( tag = RE_TAG_NAME.exec( element ) ) ?
-        tag[ 1 ].toLowerCase() : '' ] || wrapMap.defaults;
+    // Convert html into DOM nodes
+    } else if ( /<|&#?\w+;/.test( el ) ) {
+      if ( !tmp ) {
+        tmp = ctx.createElement( 'div' );
+      }
 
-      temp.innerHTML = wrap[ 1 ] + element + wrap[ 2 ];
+      if ( ( tag = /<([a-z][^\s>]*)/i.exec( el ) ) ) {
+        wrap = wrapMap[ tag = tag[ 1 ] ] ||
+          wrapMap[ tag.toLowerCase() ] ||
+          wrapMap.defaults;
+      } else {
+        wrap = wrapMap.defaults;
+      }
+
+      tmp.innerHTML = wrap[ 1 ] + el + wrap[ 2 ];
 
       for ( j = wrap[ 0 ]; j > 0; --j ) {
-        temp = temp.lastChild;
+        tmp = tmp.lastChild;
       }
 
-      baseMerge( nodes, temp.childNodes );
-      temp.innerHTML = '';
+      baseMerge( nodes, tmp.childNodes );
+
+    // Convert non-html into a text node
     } else {
-      nodes.push( context.createTextNode( element ) );
+      nodes.push( ctx.createTextNode( el ) );
     }
   }
 
-  for ( i = 0, length = nodes.length; i < length; ++i ) {
-    fragment.appendChild( nodes[ i ] );
+  if ( tmp ) {
+    tmp.innerHTML = '';
   }
 
-  return fragment;
+  for ( i = 0, len = nodes.length; i < len; ++i ) {
+    frag.appendChild( nodes[ i ] );
+  }
+
+  return frag;
 };
 
-var manipulation = function ( collection, callback, args ) {
+var jqDomManip = function ( set, callback, args ) {
+  var len = set.length,
+      lastIndex = len - 1,
+      i = 0,
+      frag, val, ctx, el;
+
+  if ( !len ) {
+    return set;
+  }
+
+  // flatten args
   args = apply( arr_concat, [], args );
 
-  var i = 0,
-      length = collection.length,
-      last = length - 1,
-      fragment, element, context;
+  if ( typeof ( val = args[ 0 ] ) == 'function' ) {
+    for ( ; i < len; ++i ) {
+      jqDomManip( new DOMWrapper( el = set[ i ] ), callback, [
+        val.call( el, i, el )
+      ] );
+    }
+  } else if ( ( ctx = set[ 0 ].ownerDocument ) ) {
+    frag = jqBuildFrag( args, ctx );
 
-  if ( length ) {
-    if ( typeof args[ 0 ] == 'function' ) {
-      for ( ; i < length; ++i ) {
-        element = collection[ i ];
+    for ( ; i < len; ++i ) {
+      el = set[ i ];
 
-        manipulation( new DOMWrapper( element ), callback, [
-          args[ 0 ].call( element, i, element )
-        ] );
-      }
-    } else if ( ( context = collection[ 0 ].ownerDocument ) ) {
-      fragment = createFragment( args, context );
-
-      for ( ; i < length; ++i ) {
-        element = collection[ i ];
-        callback( element, i == last ? fragment : cloneNode( fragment, true ) );
+      if ( i !== lastIndex ) {
+        callback( el, cloneNode( frag, true ) );
+      } else {
+        callback( el, frag );
       }
     }
   }
 
-  return collection;
+  return set;
 };
 
 // jQuery 3.2.1
-var access = function ( collection, callback, key, value, chainable, empty, raw ) {
+var jqAccess = function ( set, callback, key, val, chainable, ifEmptyVal, raw ) {
   var bulk = key == null,
-      i = 0,
-      length = collection.length,
-      element, keys, j, k_len;
+      len = set.length,
+      keysLen, keys, el, i;
 
-  if ( !bulk && getType( key ) == 'object' ) {
+  if ( getType( key ) == 'object' ) {
     chainable = true;
-    k_len = ( keys = getKeys( key ) ).length;
+    keysLen = ( keys = getKeys( key ) ).length;
     
-    for ( j = 0; j < k_len; ++j ) {
-      access( collection, callback, keys[ j ], key[ keys[ j ] ], chainable, empty, raw );
+    for ( i = 0; i < keysLen; ++i ) {
+      jqAccess( set, callback, keys[ i ], key[ keys[ i ] ], chainable, ifEmptyVal, raw );
     }
-  } else if ( value !== undefined ) {
+  } else if ( val !== undefined ) {
     chainable = true;
 
-    if ( typeof value != 'function' ) {
+    if ( typeof val != 'function' ) {
       raw = true;
     }
 
     if ( bulk ) {
       if ( raw ) {
-        callback.call( collection, value );
+        callback.call( set, val );
         callback = null;
       } else {
         bulk = callback;
 
-        callback = function ( element, key, value ) {
-          return bulk.call( new DOMWrapper( element ), value );
+        callback = function ( el, key, val ) {
+          return bulk.call( new DOMWrapper( el ), val );
         };
       }
     }
 
     if ( callback ) {
-      for ( ; i < length; ++i ) {
-        callback(
-          ( element = collection[ i ] ),
-          key, raw ?
-            value :
-            value.call( element, i, callback( element, key ) ),
-          chainable );
-      }
-    }
+      for ( i = 0; i < len; ++i ) {
+        el = set[ i ];
+
+        if ( raw ) {
+          callback( el, key, val, chainable );
+        } else {
+          callback( el, key, val.call( el, i, callback( el, key ) ), chainable );
+        }
+      } // end for
+    } // end if
   }
 
-  return chainable ?
-    collection : bulk ?
-    callback.call( collection ) : length ?
-    callback( collection[ 0 ], key, undefined, chainable ) : empty;
+  if ( chainable ) {
+    return set;
+  }
+
+  if ( bulk ) {
+    return callback.call( set );
+  }
+
+  if ( len ) {
+    return callback( set[ 0 ], key, undefined, chainable );
+  }
+
+  return ifEmptyVal;
 };
 
 // jQuery 3.2.1
@@ -4904,7 +4927,7 @@ var getDefaultVisibleDisplay = function ( target ) {
   return display;
 };
 
-( function ( access ) {
+( function ( jqAccess ) {
   var support_attrs = support.getAttribute = function () {
     var span = document.createElement( 'span' ),
         name = 'name';
@@ -4991,13 +5014,13 @@ var getDefaultVisibleDisplay = function ( target ) {
   };
 
   prototype.attr = function ( name, value ) {
-    return access( this, attr, name, value, value !== undefined, null );
+    return jqAccess( this, attr, name, value, value !== undefined, null );
   };
 
   prototype.prop = function ( name, value ) {
-    return access( this, prop, name, value, value !== undefined, null );
+    return jqAccess( this, prop, name, value, value !== undefined, null );
   };
-} )( access );
+} )( jqAccess );
 
 var classList = {
   add: function ( element, classes ) {
@@ -5931,7 +5954,7 @@ peako.getComputedStyle = getComputedStyle;
 peako.lowerFirst = lowerFirst;
 peako.upperFirst = upperFirst;
 peako.style = getStyle;
-peako.access = accessor;
+peako.access = access;
 peako.assign = assign;
 peako.assignIn = assignIn;
 peako.before = before;
