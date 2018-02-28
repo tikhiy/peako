@@ -58,6 +58,7 @@ var document = window.document,
 
 var regexps = {
   selector: /^(?:#([\w-]+)|([\w-]+)|\.([\w-]+))$/,
+  // bug we can't input smth like this "[ -1 ]" and "[ - 1 ]" (!)
   property: /(^|\.)\s*([_a-z]\w*)\s*|\[\s*(\d+|\d*\.\d+|("|')(([^\\]\\(\\\\)*|[^\4])*)\4)\s*\]/gi,
   deep_key: /(^|[^\\])(\\\\)*(\.|\[)/,
   single_tag: /^(<([\w-]+)><\/[\w-]+>|<([\w-]+)(?:\s*\/)?>)$/,
@@ -847,19 +848,18 @@ if ( support.defineProperty !== 2 ) {
 //   false ); // invert iteratee return value (for reject)
 // // -> [ 0, 3 ]
 
-var baseFilter = function ( iterable, iteratee, context, not ) {
+var baseFilter = function ( arr, fun, ctx, not ) {
   var i = 0,
-      length = getLength( iterable ),
+      len = getLength( arr ),
       filtered = [],
-      value;
+      val;
 
-  for ( ; i < length; ++i ) {
-    value = iterable[ i ];
-
-    if ( has( i, iterable ) &&
-      iteratee.call( context, value, i, iterable ) != not )
-    {
-      filtered.push( value );
+  for ( ; i < len; ++i ) {
+    // Disable the "Confusing use of '!'. (W018)" warning.
+    // jshint -W018
+    if ( has( i, arr ) && !fun.call( ctx, val = arr[ i ], i, arr ) === not ) {
+    // jshint +W018
+      filtered.push( val );
     }
   }
 
@@ -889,17 +889,18 @@ var baseFilter = function ( iterable, iteratee, context, not ) {
 //   true ); // invert iteratee return value (for reject)
 // // -> { two: 2 }
 
-var baseFilterObject = function ( object, iteratee, context, keys, not ) {
+var baseFilterObject = function ( obj, fun, ctx, keys, not ) {
   var i = 0,
-      length = keys.length,
+      len = keys.length,
       filtered = {},
-      value, key;
+      val, key;
 
-  for ( ; i < length; ++i ) {
-    value = object[ key = keys[ i ] ];
-
-    if ( iteratee.call( context, value, key, object ) != not ) {
-      filtered[ key ] = value;
+  for ( ; i < len; ++i ) {
+    // Disable the "Confusing use of '!'. (W018)" warning.
+    // jshint -W018
+    if ( !fun.call( ctx, val = obj[ key = keys[ i ] ], key, obj ) === not ) {
+    // jshint +W018
+      filtered[ key ] = val;
     }
   }
 
@@ -938,24 +939,22 @@ var baseFlatten = function ( iterable, temp, depth ) {
 };
 
 /**
- * Calls `iteratee` with `context` for each element in `iterable`.
+ * Base _.forEach(), _.forEachRight() implementation.
  */
-var baseForEach = function ( iterable, iteratee, context, fromRight ) {
+var baseForEach = function ( arr, fun, ctx, fromRight ) {
   var i = -1,
-      j = getLength( iterable ) + i,
+      j = getLength( arr ) - 1,
       index;
 
   for ( ; j >= 0; --j ) {
-    index = fromRight ? j : ++i;
-
-    if ( has( index, iterable ) &&
-      iteratee.call( context, iterable[ index ], index, iterable ) === false )
+    if ( has( index = fromRight ? j : ++i, arr ) &&
+      fun.call( ctx, arr[ index ], index, arr ) === false )
     {
       break;
     }
   }
 
-  return iterable;
+  return arr;
 };
 
 /**
@@ -1367,20 +1366,15 @@ var createEverySome = function ( every ) {
   };
 };
 
-var createFilter = function ( not, getKeys ) {
-  return function ( iterable, iteratee, context ) {
-    iteratee = peako.iteratee( iteratee );
+var createFilter = function ( not, keys ) {
+  return function ( obj, fun, ctx ) {
+    fun = peako.iteratee( fun );
 
-    if ( isArrayLike( iterable ) ) {
-      return baseFilter( iterable, iteratee, context, not );
+    if ( isArrayLike( obj ) ) {
+      return baseFilter( obj, fun, ctx, not );
     }
 
-    return baseFilterObject(
-      iterable = toObject( iterable ),
-      iteratee,
-      context,
-      getKeys( iterable ),
-      not );
+    return baseFilterObject( obj = toObject( obj ), fun, ctx, keys( obj ), not );
   };
 };
 
@@ -1660,32 +1654,32 @@ var unescape = function ( string ) {
   return string.replace( /\\(\\)?/g, '$1' );
 };
 
-var toKey = function ( value ) {
-  var type = getType( value ),
-      key;
+var toKey = function ( val ) {
+  var key;
 
-  if ( type == 'string' ) {
-    return unescape( value );
+  if ( typeof val == 'string' ) {
+    return unescape( val );
   }
 
-  if ( type == 'symbol' ) {
-    return value;
+  if ( isSymbol( val ) ) {
+    return val;
   }
 
-  key = '' + value;
+  key = '' + val;
 
-  if ( key == '0' && 1 / value == -Infinity ) {
+  if ( key == '0' && 1 / val == -Infinity ) {
     return '-0';
   }
 
   return unescape( key );
 };
 
-var getStyle = function ( element, name, computed_style ) {
-  return element.style[ name ] ||
-    ( computed_style || getComputedStyle( element ) ).getPropertyValue( name );
+var getStyle = function ( el, name, comp ) {
+  return el.style[ name ] ||
+    ( comp || getComputedStyle( el ) ).getPropertyValue( name );
 };
 
+// test this on perf
 var has = function ( key, object ) {
   if ( object == null ) {
     return false;
@@ -1906,9 +1900,9 @@ var clone = function ( deep, target, guard ) {
 };
 
 /**
- * Creates an array with elements from the `iterable` array. NOTE: You can
- * use `<Array>.slice()`, but in some situations `_.cloneArray()` works much
- * faster (for array-like objects).
+ * Creates an array with elements from the `iterable` array. NOTE: You can use
+ * `<Array>.slice()`, but in some situations `_.cloneArray()` works much faster
+ * (for array-like objects).
  *
  * @category Collection
  * @memberof _
@@ -1979,8 +1973,8 @@ var constant = function ( value ) {
  * @static
  * @since 0.0.4
  * @param {null|Object} prototype The prototype of a new object.
- * @param {Object} [descriptors] The descriptors to assign in the new object
- *  via [`_.defineProperties()`]{@link _.defineProperties}.
+ * @param {Object} [descriptors] The descriptors to assign in the new object via
+ *  [`_.defineProperties()`]{@link _.defineProperties}.
  * @returns {Array} A new created object with `prototype`.
  * @example
  *
@@ -2368,24 +2362,22 @@ var default_file_options = {
 };
 
 /**
- * This function will be called when the file is loaded successfully. `this`
- * in this function will point to the &lt;XMLHttpRequest&gt; object that was
- * used to load the file.
+ * This function will be called when the file is loaded successfully. `this` in
+ * this function will point to the &lt;XMLHttpRequest&gt; object that was used
+ * to load the file.
  * @callback FileLoadedCallback
  * @param {String} data The content of the loaded file.
  * @param {String} path The path of the loaded file.
- * @param {FileOptions} options The options that given into the `_.file()`
- *  method.
+ * @param {FileOptions} options The options that given into `_.file()`.
  */
 
 /**
  * This function will be called when the error occur while loading the file.
- * `this` in this function will point to the &lt;XMLHttpRequest&gt; object
- * that was used to load the file.
+ * `this` in this function will point to the &lt;XMLHttpRequest&gt; object that
+ * was used to load the file.
  * @callback LoadingFileErrorCallback
  * @param {String} path The path of the file that failed to load.
- * @param {FileOptions} options The options that given into the `_.file()`
- *  method.
+ * @param {FileOptions} options The options that given into `_.file()`.
  */
 
 /**
@@ -2394,12 +2386,12 @@ var default_file_options = {
  * @type {Object}
  * @property {String} [path] The path of the file to be loaded.
  * @property {Boolean} [async] Use an asynchronous request?
- * @property {FileLoadedCallback} [onload] This function will be called when
- *  the file is loaded successfully.
- * @property {LoadingFileErrorCallback} [onerror] This function will be
- *  called when the error occur while loading the file.
- * @property {Number} [timeout=60000] If the load time for the file needs
- *  more than this limit, it will be canceled.
+ * @property {FileLoadedCallback} [onload] This function will be called when the
+ *  file is loaded successfully.
+ * @property {LoadingFileErrorCallback} [onerror] This function will be called
+ *  when the error occur while loading the file.
+ * @property {Number} [timeout=60000] If the load time for the file needs more
+ *  than this limit, it will be canceled.
  */
 
 /**
@@ -2410,8 +2402,8 @@ var default_file_options = {
  * @static
  * @param {String} [path=options.path] The path of the file to be loaded.
  * @param {FileOptions} [options] File load options.
- * @returns {null|String} When the request wasn't asynchronous, it returns
- *  the contents of the file.
+ * @returns {null|String} When the request wasn't asynchronous, it returns the
+ *  contents of the file.
  * @example <caption>Use Cases</caption>
  *
  * // 1. async = false
@@ -2842,24 +2834,24 @@ var reduceRight = function ( iterable, iteratee, value ) {
   return value;
 };
 
-var sample = function ( object ) {
-  return baseSample( getIterable( toObject( object ) ) );
+var sample = function ( arr ) {
+  return baseSample( getIterable( toObject( arr ) ) );
 };
 
-var sampleSize = function ( object, size ) {
-  if ( object == null ) {
+var sampleSize = function ( arr, size ) {
+  if ( arr == null ) {
     throw TypeError( ERR_UNDEFINED_OR_NULL );
   }
 
-  object = toArray( object );
+  arr = toArray( arr );
 
   if ( size === undefined ) {
     size = 1;
   } else {
-    size = clamp( size, 0, getLength( object ) );
+    size = clamp( size, 0, arr.length );
   }
 
-  return baseShuffle( object, size );
+  return baseShuffle( arr, size );
 };
 
 /**
@@ -3190,7 +3182,7 @@ var event = {
   },
 
   /**
-   * Removes the event listener (or listeners) of the target, with considering IE.
+   * Removes the event listeners attached to the target, with considering IE.
    */
 
   // // remove delegated click alert listener:
@@ -3874,17 +3866,24 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
    * } );
    */
   addClass: function ( classes ) {
-    var callable = typeof classes == 'function',
-        i = this.length - 1,
-        el;
+    var i = this.length - 1,
+        el, callable;
+
+    if ( typeof classes != 'function' ) {
+      classes = toWords( classes );
+    } else {
+      callable = true;
+    }
 
     for ( ; i >= 0; --i ) {
-      if ( ( el = this[ i ] ).nodeType === 1 ) {
-        if ( callable ) {
-          classList.add( el, classes.call( el, i, el.className ) );
-        } else {
-          classList.add( el, classes );
-        }
+      if ( ( el = this[ i ] ).nodeType !== 1 ) {
+        continue;
+      }
+
+      if ( callable ) {
+        classList.add( el, toWords( classes.call( el, i, el.className ) ) );
+      } else {
+        classList.add( el, classes );
       }
     }
 
@@ -3894,13 +3893,11 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   /**
    * @memberof _.DOMWrapper.prototype
    * @chainable
-   *   @param {String} [classes] The classes that should be removed from the
-   * elements.
-   *   @param {Function} [classes] The function that will be called (with the
-   * element index and current element classes) once for each element, and
-   * returns which classes should be removed.
-   *   @param {RegExp} [classes] You can remove classes that match the RegEx
-   * pattern.
+   * @param {String} [classes] The classes that should be removed from the
+   *  elements.
+   * @param {Function} [classes] The function that will be called (with the
+   *  element index and current element classes) once for each element, and
+   *  returns which classes should be removed.
    *
    * @example <caption>Using a string</caption>
    * _( 'div' ).removeClass( 'something blue' );
@@ -3915,34 +3912,35 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
    *   return 'two';
    * } );
    *
-   * @example <caption>Using a pattern</caption>
-   * _( 'div' ).removeClass( /stuff-\d+/ );
-   *
    * @example <caption>Remove all classes</caption>
    * _( 'div' ).removeClass();
    */
   removeClass: function ( classes ) {
-    var all = classes === undefined,
-        fn = !all && typeof classes === 'function',
-        re = !fn && getType( classes ) === 'regexp',
-        i = this.length - 1,
-        el;
+    var i = this.length - 1,
+        el, mode;
+
+    if ( classes === undefined ) {
+      mode = 0;
+    } else if ( typeof classes === 'function' ) {
+      mode = 1;
+    } else {
+      classes = toWords( classes );
+    }
 
     for ( ; i >= 0; --i ) {
-      if ( ( el = this[ i ] ).nodeType === 1 ) {
-        switch ( true ) {
-          case all:
-            el.className = '';
-            break;
-          case re:
-            classList.removeWithRegexp( el, classes );
-            break;
-          case fn:
-            classList.remove( el, classes.call( el, i, el.className ) );
-            break;
-          default:
-            classList.remove( el, classes );
-        }
+      if ( ( el = this[ i ] ).nodeType !== 1 ) {
+        continue;
+      }
+
+      // .removeClass()
+      if ( mode === 0 ) {
+        el.className = '';
+      // .removeClass( function () {} )
+      } else if ( mode === 1 ) {
+        classList.remove( el, toWords( classes.call( el, i, el.className ) ) );
+      // .removeClass( 'classes' )
+      } else {
+        classList.remove( el, classes );
       }
     }
 
@@ -3952,23 +3950,27 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   toggleClass: function ( classes, state ) {
     var callable, i, el;
 
-    if ( state !== undefined ) {
-      if ( state ) {
-        return this.addClass( classes );
-      }
-      
+    if ( state ) {
+      return this.addClass( classes );
+    } else if ( state !== undefined ) {
       return this.removeClass( classes );
     }
 
-    callable = typeof classes == 'function';
+    if ( typeof classes != 'function' ) {
+      classes = toWords( classes );
+    } else {
+      callable = true;
+    }
 
     for ( i = this.length - 1; i >= 0; --i ) {
-      if ( ( el = this[ i ] ).nodeType === 1 ) {
-        if ( callable ) {
-          classList.toggle( el, classes.call( el, i, el.className ) );
-        } else {
-          classList.toggle( el, classes );
-        }
+      if ( ( el = this[ i ] ).nodeType !== 1 ) {
+        continue;
+      }
+
+      if ( callable ) {
+        classList.toggle( el, toWords( classes.call( el, i, el.className ) ) );
+      } else {
+        classList.toggle( el, classes );
       }
     }
 
@@ -3977,10 +3979,23 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
 
   hasClass: function ( classes ) {
     var i = this.length - 1,
-        el;
+        el, callable;
+
+    if ( typeof classes != 'function' ) {
+      classes = toWords( classes );
+    } else {
+      callable = true;
+    }
 
     for ( ; i >= 0; --i ) {
-      if ( ( el = this[ i ] ).nodeType === 1 && classList.has( el, classes ) ) {
+      if ( ( el = this[ i ] ).nodeType !== 1 ) {
+        continue;
+      }
+
+      if ( callable ?
+        classList.has( el, toWords( classes.call( el, i, el.className ) ) ) :
+        classList.has( el, classes ) )
+      {
         return true;
       }
     }
@@ -4181,11 +4196,9 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
         el, i;
 
     for ( i = 0; i < len; ++i ) {
-      // disable the "Confusing use of '!'. (W018)" warning, because "a != b"
-      // and "!a == b" behave differently. we need to convert "a" to a boolean
-      // value.
+      // Disable the "Confusing use of '!'. (W018)" warning.
       // jshint -W018
-      if ( !is( el = this[ i ], selector, i ) == inverse ) {
+      if ( !is( el = this[ i ], selector, i ) === inverse ) {
       // jshint +W018
         els[ els.length++ ] = el;
       }
@@ -4478,7 +4491,7 @@ forOwnRight( {
 
 forOwnRight( {
   value   : 'value',
-  /* todo make it cross-browser */
+  // todo make it cross-browser
   text    : 'textContent' in body ? 'textContent' : 'innerText',
   html    : 'innerHTML',
   checked : 'checked',
@@ -4511,6 +4524,7 @@ forOwnRight( {
 }, function ( name, methodName ) {
   this[ methodName ] = function ( types, selector, listener, useCapture ) {
     var removeAll = name === 'off' && !arguments.length,
+        one = methodName === 'one' ,
         el, i, j, k;
 
     if ( !removeAll ) {
@@ -4537,7 +4551,7 @@ forOwnRight( {
 
       if ( !removeAll ) {
         for ( j = 0; j < k; ++j ) {
-          event[ name ]( el, types[ j ], selector, listener, useCapture, methodName === 'one' );
+          event[ name ]( el, types[ j ], selector, listener, useCapture, one );
         }
       } else {
         event.off( el );
@@ -4605,7 +4619,7 @@ forOwnRight( {
   scrollLeft: 'pageXOffset'
 }, function ( off, name ) {
   this[ name ] = function ( val ) {
-    var i, el, win, x, y;
+    var scrollTop, i, el, win, x, y;
 
     if ( val === undefined ) {
       if ( !( el = this[ 0 ] ) ) {
@@ -4618,6 +4632,8 @@ forOwnRight( {
 
       return el[ name ];
     }
+
+    scrollTop = name === 'scrollTop';
 
     for ( i = this.length - 1; i >= 0; --i ) {
       win = getWindow( el = this[ i ] );
@@ -4639,11 +4655,9 @@ forOwnRight( {
 
     return this;
   };
-
-  var scrollTop = name === 'scrollTop';
 }, prototype );
 
-( function ( getStyle ) {
+( function ( getStyle, getComputedStyle ) {
   var show = function ( force ) {
     var style;
 
@@ -4695,7 +4709,7 @@ forOwnRight( {
   prototype.hide = function () {
     return this.each( hide );
   };
-} )( getStyle );
+} )( getStyle, getComputedStyle );
 
 var cloneNode = function ( element, deep ) {
   return event.copy( element.cloneNode( deep ), element, deep );
@@ -5019,98 +5033,89 @@ var getDefaultVisibleDisplay = function ( target ) {
   };
 } )( jqAccess );
 
+// todo add smth like __add( el, val ), __remove( el, val ) to call it from
+// toggle for perf gain.
 var classList = {
-  add: function ( element, classes ) {
-    classes = toWords( classes );
+  add: function ( el, classes ) {
+    var len = classes.length,
+        className, val, i;
 
-    if ( !classes.length ) {
+    if ( !len ) {
       return;
     }
 
-    var i = 0,
-        length = classes.length,
-        className = ' ' + classList.getAsArray( element ).join( ' ' ) + ' ',
-        value;
+    className = classList.getClassName( el );
 
-    for ( ; i < length; ++i ) {
-      value = classes[ i ] + ' ';
+    for ( i = 0; i < len; ++i ) {
+      val = classes[ i ] + ' ';
 
-      if ( className.indexOf( ' ' + value ) < 0 ) {
-        className += value;
+      if ( className.indexOf( ' ' + val ) < 0 ) {
+        className += val;
       }
     }
 
-    element.className = trim( className );
+    el.className = trim( className );
   },
 
-  remove: function ( element, classes ) {
-    classes = toWords( classes );
+  remove: function ( el, classes ) {
+    var className, val, i;
 
     if ( !classes.length ) {
       return;
     }
 
-    var i = classes.length - 1,
-        className = ' ' + classList.getAsArray( element ).join( ' ' ) + ' ',
-        value;
+    className = classList.getClassName( el );
 
-    for ( ; i >= 0; --i ) {
-      value = ' ' + classes[ i ] + ' ';
+    for ( i = classes.length - 1; i >= 0; --i ) {
+      val = ' ' + classes[ i ] + ' ';
 
-      while ( className.indexOf( value ) >= 0 ) {
-        className = className.replace( value, ' ' );
+      while ( className.indexOf( val ) >= 0 ) {
+        className = className.replace( val, ' ' );
       }
+
+      // className = classList.__remove( className, ' ' + classes[ i ] + ' ' );
     }
 
-    element.className = trim( className );
+    el.className = trim( className );
   },
 
-  removeWithRegexp: function () {
-    var test = function ( value ) {
-      return classList.test( value );
-    };
+  toggle: function ( el, classes ) {
+    var len = classes.length,
+        className, val, i;
 
-    return function ( element, regexp ) {
-      element.className = reject( classList.getAsArray( element ), test, regexp ).join( ' ' );
-    };
-  }(),
-
-  toggle: function ( element, classes ) {
-    
-    classes = toWords( classes );
-
-    if ( !classes.length ) {
+    if ( !len ) {
       return;
     }
 
-    var i = 0,
-        length = classes.length,
-        className = ' ' + classList.getAsArray( element ).join( ' ' ) + ' ',
-        value;
+    className = classList.getClassName( el );
 
-    for ( ; i < length; ++i ) {
-      value = classes[ i ];
+    for ( i = 0; i < len; ++i ) {
+      val = classes[ i ] + ' ';
 
-      if ( className.indexOf( ' ' + value + ' ' ) < 0 ) {
-        classList.add( element, value );
+      if ( className.indexOf( ' ' + val ) >= 0 ) {
+        val = ' ' + val;
+
+        while ( className.indexOf( val ) >= 0 ) {
+          className = className.replace( val, ' ' );
+        }
+
+        // className = classList.__remove( className, ' ' + val );
       } else {
-        classList.remove( element, value );
+        className += val;
       }
     }
+
+    el.className = trim( className );
   },
 
-  has: function ( element, classes ) {
+  has: function ( el, classes ) {
     var className, i;
-
-    classes = toWords( classes );
 
     if ( !classes.length ) {
       return false;
     }
 
-    className = ' ' + classList
-      .getAsArray( element )
-      .join( ' ' ) + ' ';
+    className = classList.getClassName( el );
 
     for ( i = classes.length - 1; i >= 0; --i ) {
       if ( className.indexOf( ' ' + classes[ i ] + ' ' ) < 0 ) {
@@ -5121,12 +5126,8 @@ var classList = {
     return true;
   },
 
-  getAsArray: function ( element ) {
-    return toWords( element.className );
-  },
-
-  getAsString: function ( element ) {
-    return element.className.replace( regexps.not_spaces, ' ' );
+  getClassName: function ( el ) {
+    return ' ' + toWords( el.className ).join( ' ' ) + ' ';
   }
 };
 
@@ -5250,7 +5251,7 @@ var Promise = window.Promise || function () {
     onRejected: null
   };
 
-  // Memory leak! Need to rewrite this polyfill.
+  // Memory leak! Need to rewrite this polyfill, without wrappers.
   var promises = [],
       wrappers = [];
 
@@ -5417,7 +5418,7 @@ baseForEach( [
   };
 }, prototype, true );
 
-baseForIn( {
+forOwnRight( {
   appendTo    : 'append',
   prependTo   : 'prepend',
   insertBefore: 'before',
@@ -5432,7 +5433,7 @@ baseForIn( {
 
     return this;
   };
-}, prototype, [ 'appendTo', 'prependTo', 'insertBefore', 'insertAfter' ], true );
+}, prototype );
 
 var warn = console && console.warn || noop;
 

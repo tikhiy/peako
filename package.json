@@ -1,7 +1,7 @@
 {
   "name": "peako",
   "version": "0.1.4",
-  "description": "Pure JavaScript library which can be used as both jQuery and Lodash.",
+  "description": "Simple JavaScript library which can be used as both jQuery and Lodash.",
   "main": "peako.js",
   "scripts": {
     "build-docs": "jsdoc peako.js -c .jsdoc.json --verbose"
