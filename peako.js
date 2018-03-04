@@ -4490,11 +4490,11 @@ forOwnRight( {
 }, prototype );
 
 forOwnRight( {
-  value   : 'value',
+  value:    'value',
   // todo make it cross-browser
-  text    : 'textContent' in body ? 'textContent' : 'innerText',
-  html    : 'innerHTML',
-  checked : 'checked',
+  text:     'textContent' in body ? 'textContent' : 'innerText',
+  html:     'innerHTML',
+  checked:  'checked',
   disabled: 'disabled'
 }, function ( name, methodName ) {
   this[ methodName ] = function ( val ) {
@@ -4517,9 +4517,9 @@ forOwnRight( {
 }, prototype );
 
 forOwnRight( {
-  on     : 'on',
-  one    : 'on',
-  off    : 'off',
+  on:      'on',
+  one:     'on',
+  off:     'off',
   trigger: 'trigger'
 }, function ( name, methodName ) {
   this[ methodName ] = function ( types, selector, listener, useCapture ) {
@@ -4563,7 +4563,7 @@ forOwnRight( {
 }, prototype );
 
 forOwnRight( {
-  width : 'Width',
+  width:  'Width',
   height: 'Height'
 }, function ( name, methodName ) {
   this[ methodName ] = function ( val ) {
@@ -4615,7 +4615,7 @@ var getWindow = function ( el ) {
 };
 
 forOwnRight( {
-  scrollTop : 'pageYOffset',
+  scrollTop:  'pageYOffset',
   scrollLeft: 'pageXOffset'
 }, function ( off, name ) {
   this[ name ] = function ( val ) {
@@ -4716,8 +4716,8 @@ var cloneNode = function ( element, deep ) {
 };
 
 var wrapMap = {
-  col     : [ 2, '<table><colgroup>', '</colgroup></table>' ],
-  tr      : [ 2, '<table><tbody>', '</tbody></table>' ],
+  col:      [ 2, '<table><colgroup>', '</colgroup></table>' ],
+  tr:       [ 2, '<table><tbody>', '</tbody></table>' ],
   defaults: [ 0, '', '' ]
 };
 
@@ -4897,20 +4897,20 @@ var cssNumbers = {
   "zoom": true
 };
 
-var is = function ( element, selector, index ) {
+var is = function ( el, selector, index ) {
   if ( typeof selector == 'string' ) {
-    return element.nodeType === 1 && matches.call( element, selector );
+    return el.nodeType === 1 && matches.call( el, selector );
   }
 
   if ( isArrayLikeObject( selector ) ) {
-    return indexOf( selector, element ) >= 0;
+    return indexOf( selector, el ) >= 0;
   }
 
   if ( typeof selector == 'function' ) {
-    return selector.call( element, index, element );
+    return selector.call( el, index, el );
   }
 
-  return element === selector;
+  return el === selector;
 };
 
 var defaultVisibleDisplayMap = {};
@@ -4958,7 +4958,7 @@ var getDefaultVisibleDisplay = function ( target ) {
   }();
 
   var propFix = peako.propFix = {
-    'for'  : 'htmlFor',
+    'for':   'htmlFor',
     'class': 'className'
   };
 
@@ -5137,7 +5137,7 @@ var classList = {
  */
 var Promise = window.Promise || function () {
   var Promise = function ( executor ) {
-    if ( !isObjectLike( this ) || !( this instanceof Promise ) ) {
+    if ( !this || !( this instanceof Promise ) ) {
       throw TypeError( this + ' is not a promise' );
     }
 
@@ -5145,247 +5145,226 @@ var Promise = window.Promise || function () {
       throw TypeError( 'Promise resolver ' + executor + ' is not a function' );
     }
 
-    execute( executor, addWrapper( this ) );
+    this._state = 0;
+    this._value = undefined;
+    this._handled = false;
+    this._deferreds = [];
+
+    execute( executor, this );
   };
 
   Promise.prototype = {
-    constructor: Promise,
-
     then: function ( fulfilled, rejected ) {
       var promise = new Promise( noop ),
-          wrapper = getWrapper( promise ),
-          deferred = new Deferred( fulfilled, rejected, wrapper );
+          deferred = new Deferred( fulfilled, rejected, promise );
 
-      handle( getWrapper( this ), deferred );
+      handle( this, deferred );
       return promise;
     },
 
-    'catch': function ( reject ) {
-      return this.then( null, reject );
-    }
+    'catch': function ( rej ) {
+      return this.then( null, rej );
+    },
+
+    'finally': function ( fun ) {
+      var Promise = this.constructor;
+
+      return this.then( function ( val ) {
+        return Promise.resolve( fun() ).then( function () {
+          return val;
+        } );
+      }, function ( err ) {
+        return Promise.resolve( fun() ).then( function () {
+          return Promise.reject( err );
+        } );
+      } );
+    },
+
+    constructor: Promise
   };
 
-  assign( Promise, {
-    all: function ( iterable ) {
-      var args = arr_slice.call( iterable ),
-          remaining = args.length;
+  Promise.all = function ( arr ) {
+    var args = arr_slice.call( arr ),
+        remaining = args.length;
 
-      return new Promise( function ( resolve, reject ) {
-        if ( !remaining ) {
-          return resolve( args );
-        }
+    return new Promise( function ( resolve, reject ) {
+      var res, len, i;
 
-        var res = function ( value, args ) {
-          try {
-            if ( !isPrimitive( value ) && typeof value.then == 'function' ) {
-              value.then( function ( value ) {
-                res( value, args );
-              }, reject );
-            } else if ( !--remaining ) {
-              resolve( args );
-            }
-          } catch ( error ) {
-            reject( error );
+      if ( !remaining ) {
+        return resolve( args );
+      }
+
+      res = function ( val, args ) {
+        try {
+          if ( !isPrimitive( val ) && typeof val.then == 'function' ) {
+            val.then( function ( val ) {
+              res( val, args );
+            }, reject );
+          } else if ( !--remaining ) {
+            resolve( args );
           }
-        };
-
-        var i = 0,
-            length = remaining;
-
-        for ( ; i < length; ++i ) {
-          res( args[ i ], args );
+        } catch ( reason ) {
+          reject( reason );
         }
-      } );
-    },
+      };
 
-    resolve: function ( value ) {
-      return new Promise( function ( resolve ) {
-        resolve( value );
-      } );
-    },
-
-    reject: function ( value ) {
-      return new Promise( function ( resolve, reject ) {
-        reject( value );
-      } );
-    },
-
-    race: function ( values ) {
-      return new Promise( function ( resolve, reject ) {
-        var i = 0,
-            length = values.length;
-
-        for ( ; i < length; ++i ) {
-          values[ i ].then( resolve, reject );
-        }
-      } );
-    }
-  } );
-
-  var Wrapper = function ( promise ) {
-    this.promise = promise;
-    this.deferreds = [];
+      for ( i = 0, len = remaining; i < len; ++i ) {
+        res( args[ i ], args );
+      }
+    } );
   };
 
-  Wrapper.prototype = {
-    constructor: Wrapper,
-    handled: false,
-    state: 0
+  Promise.resolve = function ( val ) {
+    return new Promise( function ( res ) {
+      res( val );
+    } );
   };
 
-  var Deferred = function ( onFulfilled, onRejected, promise ) {
-    if ( typeof onFulfilled == 'function' ) {
-      this.onFulfilled = onFulfilled;
+  Promise.reject = function ( val ) {
+    return new Promise( function ( res, rej ) {
+      rej( val );
+    } );
+  };
+
+  Promise.race = function ( promises ) {
+    return new Promise( function ( res, rej ) {
+      var i = 0,
+          len = promises.length;
+
+      for ( ; i < len; ++i ) {
+        promises[ i ].then( res, rej );
+      }
+    } );
+  };
+
+  var Deferred = function ( fulfilled, rejected, promise ) {
+    if ( typeof fulfilled == 'function' ) {
+      this.fulfilled = fulfilled;
     }
 
-    if ( typeof onRejected == 'function' ) {
-      this.onRejected = onRejected;
+    if ( typeof rejected == 'function' ) {
+      this.rejected = rejected;
     }
 
     this.promise = promise;
   };
 
-  Deferred.prototype = {
-    constructor: Deferred,
-    onFulfilled: null,
-    onRejected: null
-  };
-
-  // Memory leak! Need to rewrite this polyfill, without wrappers.
-  var promises = [],
-      wrappers = [];
-
-  var addWrapper = function ( promise ) {
-    var wrapper = promise;
-
-    if ( !( promise instanceof Wrapper ) && !getWrapper( promise ) ) {
-      promises.push( promise );
-      wrappers.push( wrapper = new Wrapper( wrapper ) );
-    }
-
-    return wrapper;
-  };
-
-  var getWrapper = function ( promise ) {
-    return ( promise = baseIndexOf( promises, promise ) ) < 0 ?
-      null : wrappers[ promise ];
-  };
-
-  var execute = function ( executor, wrapper ) {
+  var execute = function ( executor, promise ) {
     var done = false;
 
     try {
       executor( function ( value ) {
         if ( !done ) {
           done = true;
-          resolve( wrapper, value );
+          resolve( promise, value );
         }
       }, function ( reason ) {
         if ( !done ) {
           done = true;
-          reject( wrapper, reason );
+          reject( promise, reason );
         }
       } );
-    } catch ( error ) {
+    } catch ( reason ) {
       if ( !done ) {
-        reject( wrapper, error );
+        reject( promise, reason );
       }
     }
   };
 
-  var resolve = function ( wrapper, value ) {
+  var resolve = function ( promise, val ) {
     try {
-      if ( value === wrapper.promise ) {
+      if ( promise === val ) {
         throw TypeError( "A promise can't be resolved with itself" );
       }
 
-      if ( isPrimitive( value ) || typeof value.then != 'function' ) {
-        wrapper.state = 1;
-        wrapper.value = value;
-        finale( wrapper );
-      } else if ( value instanceof Promise ) {
-        wrapper.state = 3;
-        wrapper.value = getWrapper( value );
-        finale( wrapper );
+      if ( isPrimitive( val ) || typeof val.then != 'function' ) {
+        promise._state = 1;
+        promise._value = val;
+        finale( promise );
+      } else if ( val instanceof Promise ) {
+        promise._state = 3;
+        promise._value = val;
+        finale( promise );
       } else {
-        execute( function ( resolve, reject ) {
-          value.then( resolve, reject );
-        }, wrapper );
+        execute( function ( res, rej ) {
+          val.then( res, rej );
+        }, promise );
       }
-    } catch ( error ) {
-      reject( wrapper, error );
+    } catch ( reason ) {
+      reject( promise, reason );
     }
   };
 
-  var reject = function ( wrapper, value ) {
-    wrapper.state = 2;
-    wrapper.value = value;
-    finale( wrapper );
+  var reject = function ( promise, val ) {
+    promise._state = 2;
+    promise._value = val;
+    finale( promise );
   };
 
-  var finale = function ( wrapper ) {
+  var finale = function ( promise ) {
     var i = 0,
-        length = wrapper.deferreds.length;
+        len = promise._deferreds.length;
 
-    if ( wrapper.state === 2 && !length ) {
+    if ( promise._state === 2 && !len ) {
       setImmediate( function () {
-        if ( !wrapper.handled ) {
-          warn( 'Possible Unhandled Promise Rejection: ', wrapper.value );
+        if ( !promise._handled ) {
+          warn( 'Possible Unhandled Promise Rejection: ', promise._value );
         }
       } );
     }
 
-    for ( ; i < length; ++i ) {
-      handle( wrapper, wrapper.deferreds[ i ] );
+    for ( ; i < len; ++i ) {
+      handle( promise, promise._deferreds[ i ] );
     }
 
-    delete wrapper.deferreds;
+    delete promise._deferreds;
   };
 
-  var handle = function ( wrapper, deferred ) {
-    while ( wrapper.state === 3 ) {
-      wrapper = wrapper.value;
+  var handle = function ( promise, deferred ) {
+    while ( promise._state === 3 ) {
+      promise = promise._value;
     }
 
-    if ( wrapper.state === 0 ) {
-      return wrapper.deferreds.push( deferred );
+    if ( promise._state === 0 ) {
+      promise._deferreds.push( deferred );
+      return;
     }
 
-    wrapper.handled = true;
+    promise._handled = true;
 
     setImmediate( function () {
-      var containsValue = wrapper.state === 1,
-          temp, callback;
+      var tmp, fun;
 
-      if ( containsValue ) {
-        callback = deferred.onFulfilled;
+      if ( promise._state === 1 ) {
+        fun = deferred.fulfilled;
       } else {
-        callback = deferred.onRejected;
+        fun = deferred.rejected;
       }
 
-      if ( !callback ) {
-        if ( containsValue ) {
-          callback = resolve;
+      if ( !fun ) {
+        if ( promise._state === 1 ) {
+          fun = resolve;
         } else {
-          callback = reject;
+          fun = reject;
         }
 
-        callback( deferred.promise, wrapper.value );
+        fun( deferred.promise, promise._value );
         return;
       }
 
       try {
-        temp = callback( wrapper.value );
-      } catch ( error ) {
-        return reject( deferred.promise, error );
+        tmp = fun( promise._value );
+      } catch ( err ) {
+        reject( deferred.promise, err );
+        return;
       }
 
-      resolve( deferred.promise, temp );
+      resolve( deferred.promise, tmp );
     } );
   };
 
-  var setImmediate = window.setImmediate || function ( callback ) {
-    window.setTimeout( callback, 0 );
+  var setImmediate = window.setImmediate || function ( fun ) {
+    window.setTimeout( fun, 0 );
   };
 
   return Promise;
@@ -5403,11 +5382,11 @@ baseForEach( [
   'touchend',    'touchenter',  'touchleave',
   'touchcancel', 'load'
 ], function ( type ) {
-  this[ type ] = function ( argument ) {
+  this[ type ] = function ( arg ) {
     var len, i;
 
-    if ( typeof argument != 'function' ) {
-      return this.trigger( type, argument );
+    if ( typeof arg != 'function' ) {
+      return this.trigger( type, arg );
     }
 
     for ( len = arguments.length, i = 0; i < len; ++i ) {
@@ -5419,16 +5398,16 @@ baseForEach( [
 }, prototype, true );
 
 forOwnRight( {
-  appendTo    : 'append',
-  prependTo   : 'prepend',
+  appendTo:     'append',
+  prependTo:    'prepend',
   insertBefore: 'before',
-  insertAfter : 'after'
+  insertAfter:  'after'
 }, function ( based, name ) {
-  this[ name ] = function ( element ) {
-    if ( element instanceof DOMWrapper == false ) {
-      new DOMWrapper( element )[ based ]( this );
+  this[ name ] = function ( el ) {
+    if ( el instanceof DOMWrapper ) {
+      el[ based ]( this );
     } else {
-      element[ based ]( this );
+      new DOMWrapper( el )[ based ]( this );
     }
 
     return this;
@@ -5949,6 +5928,7 @@ if ( !support.fetch ) {
 prototype.css = prototype.style;
 prototype.val = prototype.value;
 peako.getComputedStyle = getComputedStyle;
+peako.getStyle = getStyle;
 peako.lowerFirst = lowerFirst;
 peako.upperFirst = upperFirst;
 peako.style = getStyle;
@@ -6025,7 +6005,7 @@ peako.map = map;
 peako.mapIn = mapIn;
 peako.mapRight = mapRight;
 peako.merge = merge;
-peako.method = peako.call = method;
+peako.method = peako.invoke = method;
 peako.mixin = peako.extend = mixin;
 peako.noConflict = noConflict;
 peako.noop = noop;
