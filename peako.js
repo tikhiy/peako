@@ -1044,14 +1044,30 @@ var baseInvert = function ( object, keys ) {
   return inverted;
 };
 
-support.keys = Object.keys ?
-  2 : { toString: null }.propertyIsEnumerable( 'toString' ) ?
-  1 : 0;
+support.keys = ( function () {
+  if ( !Object.keys ) {
+    // buggy
+    if ( { toString: null }.propertyIsEnumerable( 'toString' ) ) {
+      return 1;
+    }
+
+    // not supported
+    return 0;
+  }
+
+  try {
+    // full es2015 support
+    return Object.keys( '' ), 3;
+  } catch ( e ) {}
+
+  // es5 support
+  return 2;
+} )();
 
 /**
  * Base implementation of `Object.keys` polyfill.
  */
-if ( support.keys !== 2 ) {
+if ( support.keys !== 3 ) {
   if ( !support.keys ) {
     var non_enums = [
       'toString',
@@ -1070,7 +1086,7 @@ if ( support.keys !== 2 ) {
       for ( ; i >= 0; --i ) {
         key = non_enums[ i ];
 
-        if ( baseIndexOf( keys, key, undefined, true ) < 0 &&
+        if ( indexOf( keys, key ) < 0 &&
           hasOwnProperty.call( object, key ) )
         {
           keys.push( key );
@@ -2507,14 +2523,14 @@ var identity = function ( value ) {
 };
 
 /**
- * Returns true when the object contains the value, see
- * `Array.prototype.includes()`.
+ * Returns true when the object contains the value.
+ *
+ * @example
+ *
+ * _.includes( [ 0, NaN, 2 ], NaN ); // -> true
+ * _.includes( { z: 'A', A: 'z' }, 'z' ); // -> true
+ * _.includes( 'abcdef', 'b' ); // -> true
  */
-
-// _.includes( [ 0, NaN, 2 ], NaN ); // -> true
-// _.includes( { z: 'A', A: 'z' }, 'z' ); // -> true
-// _.includes( 'abcdef', 'b' ); // -> true
-
 var includes = function ( object, value ) {
   if ( typeof object == 'string' ) {
     return object.indexOf( value ) >= 0;
@@ -2528,30 +2544,47 @@ var includes = function ( object, value ) {
 };
 
 /**
- * Creates an object whose keys and values ​​are inverted.
+ * Creates an object whose keys and values are inverted.
+ *
+ * @memberOf _
+ * @static
+ * @param {!*} val
+ * @returns {Object}
+ * @example
+ *
+ * _.invert( { one: 1, two: 2 } );
+ * // -> { 1: 'one', 2: 'two' }
  */
-
-// _.invert( { one: 1, two: 2 } );
-// // -> { 1: 'one', 2: 'two' }
-
-var invert = function ( target ) {
-  return baseInvert( target = toObject( target ), getKeys( target ) );
+var invert = function ( val ) {
+  return baseInvert( val = toObject( val ), getKeys( val ) );
 };
 
 /**
- * The ES5 `Object.keys()` polyfill.
+ * The ES2015 `Object.keys()` polyfill.
+ *
+ * @memberOf _
+ * @static
+ * @param {!*} val The value to get it keys.
+ * @returns {Array} Array that contains enumerable keys of the value.
+ * @example
+ *
+ * _.keys( 'abc' );
+ * // -> [ '0', '1', '2' ]
+ *
+ * var object = {
+ *   a: 'b',
+ *   b: 'c'
+ * };
+ *
+ * object.constructor.prototype.c = 'a';
+ *
+ * _.keys( object );
+ * // -> [ 'a', 'b' ]
+ *
+ * @see _.keysIn
  */
-
-// var object = {
-//   a: 'b',
-//   b: 'c'
-// };
-//
-// object.constructor.prototype.c = 'a';
-// _.keys( object ); // -> [ 'a', 'b' ]
-
-var getKeys = support.keys !== 2 ? function ( object ) {
-  return baseKeys( toObject( object ) );
+var getKeys = support.keys !== 3 ? function ( val ) {
+  return baseKeys( toObject( val ) );
 } : Object.keys;
 
 /**
