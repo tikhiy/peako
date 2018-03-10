@@ -22,7 +22,7 @@
 /**
  * @class _
  * @alias peako
- * @param {Node|String|ArrayLikeObject|Function} selector
+ * @param {Node|string|ArrayLikeObject|Function} selector
  * @returns {_.DOMWrapper}
  */
 var peako = function ( selector ) {
@@ -124,7 +124,7 @@ var bindFast = function ( target, context ) {
  * @static
  * @since 0.0.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isArray( [] );
@@ -144,7 +144,7 @@ var isArray = Array.isArray || function ( value ) {
  * @static
  * @since 0.0.1
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isArrayLike( [] );
@@ -173,7 +173,7 @@ var isArrayLike = function ( value ) {
  * @static
  * @since 0.1.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isArrayLikeObject( [] );
@@ -194,7 +194,7 @@ var isArrayLikeObject = function ( value ) {
  * @static
  * @since 0.0.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isBoolean( false );
@@ -213,7 +213,7 @@ var isBoolean = function ( value ) {
  * @static
  * @since 0.0.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isFinite( new Number() );
@@ -234,7 +234,7 @@ var isFinite = function ( value ) {
  * @static
  * @since 0.0.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isFunction( () => {} );
@@ -255,7 +255,7 @@ support.HTMLElement = toString.call( body ).indexOf( 'HTML' ) > 0;
  * @static
  * @since 0.0.1
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isElement( document.createElement( 'span' ) );
@@ -285,7 +285,7 @@ var isElement = function ( value ) {
  * @static
  * @since 0.1.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isElementLike( document.createElement( 'span' ) );
@@ -308,7 +308,7 @@ var isElementLike = function ( value ) {
  * @param {*} value The value to check.
  * @param {Number} [length=Number.MAX_SAFE_INTEGER] Check for an array with a
  *  specific length.
- * @returns {Boolean}
+ * @returns {boolean}
  *
  * @example <caption>Without `length` parameter</caption>
  * _.isIndex( 0 ); // -> true
@@ -343,7 +343,7 @@ var MAX_ARRAY_LENGTH = 4294967295;
  * @static
  * @since 0.0.9
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isLength( 0 );
@@ -367,7 +367,7 @@ var isLength = function ( value ) {
  * @static
  * @since 0.0.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isNaN( NaN );
@@ -386,7 +386,7 @@ var isNaN = function ( value ) {
  * @static
  * @since 0.0.1
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isNumber( 0 );
@@ -407,7 +407,7 @@ var isNumber = function ( value ) {
  * @static
  * @since 0.0.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isObject( {} );
@@ -429,7 +429,7 @@ var isObject = function ( value ) {
  * @static
  * @since 0.1.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isObjectLike( {} );
@@ -453,7 +453,7 @@ var fnToString = fn.toString,
  * @static
  * @since 0.0.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isPlainObject( {} );
@@ -484,7 +484,7 @@ var isPlainObject = function ( value ) {
  * @static
  * @since 0.0.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isPrimitive( null );
@@ -510,7 +510,7 @@ var MAX_SAFE_INT = 9007199254740991,
  * @static
  * @since 0.0.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isSafeInteger( new Number() );
@@ -534,7 +534,7 @@ var isSafeInteger = function ( value ) {
  * @static
  * @since 0.0.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isDOMElement( window );
@@ -573,7 +573,7 @@ var isDOMElement = function ( value ) {
  * @static
  * @since 0.0.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isString( '' );
@@ -592,7 +592,7 @@ var isString = function ( value ) {
  * @static
  * @since 0.1.0
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isSymbol( Symbol() );
@@ -620,7 +620,7 @@ var isSymbol = function ( value ) {
  * @static
  * @since 0.0.6
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isWindow( window );
@@ -640,7 +640,7 @@ var isWindow = function ( value ) {
  * @static
  * @since 0.1.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isWindowLike( window );
@@ -1868,7 +1868,7 @@ var clamp = function ( value, lower, upper ) {
  * @memberof _
  * @static
  * @since 0.0.1
- * @param {Boolean} [deep=true] Recursively clone the target?
+ * @param {boolean} [deep=true] Recursively clone the target?
  * @param {!*} target The object to clone.
  * @returns {Object} The clone of the object.
  * @example
@@ -1924,7 +1924,7 @@ var clone = function ( deep, target, guard ) {
  * @memberof _
  * @static
  * @since 0.0.4
- * @param {Object|String} iterable The array-like value to clone.
+ * @param {Object|string} iterable The array-like value to clone.
  * @returns {Array} The clone of `iterable`.
  * @example
  *
@@ -2126,7 +2126,7 @@ function ( object, descriptors ) {
  * @static
  * @since 0.0.4
  * @param {Object} object The object to modificate.
- * @param {String} key The key of defined property.
+ * @param {string} key The key of defined property.
  * @param {Object} descriptor The descriptor to define.
  * @returns {Object} The object in which property were defined.
  * @example
@@ -2173,7 +2173,7 @@ var equal = function ( a, b ) {
  * @static
  * @since 0.1.0
  * @param {RegExp} regexp
- * @param {String} string
+ * @param {string} string
  * @returns {Array}
  * @example
  *
@@ -2382,8 +2382,8 @@ var default_file_options = {
  * this function will point to the &lt;XMLHttpRequest&gt; object that was used
  * to load the file.
  * @callback FileLoadedCallback
- * @param {String} data The content of the loaded file.
- * @param {String} path The path of the loaded file.
+ * @param {string} data The content of the loaded file.
+ * @param {string} path The path of the loaded file.
  * @param {FileOptions} options The options that given into `_.file()`.
  */
 
@@ -2392,7 +2392,7 @@ var default_file_options = {
  * `this` in this function will point to the &lt;XMLHttpRequest&gt; object that
  * was used to load the file.
  * @callback LoadingFileErrorCallback
- * @param {String} path The path of the file that failed to load.
+ * @param {string} path The path of the file that failed to load.
  * @param {FileOptions} options The options that given into `_.file()`.
  */
 
@@ -2400,8 +2400,8 @@ var default_file_options = {
  * This options used in [`_.file()`]{@link _.file}.
  * @typedef FileOptions
  * @type {Object}
- * @property {String} [path] The path of the file to be loaded.
- * @property {Boolean} [async] Use an asynchronous request?
+ * @property {string} [path] The path of the file to be loaded.
+ * @property {boolean} [async] Use an asynchronous request?
  * @property {FileLoadedCallback} [onload] This function will be called when the
  *  file is loaded successfully.
  * @property {LoadingFileErrorCallback} [onerror] This function will be called
@@ -2416,9 +2416,9 @@ var default_file_options = {
  * @category Utility Methods
  * @memberof _
  * @static
- * @param {String} [path=options.path] The path of the file to be loaded.
+ * @param {string} [path=options.path] The path of the file to be loaded.
  * @param {FileOptions} [options] File load options.
- * @returns {null|String} When the request wasn't asynchronous, it returns the
+ * @returns {null|string} When the request wasn't asynchronous, it returns the
  *  contents of the file.
  * @example <caption>Use Cases</caption>
  *
@@ -2562,6 +2562,7 @@ var invert = function ( val ) {
 /**
  * The ES2015 `Object.keys()` polyfill.
  *
+ * @method keys
  * @memberOf _
  * @static
  * @param {!*} val The value to get it keys.
@@ -3693,7 +3694,7 @@ support.getElementsByClassName = 'getElementsByClassName' in document;
  * @memberof _
  * @static
  * @param {Node} selector This element will be added to the new object.
- * @param {String} selector When the selector string contains HTML content, it
+ * @param {string} selector When the selector string contains HTML content, it
  *  will be parsed and added to the new object, if it doesn't, then will be
  *  added elements selected by the CSS selector.
  * @param {ArrayLikeObject} selector Elements from `selector` will be copied to
@@ -3786,7 +3787,7 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
    * array with all elements of this object will be returned.
    *
    * @memberof _.DOMWrapper
-   * @param {Number} [index] The position of the needed element.
+   * @param {number} [index] The position of the needed element.
    * @returns {Node|Array} Returns the picked element or array of all
    * elements.
    *
@@ -3880,7 +3881,7 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
    *
    * @memberof _.DOMWrapper.prototype
    * @chainable
-   * @param {String|Function} classes The classes that should be added to the
+   * @param {string|Function} classes The classes that should be added to the
    * elements, or the function that will be called (with the element index and
    * current element classes) once for each element, and returns the classes
    * that need to be added.
@@ -3926,7 +3927,7 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   /**
    * @memberof _.DOMWrapper.prototype
    * @chainable
-   * @param {String} [classes] The classes that should be removed from the
+   * @param {string} [classes] The classes that should be removed from the
    *  elements.
    * @param {Function} [classes] The function that will be called (with the
    *  element index and current element classes) once for each element, and
@@ -4546,6 +4547,8 @@ forOwnRight( {
         el[ name ] = val;
       }
     }
+
+    return this;
   };
 }, prototype );
 
