@@ -12,7 +12,7 @@
  * Code below could be confusing!
  */
 
-/* jshint esversion: 3, unused: true, undef: true */
+/* jshint esversion: 3, unused: true, undef: true, noarg: true, curly: true, immed: true */
 /* global XMLHttpRequest, Element, FileReader, Blob, FormData, ArrayBuffer */
 
 ;( function ( window, undefined ) {
@@ -771,7 +771,7 @@ var baseCloneArray = function ( iterable ) {
  * 1 - works only with DOM elements (old IE).
  * 2 - full support.
  */
-support.defineProperty = function () {
+support.defineProperty = ( function () {
   var test = function ( target ) {
     try {
       if ( '' in Object.defineProperty( target, '', {} ) ) {
@@ -783,7 +783,7 @@ support.defineProperty = function () {
   };
 
   return test( document.createElement( 'span' ) ) + test( {} );
-}();
+} )();
 
 support.defineGetter = '__defineGetter__' in obj;
 
@@ -1116,27 +1116,21 @@ if ( support.keys !== 3 ) {
 }
 
 /**
- * Base implementation of `_.map` and `_.mapRight` (works only with array-like
- * objects). `_.mapRight()` reverses the array, but doesn't loop through it
- * reversibly!
+ * Base implementation of `_.map()`.
+ * todo make separate map and mapObject.
  */
-var baseMap = function ( iterable, iteratee, context, fromRight ) {
-  var length, result, j, i;
+var baseMap = arr.map ? bindFast( fn_call, arr.map ) : function ( arr, fun, ctx ) {
+  var len = arr.length,
+      res = Array( len ),
+      i;
 
-  if ( !fromRight && arr.map ) {
-    return arr.map.call( iterable, iteratee, context );
-  }
-
-  result = Array( j = length = getLength( iterable ) );
-
-  for ( i = 0; i < length; ++i ) {
-    if ( has( i, iterable ) ) {
-      result[ fromRight ? --j : i ] = iteratee
-        .call( context, iterable[ i ], i, iterable );
+  for ( i = 0; i < len; ++i ) {
+    if ( has( i, arr ) ) {
+      res[ i ] = fun.call( ctx, arr[ i ], i, arr );
     }
   }
 
-  return result;
+  return res;
 };
 
 /**
@@ -1153,7 +1147,7 @@ var baseMap = function ( iterable, iteratee, context, fromRight ) {
 // };
 //
 // var users = {
-//   Josh: new User( 'Josh', 1243 ),
+//   Josh: new User( 'Josh', 1234 ),
 //   JSON: new User( 'JSON', -Infinity )
 // };
 //
@@ -1162,7 +1156,7 @@ var baseMap = function ( iterable, iteratee, context, fromRight ) {
 //   User.getAge, // iteratee
 //   null, // context for iteratee
 //   getKeys( users ) ); // properties to map in object
-// // -> { Josh: 1243, JSON: -1 }
+// // -> { Josh: 1234, JSON: -Infinity }
 
 var baseMapObject = function ( object, iteratee, context, keys ) {
   var length = keys.length,
@@ -1455,7 +1449,7 @@ var createMap = function ( fromRight, getKeys ) {
     }
 
     if ( fromRight ) {
-      throw TypeError( "Can't call _.mapRight on non-array object" );
+      throw TypeError( "Can't call _.mapRight on non-array" );
     }
 
     return baseMapObject(
@@ -1554,7 +1548,7 @@ var toWords = function ( string ) {
   return string.match( regexps.not_spaces ) || [];
 };
 
-var toCamelCase = function () {
+var toCamelCase = ( function () {
   var toCamelCase = function ( string, symbol ) {
     return symbol.toUpperCase();
   };
@@ -1564,7 +1558,7 @@ var toCamelCase = function () {
       string :
       string.replace( /-(\w)/g, toCamelCase );
   };
-}();
+} )();
 
 /* todo compare (in perfomance) with the old version. */
 var getType = function ( value ) {
@@ -1756,9 +1750,7 @@ var before = function ( n, target ) {
     if ( target ) {
       if ( --n >= 0 ) {
         value = apply( target, this, arguments );
-      }
-
-      if ( n < 2 ) {
+      } else {
         target = null;
       }
     }
@@ -1767,7 +1759,7 @@ var before = function ( n, target ) {
   };
 };
 
-var bind = function () {
+var bind = ( function () {
   var args = function ( partial_args, args ) {
     var i = 0,
         j = -1,
@@ -1831,7 +1823,7 @@ var bind = function () {
       return apply( target, context, args( partial_args, arguments ) );
     };
   };
-}();
+} )();
 
 /**
  * Returns a number that doesn't go out of bounds `lower` and `upper`.
@@ -2004,7 +1996,7 @@ var constant = function ( value ) {
  *
  * var object = _.create( prototype, descriptors );
  */
-var create = Object.create || function () {
+var create = Object.create || ( function () {
   var Constructor = function () {};
 
   return function create ( prototype, descriptors ) {
@@ -2030,7 +2022,7 @@ var create = Object.create || function () {
 
     return object;
   };
-}();
+} )();
 
 /**
  * Returns `defaultValue` when `value` is `null`, `undefined`, or `NaN`.
@@ -2297,7 +2289,7 @@ var fromPairs = function ( pairs ) {
  * @static
  * @returns {Number}
  */
-var timestamp = function () {
+var timestamp = ( function () {
   var perfomance = window.perfomance,
       navigatorStart;
 
@@ -2317,7 +2309,7 @@ var timestamp = function () {
   return function () {
     return getTime() - navigatorStart;
   };
-}();
+} )();
 
 var toPath = function ( value ) {
   var parsed, len, i;
@@ -2369,124 +2361,100 @@ var access = function ( obj, path, val ) {
   return obj[ path[ 0 ] ];
 };
 
-var default_file_options = {
+var dfltAjaxOpts = {
   onerror: function ( path ) {
     throw Error( "Can't load " + path + ' file, status: ' + this.status );
   },
 
+  type: 'GET',
   timeout: 1000 * 60
 };
 
 /**
- * This function will be called when the file is loaded successfully. `this` in
- * this function will point to the &lt;XMLHttpRequest&gt; object that was used
- * to load the file.
- * @callback FileLoadedCallback
- * @param {string} data The content of the loaded file.
- * @param {string} path The path of the loaded file.
- * @param {FileOptions} options The options that given into `_.file()`.
- */
-
-/**
- * This function will be called when the error occur while loading the file.
- * `this` in this function will point to the &lt;XMLHttpRequest&gt; object that
- * was used to load the file.
- * @callback LoadingFileErrorCallback
- * @param {string} path The path of the file that failed to load.
- * @param {FileOptions} options The options that given into `_.file()`.
- */
-
-/**
- * This options used in [`_.file()`]{@link _.file}.
- * @typedef FileOptions
- * @type {Object}
- * @property {string} [path] The path of the file to be loaded.
- * @property {boolean} [async] Use an asynchronous request?
- * @property {FileLoadedCallback} [onload] This function will be called when the
- *  file is loaded successfully.
- * @property {LoadingFileErrorCallback} [onerror] This function will be called
- *  when the error occur while loading the file.
- * @property {Number} [timeout=60000] If the load time for the file needs more
- *  than this limit, it will be canceled.
- */
-
-/**
- * Returns the contents of the file at the path.
- *
- * @category Utility Methods
+ * @method ajax
  * @memberof _
  * @static
- * @param {string} [path=options.path] The path of the file to be loaded.
- * @param {FileOptions} [options] File load options.
- * @returns {null|string} When the request wasn't asynchronous, it returns the
- *  contents of the file.
- * @example <caption>Use Cases</caption>
+ * @param {string} path
+ * @param {Object} options
+ * @example
  *
- * // 1. async = false
- * _.file( path );
- * // 2. async = options.async || true
- * _.file( path, options );
- * // 3. async = options.async || true
- * _.file( options );
+ * <caption>Get some JSON</caption>
  *
- * @see _.fetch
+ * _.ajax( 'data.json', {
+ *   onload: function ( _data ) {
+ *     data = JSON.parse( _data );
+ *   }
+ * } );
+ *
+ * @example <caption>Post some data to the server</caption>
+ *
+ * _.ajax( 'server.js', {
+ *   data: document.location.hash,
+ *   type: 'POST'
+ * } );
  */
-var file = function ( path, options ) {
+peako.ajax = function ( path, options ) {
 
   var data = null,
-      use_async, request, id;
+      async, req, timer;
 
   // _.file( options );
   // async = options.async || true
   if ( typeof path != 'string' ) {
-    options = defaults( default_file_options, path );
-    use_async = options.async === undefined || options.async;
+    options = defaults( dfltAjaxOpts, path );
+    async = options.async === undefined || options.async;
     path = options.path;
 
   // _.file( path );
   // async = false
   } else if ( options === undefined ) {
-    options = default_file_options;
-    use_async = false;
+    options = dfltAjaxOpts;
+    async = false;
 
   // _.file( path, options );
   // async = options.async || true
   } else {
-    options = defaults( default_file_options, options );
-    use_async = options.async === undefined || options.async;
+    options = defaults( dfltAjaxOpts, options );
+    async = options.async === undefined || options.async;
   }
 
-  request = new XMLHttpRequest();
+  req = new XMLHttpRequest();
 
-  request.onreadystatechange = function () {
-    if ( this.readyState !== 4 ) {
-      return;
-    }
-
-    if ( this.status === 200 ) {
-      if ( id !== undefined ) {
-        window.clearTimeout( id );
+  if ( options.type === 'GET' ) {
+    req.onreadystatechange = function () {
+      if ( this.readyState !== 4 ) {
+        return;
       }
 
-      data = this.responseText;
+      if ( this.status === 200 ) {
+        if ( timer != null ) {
+          window.clearTimeout( timer );
+        }
 
-      if ( options.onload ) {
-        options.onload.call( this, data, path, options );
+        data = this.responseText;
+
+        if ( options.onload ) {
+          options.onload.call( this, data, path, options );
+        }
+      } else if ( options.onerror ) {
+        options.onerror.call( this, path, options );
       }
-    } else if ( options.onerror ) {
-      options.onerror.call( this, path, options );
+    };
+
+    req.open( 'GET', path, async );
+
+    if ( async ) {
+      timer = window.setTimeout( function () {
+        req.abort();
+      }, options.timeout );
     }
-  };
 
-  request.open( 'GET', path, use_async );
-
-  if ( use_async ) {
-    id = window.setTimeout( function () {
-      request.abort();
-    }, options.timeout );
+    req.send();
+  } else if ( options.type === 'POST' ) {
+    req.open( 'POST', path, async );
+    req.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8' );
+    req.send( options.data );
   }
-
-  request.send();
 
   return data;
 
@@ -2645,13 +2613,11 @@ var merge = function ( iterable ) {
 var method = function ( path ) {
   var len = ( path = toPath( path ) ).length,
       args = slice.call( arguments, 1 ),
-      key;
+      key = path[ path.length - 1 ];
 
   if ( !len ) {
     throw Error( 'An empty _.method() path' );
   }
-
-  key = path[ path.length - 1 ];
 
   return len > 1 ? function ( obj ) {
     if ( obj != null && ( obj = baseAccessor( obj, path, 1 ) ) != null ) {
@@ -2981,15 +2947,15 @@ var toPlainObject = function ( target ) {
   return assignIn( {}, toObject( target ) );
 };
 
-var unique = function () {
-  var unique = function ( value, i, iterable ) {
-    return baseIndexOf( iterable, value ) == i;
+var unique = ( function () {
+  var unique = function ( val, i, arr ) {
+    return baseIndexOf( arr, val ) == i;
   };
 
-  return function ( iterable ) {
-    return filter( iterable, unique );
+  return function ( arr ) {
+    return filter( arr, unique );
   };
-}();
+} )();
 
 var without = function ( iterable ) {
   var i = 0,
@@ -3415,7 +3381,7 @@ var event = {
  * Adapted from Jonathan Neal getComputedStyle polyfill.
  * https://github.com/jonathantneal/polyfill/blob/master/polyfills/getComputedStyle/polyfill.js
  */
-var getComputedStyle = window.getComputedStyle || function () {
+var getComputedStyle = window.getComputedStyle || ( function () {
   var toDOMString = function () {
     var toDOMString = function ( letter ) {
       return '-' + letter.toLowerCase();
@@ -3548,7 +3514,7 @@ var getComputedStyle = window.getComputedStyle || function () {
   return function getComputedStyle ( element ) {
     return new CSSStyleDeclaration( element );
   };
-}();
+} )();
 
 /**
  * Based on Erik Möller requestAnimationFrame polyfill:
@@ -3562,7 +3528,7 @@ var getComputedStyle = window.getComputedStyle || function () {
  *
  * MIT license
  */
-var timer = function () {
+var timer = ( function () {
   var timer = {},
       suffix = 'AnimationFrame',
 
@@ -3606,7 +3572,7 @@ var timer = function () {
   }
 
   return timer;
-}();
+} )();
 
 var matches = window.Element && (
   Element.prototype.matches ||
@@ -4038,7 +4004,7 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   },
 
   offset: function ( options ) {
-    var el, doc, root, body,
+    var el, doc, docEl, body,
         off, callable, i, style, win;
 
     if ( options == null ) {
@@ -4048,19 +4014,19 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
         return null;
       }
 
+      if ( !el.getClientRects().length ) {
+        return { top: 0, left: 0 };
+      }
+
       doc = el.ownerDocument;
-      root = doc.docElement;
+      docEl = doc.documentElement;
       body = doc.body;
       win = doc.defaultView;
       off = el.getBoundingClientRect();
 
       return {
-        top: off.top +
-          ( win.pageYOffset || root.scrollTop || body.scrollTop ) -
-          ( root.clientTop || body.clientTop || 0 ),
-        left: off.left +
-          ( win.pageXOffset || root.scrollLeft || body.scrollLeft ) -
-          ( root.clientLeft || body.clientLeft || 0 )
+        top: off.top + ( win.pageYOffset || docEl.scrollTop || body.scrollTop ) - ( docEl.clientTop || body.clientTop || 0 ),
+        left: off.left + ( win.pageXOffset || docEl.scrollLeft || body.scrollLeft ) - ( docEl.clientLeft || body.clientLeft || 0 )
       };
     }
 
@@ -4511,8 +4477,10 @@ forOwnRight( {
         continue;
       }
 
-      // Skip some weird stuff (spaces, comments, whatever...)
-      while ( ( sib = el[ sibling ] ) && sib.nodeType !== 1 );
+      // skip text nodes
+      do {
+        sib = el[ sibling ];
+      } while ( sib && sib.nodeType !== 1 );
 
       if ( sib && ( !selector || is( sib, selector, i ) ) ) {
         els[ els.length++ ] = sib;
@@ -4595,7 +4563,7 @@ forOwnRight( {
     }
 
     return this;
-  };      
+  };
 }, prototype );
 
 forOwnRight( {
@@ -4864,7 +4832,7 @@ var jqAccess = function ( set, callback, key, val, chainable, ifEmptyVal, raw ) 
   if ( getType( key ) == 'object' ) {
     chainable = true;
     keysLen = ( keys = getKeys( key ) ).length;
-    
+
     for ( i = 0; i < keysLen; ++i ) {
       jqAccess( set, callback, keys[ i ], key[ keys[ i ] ], chainable, ifEmptyVal, raw );
     }
@@ -4981,7 +4949,7 @@ var getDefaultVisibleDisplay = function ( target ) {
 };
 
 ( function ( jqAccess ) {
-  var supportAttrs = support.getAttribute = function () {
+  var supportAttrs = support.getAttribute = ( function () {
     var span = document.createElement( 'span' ),
         name = 'name';
 
@@ -4991,7 +4959,7 @@ var getDefaultVisibleDisplay = function ( target ) {
     } catch ( e ) {}
 
     return false;
-  }();
+  } )();
 
   var propFix = peako.propFix = {
     'for':   'htmlFor',
@@ -5040,7 +5008,7 @@ var getDefaultVisibleDisplay = function ( target ) {
         }
       }
     }
-    
+
     return this;
   };
 
@@ -5056,7 +5024,7 @@ var getDefaultVisibleDisplay = function ( target ) {
         delete el[ names[ j ] ];
       }
     }
-    
+
     return this;
   };
 
@@ -5171,7 +5139,7 @@ var classList = {
  * Based on Taylor Hakes Promise polyfill.
  * https://github.com/taylorhakes/promise-polyfill
  */
-var Promise = window.Promise || function () {
+var Promise = window.Promise || ( function () {
   var Promise = function ( executor ) {
     if ( !this || !( this instanceof Promise ) ) {
       throw TypeError( this + ' is not a promise' );
@@ -5203,17 +5171,21 @@ var Promise = window.Promise || function () {
     },
 
     'finally': function ( fun ) {
-      var Promise = this.constructor;
+      var Promise = this.constructor,
 
-      return this.then( function ( val ) {
-        return Promise.resolve( fun() ).then( function () {
-          return val;
-        } );
-      }, function ( err ) {
-        return Promise.resolve( fun() ).then( function () {
-          return Promise.reject( err );
-        } );
-      } );
+          done = function ( val ) {
+            return Promise.resolve( fun() ).then( function () {
+              return val;
+            } );
+          },
+    
+          fail = function ( err ) {
+            return Promise.resolve( fun() ).then( function () {
+              return Promise.reject( err );
+            } );
+          };
+
+      return this.then( done, fail );
     },
 
     constructor: Promise
@@ -5404,7 +5376,7 @@ var Promise = window.Promise || function () {
   };
 
   return Promise;
-}();
+} )();
 
 baseForEach( [
   'blur',        'focus',       'focusin',
@@ -5588,13 +5560,13 @@ if ( !support.fetch ) {
     return file_reader_ready( reader );
   };
 
-  support.blob = has( 'FileReader', window ) && has( 'Blob', window ) && function () {
+  support.blob = has( 'FileReader', window ) && has( 'Blob', window ) && ( function () {
     try {
       return new Blob(), true;
     } catch ( e ) {}
 
     return false;
-  }();
+  } )();
 
   support.formData = has( 'FormData', window );
   support.arrayBuffer = has( 'ArrayBuffer', window );
@@ -5990,7 +5962,6 @@ peako.eachRight = eachRight;
 peako.equal = peako.eq = equal;
 peako.every = every;
 peako.exec = exec;
-peako.file = file;
 peako.fill = fill;
 peako.filter = filter;
 peako.filterIn = filterIn;

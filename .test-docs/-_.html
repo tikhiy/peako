@@ -131,7 +131,7 @@
 </dl>
     <h6 class="doclet-subheader">Parameters</h6>
     
-  <p><code>selector</code> <code class="doclet-type">(Node|String|ArrayLikeObject|function)</code></p>
+  <p><code>selector</code> <code class="doclet-type">(Node|string|ArrayLikeObject|function)</code></p>
 
   
     <h6 class="doclet-subheader">Returns</h6>
@@ -168,11 +168,45 @@
 
         
             <div class="doclet">
+  <pre class="doclet-header">ajax<span class="signature">( path, options )</span></pre>
+
+  
+
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2375">line 2375</a></span></div>
+</dl>
+    <h6 class="doclet-subheader">Parameters</h6>
+    
+  <p><code>path</code> <code class="doclet-type">(string)</code></p>
+
+  <p><code>options</code> <code class="doclet-type">(Object)</code></p>
+
+  <h6 class="doclet-subheader">Examples</h6>
+      <p class="code-caption">Get some JSON</p>
+    
+
+    <pre class="prettyprint"><code>_.ajax( 'data.json', {
+  onload: function ( _data ) {
+    data = JSON.parse( _data );
+  }
+} );</code></pre>
+
+      <p class="code-caption">Post some data to the server</p>
+    
+
+    <pre class="prettyprint"><code>_.ajax( 'server.js', {
+  data: document.location.hash,
+  type: 'POST'
+} );</code></pre>
+
+</div>
+<hr />
+        
+            <div class="doclet">
   <pre class="doclet-header">before<span class="signature">( n, target )</span> -> {function}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.0</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1736">line 1736</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.0</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1740">line 1740</a></span></div>
 </dl><p>Returns a function that can only be called <code>n</code> times. NOTE: Behave
 differently from Lodash <code>_.before()</code>.</p>
     <h6 class="doclet-subheader">Parameters</h6>
@@ -203,7 +237,7 @@ Math.weirdFunc(); // -> 21...</code></pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1780">line 1780</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1784">line 1784</a></span></div>
 </dl><p>Binds the <code>target</code> function to the <code>context</code>.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -235,7 +269,7 @@ _.bind( greet, { greeting: 'Hello' }, 'Mike' )( '.' );
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.5</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-93">line 93</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.5</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-94">line 94</a></span></div>
 </dl><p>Binds the function to <code>context</code>. Bound function will execute faster than
 if it was bound by <code>_.bind()</code>. NOTE: In the <code>_.bindFast()</code> method you
 can't use partial arguments.</p>
@@ -268,7 +302,7 @@ goodbye(); // -> 'goodbye.'</code></pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.1</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1842">line 1842</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.1</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1846">line 1846</a></span></div>
 </dl><p>Returns a number that doesn't go out of bounds <code>lower</code> and <code>upper</code>.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -294,11 +328,11 @@ _.clamp( 15, 0, 10 ); // -> 10</code></pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.1</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1885">line 1885</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.1</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1889">line 1889</a></span></div>
 </dl><p>Creates a clone of the <code>target</code> object.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
-  <p><code>[deep=true]</code> <code class="doclet-type">(Boolean)</code> - Recursively clone the target?</p>
+  <p><code>[deep=true]</code> <code class="doclet-type">(boolean)</code> - Recursively clone the target?</p>
 
   <p><code>target</code> <code class="doclet-type">(*)</code> - The object to clone.</p>
 
@@ -334,13 +368,13 @@ clone instanceof Person;
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1930">line 1930</a></span></div>
-</dl><p>Creates an array with elements from the <code>iterable</code> array. NOTE: You can
-use <code>&lt;Array&gt;.slice()</code>, but in some situations <code>_.cloneArray()</code> works much
-faster (for array-like objects).</p>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1934">line 1934</a></span></div>
+</dl><p>Creates an array with elements from the <code>iterable</code> array. NOTE: You can use
+<code>&lt;Array&gt;.slice()</code>, but in some situations <code>_.cloneArray()</code> works much faster
+(for array-like objects).</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
-  <p><code>iterable</code> <code class="doclet-type">(Object|String)</code> - The array-like value to clone.</p>
+  <p><code>iterable</code> <code class="doclet-type">(Object|string)</code> - The array-like value to clone.</p>
 
   
     <h6 class="doclet-subheader">Returns</h6>
@@ -364,7 +398,7 @@ _.cloneArray( weirdObject );
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1952">line 1952</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1956">line 1956</a></span></div>
 </dl><p>Returns array without falsy values.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -386,14 +420,14 @@ _.cloneArray( weirdObject );
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1973">line 1973</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1977">line 1977</a></span></div>
 </dl><p>Polyfill for the <code>Object.create()</code> method.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
   <p><code>prototype</code> <code class="doclet-type">(null|Object)</code> - The prototype of a new object.</p>
 
-  <p><code>[descriptors]</code> <code class="doclet-type">(Object)</code> - The descriptors to assign in the new object
- via <a href="-_.html#.defineProperties"><code><code>_.defineProperties()</code></code></a>.</p>
+  <p><code>[descriptors]</code> <code class="doclet-type">(Object)</code> - The descriptors to assign in the new object via
+ <a href="-_.html#.defineProperties"><code><code>_.defineProperties()</code></code></a>.</p>
 
   
     <h6 class="doclet-subheader">Returns</h6>
@@ -418,7 +452,7 @@ var object = _.create( prototype, descriptors );</code></pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.0</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2046">line 2046</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.0</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2050">line 2050</a></span></div>
 </dl><p>Returns <code>defaultValue</code> when <code>value</code> is <code>null</code>, <code>undefined</code>, or <code>NaN</code>.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -448,7 +482,7 @@ _.defaultTo( 0, 100 );
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2054">line 2054</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2058">line 2058</a></span></div>
 </dl><p>Polyfill for the <code>Object.defineProperties()</code> method.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -483,13 +517,13 @@ _.defineProperties( object, descriptors );</code></pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2110">line 2110</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2114">line 2114</a></span></div>
 </dl><p>Polyfill for the <code>Object.defineProperty()</code> method.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
   <p><code>object</code> <code class="doclet-type">(Object)</code> - The object to modificate.</p>
 
-  <p><code>key</code> <code class="doclet-type">(String)</code> - The key of defined property.</p>
+  <p><code>key</code> <code class="doclet-type">(string)</code> - The key of defined property.</p>
 
   <p><code>descriptor</code> <code class="doclet-type">(Object)</code> - The descriptor to define.</p>
 
@@ -514,14 +548,14 @@ _.defineProperty( person, 'name', descriptor );</code></pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.0</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2157">line 2157</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.0</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2161">line 2161</a></span></div>
 </dl><p>It's like <code>&lt;RegExp&gt;.exec()</code>, but it works as <code>&lt;String&gt;.match()</code> with the
 global flag.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
   <p><code>regexp</code> <code class="doclet-type">(RegExp)</code></p>
 
-  <p><code>string</code> <code class="doclet-type">(String)</code></p>
+  <p><code>string</code> <code class="doclet-type">(string)</code></p>
 
   
     <h6 class="doclet-subheader">Returns</h6>
@@ -535,49 +569,11 @@ global flag.</p>
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">file<span class="signature">( [path=options.path], [options] )</span> -> {null|String}</pre>
-
-  
-
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2426">line 2426</a></span></div>
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-      <ul>
-        <li>_.fetch</li>
-      </ul>
-    </dd>
-  
-</dl><p>Returns the contents of the file at the path.</p>
-    <h6 class="doclet-subheader">Parameters</h6>
-    
-  <p><code>[path=options.path]</code> <code class="doclet-type">(String)</code> - The path of the file to be loaded.</p>
-
-  <p><code>[options]</code> <code class="doclet-type">(FileOptions)</code> - File load options.</p>
-
-  
-    <h6 class="doclet-subheader">Returns</h6>
-
-    <p><code class="doclet-type">(null|String)</code> - When the request wasn't asynchronous, it returns
- the contents of the file.</p><h6 class="doclet-subheader">Example</h6>
-      <p class="code-caption">Use Cases</p>
-    
-
-    <pre class="prettyprint"><code>// 1. async = false
-_.file( path );
-// 2. async = options.async || true
-_.file( path, options );
-// 3. async = options.async || true
-_.file( options );</code></pre>
-
-</div>
-<hr />
-        
-            <div class="doclet">
   <pre class="doclet-header">fill<span class="signature">( iterable, value, [start], [end=iterable.length] )</span> -> {Object}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2208">line 2208</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2212">line 2212</a></span></div>
 </dl><p>Fill the <code>iterable</code> array from <code>start</code> to <code>end</code> index with <code>value</code>.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -607,7 +603,7 @@ _.fill( [ 'a', null, null, null, 'z' ], '.', 1, -1 );
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.5</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2243">line 2243</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.5</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2247">line 2247</a></span></div>
 </dl><p>Flattens the <code>iterable</code> array by reduce the number of dimensions in it on
 <code>depth</code> value (default - Infinity).</p>
     <h6 class="doclet-subheader">Parameters</h6>
@@ -638,7 +634,7 @@ _.flatten( weirdArray, 2 );
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.0</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2269">line 2269</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.0</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2273">line 2273</a></span></div>
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
       <ul>
@@ -669,11 +665,33 @@ _.fromPairs( _.toPairs( { one: 1 } ) );
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">isArray<span class="signature">( value )</span> -> {Boolean}</pre>
+  <pre class="doclet-header">invert<span class="signature">( val<span class="signature-attrs"> - non-null</span> )</span> -> {Object}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-118">line 118</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2528">line 2528</a></span></div>
+</dl><p>Creates an object whose keys and values are inverted.</p>
+    <h6 class="doclet-subheader">Parameters</h6>
+    
+  <p><code>val</code> <code class="doclet-type">(*)</code></p>
+
+  
+    <h6 class="doclet-subheader">Returns</h6>
+
+    <p><code class="doclet-type">(Object)</code></p><h6 class="doclet-subheader">Example</h6>
+
+    <pre class="prettyprint"><code>_.invert( { one: 1, two: 2 } );
+// -> { 1: 'one', 2: 'two' }</code></pre>
+
+</div>
+<hr />
+        
+            <div class="doclet">
+  <pre class="doclet-header">isArray<span class="signature">( value )</span> -> {boolean}</pre>
+
+  
+
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-119">line 119</a></span></div>
 </dl><p>Returns true if <code>value</code> is an Array instance.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -682,7 +700,7 @@ _.fromPairs( _.toPairs( { one: 1 } ) );
   
     <h6 class="doclet-subheader">Returns</h6>
 
-    <p><code class="doclet-type">(Boolean)</code></p><h6 class="doclet-subheader">Example</h6>
+    <p><code class="doclet-type">(boolean)</code></p><h6 class="doclet-subheader">Example</h6>
 
     <pre class="prettyprint"><code>_.isArray( [] );
 // -> true
@@ -693,11 +711,11 @@ _.isArray( Array() );
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">isArrayLike<span class="signature">( value )</span> -> {Boolean}</pre>
+  <pre class="doclet-header">isArrayLike<span class="signature">( value )</span> -> {boolean}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.1</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-156">line 156</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.1</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-157">line 157</a></span></div>
 </dl><p>Returns true if <code>value</code> is array-like. String and Object values with a
 valid <code>length</code> property is array-like.</p>
     <h6 class="doclet-subheader">Parameters</h6>
@@ -707,7 +725,7 @@ valid <code>length</code> property is array-like.</p>
   
     <h6 class="doclet-subheader">Returns</h6>
 
-    <p><code class="doclet-type">(Boolean)</code></p><h6 class="doclet-subheader">Example</h6>
+    <p><code class="doclet-type">(boolean)</code></p><h6 class="doclet-subheader">Example</h6>
 
     <pre class="prettyprint"><code>_.isArrayLike( [] );
 // -> true
@@ -720,11 +738,11 @@ _.isArrayLike( new Float32Array() );
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">isArrayLikeObject<span class="signature">( value )</span> -> {Boolean}</pre>
+  <pre class="doclet-header">isArrayLikeObject<span class="signature">( value )</span> -> {boolean}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-185">line 185</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-186">line 186</a></span></div>
 </dl><p>Returns true if <code>value</code> is an object and array-like.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -733,7 +751,7 @@ _.isArrayLike( new Float32Array() );
   
     <h6 class="doclet-subheader">Returns</h6>
 
-    <p><code class="doclet-type">(Boolean)</code></p><h6 class="doclet-subheader">Example</h6>
+    <p><code class="doclet-type">(boolean)</code></p><h6 class="doclet-subheader">Example</h6>
 
     <pre class="prettyprint"><code>_.isArrayLikeObject( [] );
 // -> true
@@ -746,11 +764,11 @@ _.isArrayLikeObject( new String() );
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">isBoolean<span class="signature">( value )</span> -> {Boolean}</pre>
+  <pre class="doclet-header">isBoolean<span class="signature">( value )</span> -> {boolean}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-204">line 204</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-205">line 205</a></span></div>
 </dl><p>Returns true if <code>value</code> is a boolean primitive.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -759,7 +777,7 @@ _.isArrayLikeObject( new String() );
   
     <h6 class="doclet-subheader">Returns</h6>
 
-    <p><code class="doclet-type">(Boolean)</code></p><h6 class="doclet-subheader">Example</h6>
+    <p><code class="doclet-type">(boolean)</code></p><h6 class="doclet-subheader">Example</h6>
 
     <pre class="prettyprint"><code>_.isBoolean( false );
 // -> true
@@ -770,11 +788,11 @@ _.isBoolean( new Boolean() );
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">isDOMElement<span class="signature">( value )</span> -> {Boolean}</pre>
+  <pre class="doclet-header">isDOMElement<span class="signature">( value )</span> -> {boolean}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-548">line 548</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-549">line 549</a></span></div>
 </dl><p>Returns true if <code>value</code> represents a DOM element.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -783,7 +801,7 @@ _.isBoolean( new Boolean() );
   
     <h6 class="doclet-subheader">Returns</h6>
 
-    <p><code class="doclet-type">(Boolean)</code></p><h6 class="doclet-subheader">Example</h6>
+    <p><code class="doclet-type">(boolean)</code></p><h6 class="doclet-subheader">Example</h6>
 
     <pre class="prettyprint"><code>_.isDOMElement( window );
 // -> true
@@ -798,11 +816,11 @@ _.isDOMElement( document.createTextNode( '' ) );
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">isElement<span class="signature">( value )</span> -> {Boolean}</pre>
+  <pre class="doclet-header">isElement<span class="signature">( value )</span> -> {boolean}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.1</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-267">line 267</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.1</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-268">line 268</a></span></div>
 </dl><p>Returns true if <code>value</code> is HTMLElement instance.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -811,7 +829,7 @@ _.isDOMElement( document.createTextNode( '' ) );
   
     <h6 class="doclet-subheader">Returns</h6>
 
-    <p><code class="doclet-type">(Boolean)</code></p><h6 class="doclet-subheader">Example</h6>
+    <p><code class="doclet-type">(boolean)</code></p><h6 class="doclet-subheader">Example</h6>
 
     <pre class="prettyprint"><code>_.isElement( document.createElement( 'span' ) );
 // -> true
@@ -824,11 +842,11 @@ _.isElement( { nodeType: 1 } );
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">isElementLike<span class="signature">( value )</span> -> {Boolean}</pre>
+  <pre class="doclet-header">isElementLike<span class="signature">( value )</span> -> {boolean}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-297">line 297</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-298">line 298</a></span></div>
 </dl><p>Returns true if <code>value</code> is HTMLElement instance, but faster than
 <code>_.isElement()</code>.</p>
     <h6 class="doclet-subheader">Parameters</h6>
@@ -838,7 +856,7 @@ _.isElement( { nodeType: 1 } );
   
     <h6 class="doclet-subheader">Returns</h6>
 
-    <p><code class="doclet-type">(Boolean)</code></p><h6 class="doclet-subheader">Example</h6>
+    <p><code class="doclet-type">(boolean)</code></p><h6 class="doclet-subheader">Example</h6>
 
     <pre class="prettyprint"><code>_.isElementLike( document.createElement( 'span' ) );
 // -> true
@@ -851,11 +869,11 @@ _.isElementLike( { nodeType: 1 } );
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">isFinite<span class="signature">( value )</span> -> {Boolean}</pre>
+  <pre class="doclet-header">isFinite<span class="signature">( value )</span> -> {boolean}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-225">line 225</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-226">line 226</a></span></div>
 </dl><p>Returns true if <code>value</code> is a finite number primitive.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -864,7 +882,7 @@ _.isElementLike( { nodeType: 1 } );
   
     <h6 class="doclet-subheader">Returns</h6>
 
-    <p><code class="doclet-type">(Boolean)</code></p><h6 class="doclet-subheader">Example</h6>
+    <p><code class="doclet-type">(boolean)</code></p><h6 class="doclet-subheader">Example</h6>
 
     <pre class="prettyprint"><code>_.isFinite( new Number() );
 // -> false (in older versions - true)
@@ -877,11 +895,11 @@ _.isFinite( NaN );
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">isFunction<span class="signature">( value )</span> -> {Boolean}</pre>
+  <pre class="doclet-header">isFunction<span class="signature">( value )</span> -> {boolean}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-244">line 244</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-245">line 245</a></span></div>
 </dl><p>Returns true for all kinds of <code>function</code>.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -890,7 +908,7 @@ _.isFinite( NaN );
   
     <h6 class="doclet-subheader">Returns</h6>
 
-    <p><code class="doclet-type">(Boolean)</code></p><h6 class="doclet-subheader">Example</h6>
+    <p><code class="doclet-type">(boolean)</code></p><h6 class="doclet-subheader">Example</h6>
 
     <pre class="prettyprint"><code>_.isFunction( () => {} );
 // -> true
@@ -901,11 +919,11 @@ _.isFunction( async () => {} );
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">isIndex<span class="signature">( value, [length=Number.MAX_SAFE_INTEGER] )</span> -> {Boolean}</pre>
+  <pre class="doclet-header">isIndex<span class="signature">( value, [length=Number.MAX_SAFE_INTEGER] )</span> -> {boolean}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.0</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-324">line 324</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.0</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-325">line 325</a></span></div>
 </dl><p>Returns true if <code>value</code> is a valid array-like index.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -917,7 +935,7 @@ _.isFunction( async () => {} );
   
     <h6 class="doclet-subheader">Returns</h6>
 
-    <p><code class="doclet-type">(Boolean)</code></p><h6 class="doclet-subheader">Examples</h6>
+    <p><code class="doclet-type">(boolean)</code></p><h6 class="doclet-subheader">Examples</h6>
       <p class="code-caption">Without `length` parameter</p>
     
 
@@ -938,11 +956,11 @@ _.isIndex( 10, names.length ); // -> false</code></pre>
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">isLength<span class="signature">( value )</span> -> {Boolean}</pre>
+  <pre class="doclet-header">isLength<span class="signature">( value )</span> -> {boolean}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.9</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-355">line 355</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.9</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-356">line 356</a></span></div>
 </dl><p>Returns true if <code>value</code> is a valid Array instance length.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -951,7 +969,7 @@ _.isIndex( 10, names.length ); // -> false</code></pre>
   
     <h6 class="doclet-subheader">Returns</h6>
 
-    <p><code class="doclet-type">(Boolean)</code></p><h6 class="doclet-subheader">Example</h6>
+    <p><code class="doclet-type">(boolean)</code></p><h6 class="doclet-subheader">Example</h6>
 
     <pre class="prettyprint"><code>_.isLength( 0 );
 // -> true
@@ -964,11 +982,11 @@ _.isLength( new Number() );
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">isNaN<span class="signature">( value )</span> -> {Boolean}</pre>
+  <pre class="doclet-header">isNaN<span class="signature">( value )</span> -> {boolean}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-377">line 377</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-378">line 378</a></span></div>
 </dl><p>Checks if <code>value</code> is NaN.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -977,7 +995,7 @@ _.isLength( new Number() );
   
     <h6 class="doclet-subheader">Returns</h6>
 
-    <p><code class="doclet-type">(Boolean)</code></p><h6 class="doclet-subheader">Example</h6>
+    <p><code class="doclet-type">(boolean)</code></p><h6 class="doclet-subheader">Example</h6>
 
     <pre class="prettyprint"><code>_.isNaN( NaN );
 // -> true
@@ -988,11 +1006,11 @@ _.isNaN( new Number( NaN ) );
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">isNumber<span class="signature">( value )</span> -> {Boolean}</pre>
+  <pre class="doclet-header">isNumber<span class="signature">( value )</span> -> {boolean}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.1</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-398">line 398</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.1</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-399">line 399</a></span></div>
 </dl><p>Returns true if <code>value</code> is a number primitive.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -1001,7 +1019,7 @@ _.isNaN( new Number( NaN ) );
   
     <h6 class="doclet-subheader">Returns</h6>
 
-    <p><code class="doclet-type">(Boolean)</code></p><h6 class="doclet-subheader">Example</h6>
+    <p><code class="doclet-type">(boolean)</code></p><h6 class="doclet-subheader">Example</h6>
 
     <pre class="prettyprint"><code>_.isNumber( 0 );
 // -> true
@@ -1014,11 +1032,11 @@ _.isNumber( new Number( Infinity ) );
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">isObject<span class="signature">( value )</span> -> {Boolean}</pre>
+  <pre class="doclet-header">isObject<span class="signature">( value )</span> -> {boolean}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-419">line 419</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-420">line 420</a></span></div>
 </dl><p>Returns true if <code>value</code> is an Object instance.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -1027,7 +1045,7 @@ _.isNumber( new Number( Infinity ) );
   
     <h6 class="doclet-subheader">Returns</h6>
 
-    <p><code class="doclet-type">(Boolean)</code></p><h6 class="doclet-subheader">Example</h6>
+    <p><code class="doclet-type">(boolean)</code></p><h6 class="doclet-subheader">Example</h6>
 
     <pre class="prettyprint"><code>_.isObject( {} );
 // -> true
@@ -1040,11 +1058,11 @@ _.isObject( new function () {} );
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">isObjectLike<span class="signature">( value )</span> -> {Boolean}</pre>
+  <pre class="doclet-header">isObjectLike<span class="signature">( value )</span> -> {boolean}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-441">line 441</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-442">line 442</a></span></div>
 </dl><p>Returns true if <code>value</code> is object-like.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -1053,7 +1071,7 @@ _.isObject( new function () {} );
   
     <h6 class="doclet-subheader">Returns</h6>
 
-    <p><code class="doclet-type">(Boolean)</code></p><h6 class="doclet-subheader">Example</h6>
+    <p><code class="doclet-type">(boolean)</code></p><h6 class="doclet-subheader">Example</h6>
 
     <pre class="prettyprint"><code>_.isObjectLike( {} );
 // -> true
@@ -1066,11 +1084,11 @@ _.isObjectLike( new function () {} );
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">isPlainObject<span class="signature">( value )</span> -> {Boolean}</pre>
+  <pre class="doclet-header">isPlainObject<span class="signature">( value )</span> -> {boolean}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-465">line 465</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-466">line 466</a></span></div>
 </dl><p>Returns true if <code>value</code> is a plain object.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -1079,7 +1097,7 @@ _.isObjectLike( new function () {} );
   
     <h6 class="doclet-subheader">Returns</h6>
 
-    <p><code class="doclet-type">(Boolean)</code></p><h6 class="doclet-subheader">Example</h6>
+    <p><code class="doclet-type">(boolean)</code></p><h6 class="doclet-subheader">Example</h6>
 
     <pre class="prettyprint"><code>_.isPlainObject( {} );
 // -> true
@@ -1092,11 +1110,11 @@ _.isPlainObject( new function () {} );
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">isPrimitive<span class="signature">( value )</span> -> {Boolean}</pre>
+  <pre class="doclet-header">isPrimitive<span class="signature">( value )</span> -> {boolean}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-496">line 496</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-497">line 497</a></span></div>
 </dl><p>Returns true if <code>value</code> is a primitive.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -1105,7 +1123,7 @@ _.isPlainObject( new function () {} );
   
     <h6 class="doclet-subheader">Returns</h6>
 
-    <p><code class="doclet-type">(Boolean)</code></p><h6 class="doclet-subheader">Example</h6>
+    <p><code class="doclet-type">(boolean)</code></p><h6 class="doclet-subheader">Example</h6>
 
     <pre class="prettyprint"><code>_.isPrimitive( null );
 // -> true
@@ -1118,11 +1136,11 @@ _.isPrimitive( new Boolean() );
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">isSafeInteger<span class="signature">( value )</span> -> {Boolean}</pre>
+  <pre class="doclet-header">isSafeInteger<span class="signature">( value )</span> -> {boolean}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-522">line 522</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-523">line 523</a></span></div>
 </dl><p>Returns true if <code>value</code> is a safe integer primitive.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -1131,7 +1149,7 @@ _.isPrimitive( new Boolean() );
   
     <h6 class="doclet-subheader">Returns</h6>
 
-    <p><code class="doclet-type">(Boolean)</code></p><h6 class="doclet-subheader">Example</h6>
+    <p><code class="doclet-type">(boolean)</code></p><h6 class="doclet-subheader">Example</h6>
 
     <pre class="prettyprint"><code>_.isSafeInteger( new Number() );
 // -> false (in older versions - true)
@@ -1144,11 +1162,11 @@ _.isSafeInteger( Number.MIN_VALUE );
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">isString<span class="signature">( value )</span> -> {Boolean}</pre>
+  <pre class="doclet-header">isString<span class="signature">( value )</span> -> {boolean}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-583">line 583</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-584">line 584</a></span></div>
 </dl><p>Returns true if <code>value</code> represents a string primitive.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -1157,7 +1175,7 @@ _.isSafeInteger( Number.MIN_VALUE );
   
     <h6 class="doclet-subheader">Returns</h6>
 
-    <p><code class="doclet-type">(Boolean)</code></p><h6 class="doclet-subheader">Example</h6>
+    <p><code class="doclet-type">(boolean)</code></p><h6 class="doclet-subheader">Example</h6>
 
     <pre class="prettyprint"><code>_.isString( '' );
 // -> true
@@ -1168,11 +1186,11 @@ _.isString( new String() );
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">isSymbol<span class="signature">( value )</span> -> {Boolean}</pre>
+  <pre class="doclet-header">isSymbol<span class="signature">( value )</span> -> {boolean}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.0</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-602">line 602</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.0</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-603">line 603</a></span></div>
 </dl><p>Returns true if <code>value</code> represents a symbol primitive or object.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -1181,7 +1199,7 @@ _.isString( new String() );
   
     <h6 class="doclet-subheader">Returns</h6>
 
-    <p><code class="doclet-type">(Boolean)</code></p><h6 class="doclet-subheader">Example</h6>
+    <p><code class="doclet-type">(boolean)</code></p><h6 class="doclet-subheader">Example</h6>
 
     <pre class="prettyprint"><code>_.isSymbol( Symbol() );
 // -> true
@@ -1192,11 +1210,11 @@ _.isSymbol( Object( Symbol() ) );
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">isWindow<span class="signature">( value )</span> -> {Boolean}</pre>
+  <pre class="doclet-header">isWindow<span class="signature">( value )</span> -> {boolean}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.6</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-630">line 630</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.6</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-631">line 631</a></span></div>
 </dl><p>Returns true if <code>value</code> represents a Window instance.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -1205,7 +1223,7 @@ _.isSymbol( Object( Symbol() ) );
   
     <h6 class="doclet-subheader">Returns</h6>
 
-    <p><code class="doclet-type">(Boolean)</code></p><h6 class="doclet-subheader">Example</h6>
+    <p><code class="doclet-type">(boolean)</code></p><h6 class="doclet-subheader">Example</h6>
 
     <pre class="prettyprint"><code>_.isWindow( window );
 // -> true
@@ -1216,11 +1234,11 @@ _.isWindow( new function () { this.window = this; } );
 <hr />
         
             <div class="doclet">
-  <pre class="doclet-header">isWindowLike<span class="signature">( value )</span> -> {Boolean}</pre>
+  <pre class="doclet-header">isWindowLike<span class="signature">( value )</span> -> {boolean}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-650">line 650</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-651">line 651</a></span></div>
 </dl><p>Returns true if <code>value</code> represents a Window instance, faster than
 <code>_.isWindow()</code>.</p>
     <h6 class="doclet-subheader">Parameters</h6>
@@ -1230,7 +1248,7 @@ _.isWindow( new function () { this.window = this; } );
   
     <h6 class="doclet-subheader">Returns</h6>
 
-    <p><code class="doclet-type">(Boolean)</code></p><h6 class="doclet-subheader">Example</h6>
+    <p><code class="doclet-type">(boolean)</code></p><h6 class="doclet-subheader">Example</h6>
 
     <pre class="prettyprint"><code>_.isWindowLike( window );
 // -> true
@@ -1241,11 +1259,50 @@ _.isWindowLike( new function () { this.window = this; } );
 <hr />
         
             <div class="doclet">
+  <pre class="doclet-header">keys<span class="signature">( val<span class="signature-attrs"> - non-null</span> )</span> -> {Array}</pre>
+
+  
+
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2532">line 2532</a></span></div>
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+      <ul>
+        <li>_.keysIn</li>
+      </ul>
+    </dd>
+  
+</dl><p>The ES2015 <code>Object.keys()</code> polyfill.</p>
+    <h6 class="doclet-subheader">Parameters</h6>
+    
+  <p><code>val</code> <code class="doclet-type">(*)</code> - The value to get it keys.</p>
+
+  
+    <h6 class="doclet-subheader">Returns</h6>
+
+    <p><code class="doclet-type">(Array)</code> - Array that contains enumerable keys of the value.</p><h6 class="doclet-subheader">Example</h6>
+
+    <pre class="prettyprint"><code>_.keys( 'abc' );
+// -> [ '0', '1', '2' ]
+
+var object = {
+  a: 'b',
+  b: 'c'
+};
+
+object.constructor.prototype.c = 'a';
+
+_.keys( object );
+// -> [ 'a', 'b' ]</code></pre>
+
+</div>
+<hr />
+        
+            <div class="doclet">
   <pre class="doclet-header">now<span class="signature">()</span> -> {Number}</pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1697">line 1697</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1701">line 1701</a></span></div>
 </dl><p><code>Date.now()</code> polyfill.</p>
     <h6 class="doclet-subheader">Returns</h6>
 
@@ -1261,7 +1318,7 @@ _.isWindowLike( new function () { this.window = this; } );
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2281">line 2281</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2285">line 2285</a></span></div>
 </dl><p>Polyfill for the <code>perfomance.now()</code> method.</p>
     <h6 class="doclet-subheader">Returns</h6>
 
@@ -1284,10 +1341,10 @@ _.isWindowLike( new function () { this.window = this; } );
   </div>
 
   <div id="nav">
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="-_.html">_</a></li><li><a href="-_.DOMWrapper.html">DOMWrapper</a></li></ul><h3><a href="global.html">Global</a></h3>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="-_.html">_</a></li><li><a href="-_.DOMWrapper.html">DOMWrapper</a></li></ul>
   </div>
 
-  <div id="footer">Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on 27 February 2018 (Wednesday)</div>
+  <div id="footer">Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on 11 March 2018 (Monday)</div>
 
   <!-- JSDoc stuff. -->
   <script src="scripts/prettify/prettify.js"></script>

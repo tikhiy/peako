@@ -126,7 +126,7 @@
  * Code below could be confusing!
  */
 
-/* jshint esversion: 3, unused: true, undef: true */
+/* jshint esversion: 3, unused: true, undef: true, noarg: true, curly: true, immed: true */
 /* global XMLHttpRequest, Element, FileReader, Blob, FormData, ArrayBuffer */
 
 ;( function ( window, undefined ) {
@@ -136,7 +136,7 @@
 /**
  * @class _
  * @alias peako
- * @param {Node|String|ArrayLikeObject|Function} selector
+ * @param {Node|string|ArrayLikeObject|Function} selector
  * @returns {_.DOMWrapper}
  */
 var peako = function ( selector ) {
@@ -172,6 +172,7 @@ var document = window.document,
 
 var regexps = {
   selector: /^(?:#([\w-]+)|([\w-]+)|\.([\w-]+))$/,
+  // bug we can't input smth like this "[ -1 ]" and "[ - 1 ]" (!)
   property: /(^|\.)\s*([_a-z]\w*)\s*|\[\s*(\d+|\d*\.\d+|("|')(([^\\]\\(\\\\)*|[^\4])*)\4)\s*\]/gi,
   deep_key: /(^|[^\\])(\\\\)*(\.|\[)/,
   single_tag: /^(&lt;([\w-]+)>&lt;\/[\w-]+>|&lt;([\w-]+)(?:\s*\/)?>)$/,
@@ -237,7 +238,7 @@ var bindFast = function ( target, context ) {
  * @static
  * @since 0.0.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isArray( [] );
@@ -257,7 +258,7 @@ var isArray = Array.isArray || function ( value ) {
  * @static
  * @since 0.0.1
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isArrayLike( [] );
@@ -286,7 +287,7 @@ var isArrayLike = function ( value ) {
  * @static
  * @since 0.1.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isArrayLikeObject( [] );
@@ -307,7 +308,7 @@ var isArrayLikeObject = function ( value ) {
  * @static
  * @since 0.0.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isBoolean( false );
@@ -326,7 +327,7 @@ var isBoolean = function ( value ) {
  * @static
  * @since 0.0.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isFinite( new Number() );
@@ -347,7 +348,7 @@ var isFinite = function ( value ) {
  * @static
  * @since 0.0.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isFunction( () => {} );
@@ -368,7 +369,7 @@ support.HTMLElement = toString.call( body ).indexOf( 'HTML' ) > 0;
  * @static
  * @since 0.0.1
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isElement( document.createElement( 'span' ) );
@@ -398,7 +399,7 @@ var isElement = function ( value ) {
  * @static
  * @since 0.1.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isElementLike( document.createElement( 'span' ) );
@@ -421,7 +422,7 @@ var isElementLike = function ( value ) {
  * @param {*} value The value to check.
  * @param {Number} [length=Number.MAX_SAFE_INTEGER] Check for an array with a
  *  specific length.
- * @returns {Boolean}
+ * @returns {boolean}
  *
  * @example &lt;caption>Without `length` parameter&lt;/caption>
  * _.isIndex( 0 ); // -> true
@@ -456,7 +457,7 @@ var MAX_ARRAY_LENGTH = 4294967295;
  * @static
  * @since 0.0.9
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isLength( 0 );
@@ -480,7 +481,7 @@ var isLength = function ( value ) {
  * @static
  * @since 0.0.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isNaN( NaN );
@@ -499,7 +500,7 @@ var isNaN = function ( value ) {
  * @static
  * @since 0.0.1
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isNumber( 0 );
@@ -520,7 +521,7 @@ var isNumber = function ( value ) {
  * @static
  * @since 0.0.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isObject( {} );
@@ -542,7 +543,7 @@ var isObject = function ( value ) {
  * @static
  * @since 0.1.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isObjectLike( {} );
@@ -566,7 +567,7 @@ var fnToString = fn.toString,
  * @static
  * @since 0.0.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isPlainObject( {} );
@@ -597,7 +598,7 @@ var isPlainObject = function ( value ) {
  * @static
  * @since 0.0.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isPrimitive( null );
@@ -623,7 +624,7 @@ var MAX_SAFE_INT = 9007199254740991,
  * @static
  * @since 0.0.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isSafeInteger( new Number() );
@@ -647,7 +648,7 @@ var isSafeInteger = function ( value ) {
  * @static
  * @since 0.0.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isDOMElement( window );
@@ -686,7 +687,7 @@ var isDOMElement = function ( value ) {
  * @static
  * @since 0.0.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isString( '' );
@@ -705,7 +706,7 @@ var isString = function ( value ) {
  * @static
  * @since 0.1.0
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isSymbol( Symbol() );
@@ -733,7 +734,7 @@ var isSymbol = function ( value ) {
  * @static
  * @since 0.0.6
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isWindow( window );
@@ -753,7 +754,7 @@ var isWindow = function ( value ) {
  * @static
  * @since 0.1.4
  * @param {*} value The value to check.
- * @returns {Boolean}
+ * @returns {boolean}
  * @example
  *
  * _.isWindowLike( window );
@@ -884,7 +885,7 @@ var baseCloneArray = function ( iterable ) {
  * 1 - works only with DOM elements (old IE).
  * 2 - full support.
  */
-support.defineProperty = function () {
+support.defineProperty = ( function () {
   var test = function ( target ) {
     try {
       if ( '' in Object.defineProperty( target, '', {} ) ) {
@@ -896,7 +897,7 @@ support.defineProperty = function () {
   };
 
   return test( document.createElement( 'span' ) ) + test( {} );
-}();
+} )();
 
 support.defineGetter = '__defineGetter__' in obj;
 
@@ -961,19 +962,18 @@ if ( support.defineProperty !== 2 ) {
 //   false ); // invert iteratee return value (for reject)
 // // -> [ 0, 3 ]
 
-var baseFilter = function ( iterable, iteratee, context, not ) {
+var baseFilter = function ( arr, fun, ctx, not ) {
   var i = 0,
-      length = getLength( iterable ),
+      len = getLength( arr ),
       filtered = [],
-      value;
+      val;
 
-  for ( ; i &lt; length; ++i ) {
-    value = iterable[ i ];
-
-    if ( has( i, iterable ) &amp;&amp;
-      iteratee.call( context, value, i, iterable ) != not )
-    {
-      filtered.push( value );
+  for ( ; i &lt; len; ++i ) {
+    // Disable the "Confusing use of '!'. (W018)" warning.
+    // jshint -W018
+    if ( has( i, arr ) &amp;&amp; !fun.call( ctx, val = arr[ i ], i, arr ) === not ) {
+    // jshint +W018
+      filtered.push( val );
     }
   }
 
@@ -1003,17 +1003,18 @@ var baseFilter = function ( iterable, iteratee, context, not ) {
 //   true ); // invert iteratee return value (for reject)
 // // -> { two: 2 }
 
-var baseFilterObject = function ( object, iteratee, context, keys, not ) {
+var baseFilterObject = function ( obj, fun, ctx, keys, not ) {
   var i = 0,
-      length = keys.length,
+      len = keys.length,
       filtered = {},
-      value, key;
+      val, key;
 
-  for ( ; i &lt; length; ++i ) {
-    value = object[ key = keys[ i ] ];
-
-    if ( iteratee.call( context, value, key, object ) != not ) {
-      filtered[ key ] = value;
+  for ( ; i &lt; len; ++i ) {
+    // Disable the "Confusing use of '!'. (W018)" warning.
+    // jshint -W018
+    if ( !fun.call( ctx, val = obj[ key = keys[ i ] ], key, obj ) === not ) {
+    // jshint +W018
+      filtered[ key ] = val;
     }
   }
 
@@ -1052,24 +1053,22 @@ var baseFlatten = function ( iterable, temp, depth ) {
 };
 
 /**
- * Calls `iteratee` with `context` for each element in `iterable`.
+ * Base _.forEach(), _.forEachRight() implementation.
  */
-var baseForEach = function ( iterable, iteratee, context, fromRight ) {
+var baseForEach = function ( arr, fun, ctx, fromRight ) {
   var i = -1,
-      j = getLength( iterable ) + i,
+      j = getLength( arr ) - 1,
       index;
 
   for ( ; j >= 0; --j ) {
-    index = fromRight ? j : ++i;
-
-    if ( has( index, iterable ) &amp;&amp;
-      iteratee.call( context, iterable[ index ], index, iterable ) === false )
+    if ( has( index = fromRight ? j : ++i, arr ) &amp;&amp;
+      fun.call( ctx, arr[ index ], index, arr ) === false )
     {
       break;
     }
   }
 
-  return iterable;
+  return arr;
 };
 
 /**
@@ -1159,14 +1158,30 @@ var baseInvert = function ( object, keys ) {
   return inverted;
 };
 
-support.keys = Object.keys ?
-  2 : { toString: null }.propertyIsEnumerable( 'toString' ) ?
-  1 : 0;
+support.keys = ( function () {
+  if ( !Object.keys ) {
+    // buggy
+    if ( { toString: null }.propertyIsEnumerable( 'toString' ) ) {
+      return 1;
+    }
+
+    // not supported
+    return 0;
+  }
+
+  try {
+    // full es2015 support
+    return Object.keys( '' ), 3;
+  } catch ( e ) {}
+
+  // es5 support
+  return 2;
+} )();
 
 /**
  * Base implementation of `Object.keys` polyfill.
  */
-if ( support.keys !== 2 ) {
+if ( support.keys !== 3 ) {
   if ( !support.keys ) {
     var non_enums = [
       'toString',
@@ -1185,7 +1200,7 @@ if ( support.keys !== 2 ) {
       for ( ; i >= 0; --i ) {
         key = non_enums[ i ];
 
-        if ( baseIndexOf( keys, key, undefined, true ) &lt; 0 &amp;&amp;
+        if ( indexOf( keys, key ) &lt; 0 &amp;&amp;
           hasOwnProperty.call( object, key ) )
         {
           keys.push( key );
@@ -1215,27 +1230,21 @@ if ( support.keys !== 2 ) {
 }
 
 /**
- * Base implementation of `_.map` and `_.mapRight` (works only with array-like
- * objects). `_.mapRight()` reverses the array, but doesn't loop through it
- * reversibly!
+ * Base implementation of `_.map()`.
+ * todo make separate map and mapObject.
  */
-var baseMap = function ( iterable, iteratee, context, fromRight ) {
-  var length, result, j, i;
+var baseMap = arr.map ? bindFast( fn_call, arr.map ) : function ( arr, fun, ctx ) {
+  var len = arr.length,
+      res = Array( len ),
+      i;
 
-  if ( !fromRight &amp;&amp; arr.map ) {
-    return arr.map.call( iterable, iteratee, context );
-  }
-
-  result = Array( j = length = getLength( iterable ) );
-
-  for ( i = 0; i &lt; length; ++i ) {
-    if ( has( i, iterable ) ) {
-      result[ fromRight ? --j : i ] = iteratee
-        .call( context, iterable[ i ], i, iterable );
+  for ( i = 0; i &lt; len; ++i ) {
+    if ( has( i, arr ) ) {
+      res[ i ] = fun.call( ctx, arr[ i ], i, arr );
     }
   }
 
-  return result;
+  return res;
 };
 
 /**
@@ -1252,7 +1261,7 @@ var baseMap = function ( iterable, iteratee, context, fromRight ) {
 // };
 //
 // var users = {
-//   Josh: new User( 'Josh', 1243 ),
+//   Josh: new User( 'Josh', 1234 ),
 //   JSON: new User( 'JSON', -Infinity )
 // };
 //
@@ -1261,7 +1270,7 @@ var baseMap = function ( iterable, iteratee, context, fromRight ) {
 //   User.getAge, // iteratee
 //   null, // context for iteratee
 //   getKeys( users ) ); // properties to map in object
-// // -> { Josh: 1243, JSON: -1 }
+// // -> { Josh: 1234, JSON: -Infinity }
 
 var baseMapObject = function ( object, iteratee, context, keys ) {
   var length = keys.length,
@@ -1481,20 +1490,15 @@ var createEverySome = function ( every ) {
   };
 };
 
-var createFilter = function ( not, getKeys ) {
-  return function ( iterable, iteratee, context ) {
-    iteratee = peako.iteratee( iteratee );
+var createFilter = function ( not, keys ) {
+  return function ( obj, fun, ctx ) {
+    fun = peako.iteratee( fun );
 
-    if ( isArrayLike( iterable ) ) {
-      return baseFilter( iterable, iteratee, context, not );
+    if ( isArrayLike( obj ) ) {
+      return baseFilter( obj, fun, ctx, not );
     }
 
-    return baseFilterObject(
-      iterable = toObject( iterable ),
-      iteratee,
-      context,
-      getKeys( iterable ),
-      not );
+    return baseFilterObject( obj = toObject( obj ), fun, ctx, keys( obj ), not );
   };
 };
 
@@ -1559,7 +1563,7 @@ var createMap = function ( fromRight, getKeys ) {
     }
 
     if ( fromRight ) {
-      throw TypeError( "Can't call _.mapRight on non-array object" );
+      throw TypeError( "Can't call _.mapRight on non-array" );
     }
 
     return baseMapObject(
@@ -1658,7 +1662,7 @@ var toWords = function ( string ) {
   return string.match( regexps.not_spaces ) || [];
 };
 
-var toCamelCase = function () {
+var toCamelCase = ( function () {
   var toCamelCase = function ( string, symbol ) {
     return symbol.toUpperCase();
   };
@@ -1668,7 +1672,7 @@ var toCamelCase = function () {
       string :
       string.replace( /-(\w)/g, toCamelCase );
   };
-}();
+} )();
 
 /* todo compare (in perfomance) with the old version. */
 var getType = function ( value ) {
@@ -1774,32 +1778,32 @@ var unescape = function ( string ) {
   return string.replace( /\\(\\)?/g, '$1' );
 };
 
-var toKey = function ( value ) {
-  var type = getType( value ),
-      key;
+var toKey = function ( val ) {
+  var key;
 
-  if ( type == 'string' ) {
-    return unescape( value );
+  if ( typeof val == 'string' ) {
+    return unescape( val );
   }
 
-  if ( type == 'symbol' ) {
-    return value;
+  if ( isSymbol( val ) ) {
+    return val;
   }
 
-  key = '' + value;
+  key = '' + val;
 
-  if ( key == '0' &amp;&amp; 1 / value == -Infinity ) {
+  if ( key == '0' &amp;&amp; 1 / val == -Infinity ) {
     return '-0';
   }
 
   return unescape( key );
 };
 
-var getStyle = function ( element, name, computed_style ) {
-  return element.style[ name ] ||
-    ( computed_style || getComputedStyle( element ) ).getPropertyValue( name );
+var getStyle = function ( el, name, comp ) {
+  return el.style[ name ] ||
+    ( comp || getComputedStyle( el ) ).getPropertyValue( name );
 };
 
+// test this on perf
 var has = function ( key, object ) {
   if ( object == null ) {
     return false;
@@ -1871,7 +1875,7 @@ var before = function ( n, target ) {
   };
 };
 
-var bind = function () {
+var bind = ( function () {
   var args = function ( partial_args, args ) {
     var i = 0,
         j = -1,
@@ -1935,7 +1939,7 @@ var bind = function () {
       return apply( target, context, args( partial_args, arguments ) );
     };
   };
-}();
+} )();
 
 /**
  * Returns a number that doesn't go out of bounds `lower` and `upper`.
@@ -1972,7 +1976,7 @@ var clamp = function ( value, lower, upper ) {
  * @memberof _
  * @static
  * @since 0.0.1
- * @param {Boolean} [deep=true] Recursively clone the target?
+ * @param {boolean} [deep=true] Recursively clone the target?
  * @param {!*} target The object to clone.
  * @returns {Object} The clone of the object.
  * @example
@@ -2020,15 +2024,15 @@ var clone = function ( deep, target, guard ) {
 };
 
 /**
- * Creates an array with elements from the `iterable` array. NOTE: You can
- * use `&lt;Array>.slice()`, but in some situations `_.cloneArray()` works much
- * faster (for array-like objects).
+ * Creates an array with elements from the `iterable` array. NOTE: You can use
+ * `&lt;Array>.slice()`, but in some situations `_.cloneArray()` works much faster
+ * (for array-like objects).
  *
  * @category Collection
  * @memberof _
  * @static
  * @since 0.0.4
- * @param {Object|String} iterable The array-like value to clone.
+ * @param {Object|string} iterable The array-like value to clone.
  * @returns {Array} The clone of `iterable`.
  * @example
  *
@@ -2093,8 +2097,8 @@ var constant = function ( value ) {
  * @static
  * @since 0.0.4
  * @param {null|Object} prototype The prototype of a new object.
- * @param {Object} [descriptors] The descriptors to assign in the new object
- *  via [`_.defineProperties()`]{@link _.defineProperties}.
+ * @param {Object} [descriptors] The descriptors to assign in the new object via
+ *  [`_.defineProperties()`]{@link _.defineProperties}.
  * @returns {Array} A new created object with `prototype`.
  * @example
  *
@@ -2108,7 +2112,7 @@ var constant = function ( value ) {
  *
  * var object = _.create( prototype, descriptors );
  */
-var create = Object.create || function () {
+var create = Object.create || ( function () {
   var Constructor = function () {};
 
   return function create ( prototype, descriptors ) {
@@ -2134,7 +2138,7 @@ var create = Object.create || function () {
 
     return object;
   };
-}();
+} )();
 
 /**
  * Returns `defaultValue` when `value` is `null`, `undefined`, or `NaN`.
@@ -2230,7 +2234,7 @@ function ( object, descriptors ) {
  * @static
  * @since 0.0.4
  * @param {Object} object The object to modificate.
- * @param {String} key The key of defined property.
+ * @param {string} key The key of defined property.
  * @param {Object} descriptor The descriptor to define.
  * @returns {Object} The object in which property were defined.
  * @example
@@ -2277,7 +2281,7 @@ var equal = function ( a, b ) {
  * @static
  * @since 0.1.0
  * @param {RegExp} regexp
- * @param {String} string
+ * @param {string} string
  * @returns {Array}
  * @example
  *
@@ -2401,7 +2405,7 @@ var fromPairs = function ( pairs ) {
  * @static
  * @returns {Number}
  */
-var timestamp = function () {
+var timestamp = ( function () {
   var perfomance = window.perfomance,
       navigatorStart;
 
@@ -2421,7 +2425,7 @@ var timestamp = function () {
   return function () {
     return getTime() - navigatorStart;
   };
-}();
+} )();
 
 var toPath = function ( value ) {
   var parsed, len, i;
@@ -2473,126 +2477,100 @@ var access = function ( obj, path, val ) {
   return obj[ path[ 0 ] ];
 };
 
-var default_file_options = {
+var dfltAjaxOpts = {
   onerror: function ( path ) {
     throw Error( "Can't load " + path + ' file, status: ' + this.status );
   },
 
+  type: 'GET',
   timeout: 1000 * 60
 };
 
 /**
- * This function will be called when the file is loaded successfully. `this`
- * in this function will point to the &amp;lt;XMLHttpRequest&amp;gt; object that was
- * used to load the file.
- * @callback FileLoadedCallback
- * @param {String} data The content of the loaded file.
- * @param {String} path The path of the loaded file.
- * @param {FileOptions} options The options that given into the `_.file()`
- *  method.
- */
-
-/**
- * This function will be called when the error occur while loading the file.
- * `this` in this function will point to the &amp;lt;XMLHttpRequest&amp;gt; object
- * that was used to load the file.
- * @callback LoadingFileErrorCallback
- * @param {String} path The path of the file that failed to load.
- * @param {FileOptions} options The options that given into the `_.file()`
- *  method.
- */
-
-/**
- * This options used in [`_.file()`]{@link _.file}.
- * @typedef FileOptions
- * @type {Object}
- * @property {String} [path] The path of the file to be loaded.
- * @property {Boolean} [async] Use an asynchronous request?
- * @property {FileLoadedCallback} [onload] This function will be called when
- *  the file is loaded successfully.
- * @property {LoadingFileErrorCallback} [onerror] This function will be
- *  called when the error occur while loading the file.
- * @property {Number} [timeout=60000] If the load time for the file needs
- *  more than this limit, it will be canceled.
- */
-
-/**
- * Returns the contents of the file at the path.
- *
- * @category Utility Methods
+ * @method ajax
  * @memberof _
  * @static
- * @param {String} [path=options.path] The path of the file to be loaded.
- * @param {FileOptions} [options] File load options.
- * @returns {null|String} When the request wasn't asynchronous, it returns
- *  the contents of the file.
- * @example &lt;caption>Use Cases&lt;/caption>
+ * @param {string} path
+ * @param {Object} options
+ * @example
  *
- * // 1. async = false
- * _.file( path );
- * // 2. async = options.async || true
- * _.file( path, options );
- * // 3. async = options.async || true
- * _.file( options );
+ * &lt;caption>Get some JSON&lt;/caption>
  *
- * @see _.fetch
+ * _.ajax( 'data.json', {
+ *   onload: function ( _data ) {
+ *     data = JSON.parse( _data );
+ *   }
+ * } );
+ *
+ * @example &lt;caption>Post some data to the server&lt;/caption>
+ *
+ * _.ajax( 'server.js', {
+ *   data: document.location.hash,
+ *   type: 'POST'
+ * } );
  */
-var file = function ( path, options ) {
+peako.ajax = function ( path, options ) {
 
   var data = null,
-      use_async, request, id;
+      async, req, timer;
 
   // _.file( options );
   // async = options.async || true
   if ( typeof path != 'string' ) {
-    options = defaults( default_file_options, path );
-    use_async = options.async === undefined || options.async;
+    options = defaults( dfltAjaxOpts, path );
+    async = options.async === undefined || options.async;
     path = options.path;
 
   // _.file( path );
   // async = false
   } else if ( options === undefined ) {
-    options = default_file_options;
-    use_async = false;
+    options = dfltAjaxOpts;
+    async = false;
 
   // _.file( path, options );
   // async = options.async || true
   } else {
-    options = defaults( default_file_options, options );
-    use_async = options.async === undefined || options.async;
+    options = defaults( dfltAjaxOpts, options );
+    async = options.async === undefined || options.async;
   }
 
-  request = new XMLHttpRequest();
+  req = new XMLHttpRequest();
 
-  request.onreadystatechange = function () {
-    if ( this.readyState !== 4 ) {
-      return;
-    }
-
-    if ( this.status === 200 ) {
-      if ( id !== undefined ) {
-        window.clearTimeout( id );
+  if ( options.type === 'GET' ) {
+    req.onreadystatechange = function () {
+      if ( this.readyState !== 4 ) {
+        return;
       }
 
-      data = this.responseText;
+      if ( this.status === 200 ) {
+        if ( timer != null ) {
+          window.clearTimeout( timer );
+        }
 
-      if ( options.onload ) {
-        options.onload.call( this, data, path, options );
+        data = this.responseText;
+
+        if ( options.onload ) {
+          options.onload.call( this, data, path, options );
+        }
+      } else if ( options.onerror ) {
+        options.onerror.call( this, path, options );
       }
-    } else if ( options.onerror ) {
-      options.onerror.call( this, path, options );
+    };
+
+    req.open( 'GET', path, async );
+
+    if ( async ) {
+      timer = window.setTimeout( function () {
+        req.abort();
+      }, options.timeout );
     }
-  };
 
-  request.open( 'GET', path, use_async );
-
-  if ( use_async ) {
-    id = window.setTimeout( function () {
-      request.abort();
-    }, options.timeout );
+    req.send();
+  } else if ( options.type === 'POST' ) {
+    req.open( 'POST', path, async );
+    req.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8' );
+    req.send( options.data );
   }
-
-  request.send();
 
   return data;
 
@@ -2629,14 +2607,14 @@ var identity = function ( value ) {
 };
 
 /**
- * Returns true when the object contains the value, see
- * `Array.prototype.includes()`.
+ * Returns true when the object contains the value.
+ *
+ * @example
+ *
+ * _.includes( [ 0, NaN, 2 ], NaN ); // -> true
+ * _.includes( { z: 'A', A: 'z' }, 'z' ); // -> true
+ * _.includes( 'abcdef', 'b' ); // -> true
  */
-
-// _.includes( [ 0, NaN, 2 ], NaN ); // -> true
-// _.includes( { z: 'A', A: 'z' }, 'z' ); // -> true
-// _.includes( 'abcdef', 'b' ); // -> true
-
 var includes = function ( object, value ) {
   if ( typeof object == 'string' ) {
     return object.indexOf( value ) >= 0;
@@ -2650,30 +2628,48 @@ var includes = function ( object, value ) {
 };
 
 /**
- * Creates an object whose keys and values ​​are inverted.
+ * Creates an object whose keys and values are inverted.
+ *
+ * @memberOf _
+ * @static
+ * @param {!*} val
+ * @returns {Object}
+ * @example
+ *
+ * _.invert( { one: 1, two: 2 } );
+ * // -> { 1: 'one', 2: 'two' }
  */
-
-// _.invert( { one: 1, two: 2 } );
-// // -> { 1: 'one', 2: 'two' }
-
-var invert = function ( target ) {
-  return baseInvert( target = toObject( target ), getKeys( target ) );
+var invert = function ( val ) {
+  return baseInvert( val = toObject( val ), getKeys( val ) );
 };
 
 /**
- * The ES5 `Object.keys()` polyfill.
+ * The ES2015 `Object.keys()` polyfill.
+ *
+ * @method keys
+ * @memberOf _
+ * @static
+ * @param {!*} val The value to get it keys.
+ * @returns {Array} Array that contains enumerable keys of the value.
+ * @example
+ *
+ * _.keys( 'abc' );
+ * // -> [ '0', '1', '2' ]
+ *
+ * var object = {
+ *   a: 'b',
+ *   b: 'c'
+ * };
+ *
+ * object.constructor.prototype.c = 'a';
+ *
+ * _.keys( object );
+ * // -> [ 'a', 'b' ]
+ *
+ * @see _.keysIn
  */
-
-// var object = {
-//   a: 'b',
-//   b: 'c'
-// };
-//
-// object.constructor.prototype.c = 'a';
-// _.keys( object ); // -> [ 'a', 'b' ]
-
-var getKeys = support.keys !== 2 ? function ( object ) {
-  return baseKeys( toObject( object ) );
+var getKeys = support.keys !== 3 ? function ( val ) {
+  return baseKeys( toObject( val ) );
 } : Object.keys;
 
 /**
@@ -2733,13 +2729,11 @@ var merge = function ( iterable ) {
 var method = function ( path ) {
   var len = ( path = toPath( path ) ).length,
       args = slice.call( arguments, 1 ),
-      key;
+      key = path[ path.length - 1 ];
 
   if ( !len ) {
     throw Error( 'An empty _.method() path' );
   }
-
-  key = path[ path.length - 1 ];
 
   return len > 1 ? function ( obj ) {
     if ( obj != null &amp;&amp; ( obj = baseAccessor( obj, path, 1 ) ) != null ) {
@@ -2956,24 +2950,24 @@ var reduceRight = function ( iterable, iteratee, value ) {
   return value;
 };
 
-var sample = function ( object ) {
-  return baseSample( getIterable( toObject( object ) ) );
+var sample = function ( arr ) {
+  return baseSample( getIterable( toObject( arr ) ) );
 };
 
-var sampleSize = function ( object, size ) {
-  if ( object == null ) {
+var sampleSize = function ( arr, size ) {
+  if ( arr == null ) {
     throw TypeError( ERR_UNDEFINED_OR_NULL );
   }
 
-  object = toArray( object );
+  arr = toArray( arr );
 
   if ( size === undefined ) {
     size = 1;
   } else {
-    size = clamp( size, 0, getLength( object ) );
+    size = clamp( size, 0, arr.length );
   }
 
-  return baseShuffle( object, size );
+  return baseShuffle( arr, size );
 };
 
 /**
@@ -3069,15 +3063,15 @@ var toPlainObject = function ( target ) {
   return assignIn( {}, toObject( target ) );
 };
 
-var unique = function () {
-  var unique = function ( value, i, iterable ) {
-    return baseIndexOf( iterable, value ) == i;
+var unique = ( function () {
+  var unique = function ( val, i, arr ) {
+    return baseIndexOf( arr, val ) == i;
   };
 
-  return function ( iterable ) {
-    return filter( iterable, unique );
+  return function ( arr ) {
+    return filter( arr, unique );
   };
-}();
+} )();
 
 var without = function ( iterable ) {
   var i = 0,
@@ -3304,7 +3298,7 @@ var event = {
   },
 
   /**
-   * Removes the event listener (or listeners) of the target, with considering IE.
+   * Removes the event listeners attached to the target, with considering IE.
    */
 
   // // remove delegated click alert listener:
@@ -3503,7 +3497,7 @@ var event = {
  * Adapted from Jonathan Neal getComputedStyle polyfill.
  * https://github.com/jonathantneal/polyfill/blob/master/polyfills/getComputedStyle/polyfill.js
  */
-var getComputedStyle = window.getComputedStyle || function () {
+var getComputedStyle = window.getComputedStyle || ( function () {
   var toDOMString = function () {
     var toDOMString = function ( letter ) {
       return '-' + letter.toLowerCase();
@@ -3636,7 +3630,7 @@ var getComputedStyle = window.getComputedStyle || function () {
   return function getComputedStyle ( element ) {
     return new CSSStyleDeclaration( element );
   };
-}();
+} )();
 
 /**
  * Based on Erik Möller requestAnimationFrame polyfill:
@@ -3650,7 +3644,7 @@ var getComputedStyle = window.getComputedStyle || function () {
  *
  * MIT license
  */
-var timer = function () {
+var timer = ( function () {
   var timer = {},
       suffix = 'AnimationFrame',
 
@@ -3694,7 +3688,7 @@ var timer = function () {
   }
 
   return timer;
-}();
+} )();
 
 var matches = window.Element &amp;&amp; (
   Element.prototype.matches ||
@@ -3782,7 +3776,7 @@ support.getElementsByClassName = 'getElementsByClassName' in document;
  * @memberof _
  * @static
  * @param {Node} selector This element will be added to the new object.
- * @param {String} selector When the selector string contains HTML content, it
+ * @param {string} selector When the selector string contains HTML content, it
  *  will be parsed and added to the new object, if it doesn't, then will be
  *  added elements selected by the CSS selector.
  * @param {ArrayLikeObject} selector Elements from `selector` will be copied to
@@ -3875,7 +3869,7 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
    * array with all elements of this object will be returned.
    *
    * @memberof _.DOMWrapper
-   * @param {Number} [index] The position of the needed element.
+   * @param {number} [index] The position of the needed element.
    * @returns {Node|Array} Returns the picked element or array of all
    * elements.
    *
@@ -3969,7 +3963,7 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
    *
    * @memberof _.DOMWrapper.prototype
    * @chainable
-   * @param {String|Function} classes The classes that should be added to the
+   * @param {string|Function} classes The classes that should be added to the
    * elements, or the function that will be called (with the element index and
    * current element classes) once for each element, and returns the classes
    * that need to be added.
@@ -3988,17 +3982,24 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
    * } );
    */
   addClass: function ( classes ) {
-    var callable = typeof classes == 'function',
-        i = this.length - 1,
-        el;
+    var i = this.length - 1,
+        el, callable;
+
+    if ( typeof classes != 'function' ) {
+      classes = toWords( classes );
+    } else {
+      callable = true;
+    }
 
     for ( ; i >= 0; --i ) {
-      if ( ( el = this[ i ] ).nodeType === 1 ) {
-        if ( callable ) {
-          classList.add( el, classes.call( el, i, el.className ) );
-        } else {
-          classList.add( el, classes );
-        }
+      if ( ( el = this[ i ] ).nodeType !== 1 ) {
+        continue;
+      }
+
+      if ( callable ) {
+        classList.add( el, toWords( classes.call( el, i, el.className ) ) );
+      } else {
+        classList.add( el, classes );
       }
     }
 
@@ -4008,13 +4009,11 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   /**
    * @memberof _.DOMWrapper.prototype
    * @chainable
-   *   @param {String} [classes] The classes that should be removed from the
-   * elements.
-   *   @param {Function} [classes] The function that will be called (with the
-   * element index and current element classes) once for each element, and
-   * returns which classes should be removed.
-   *   @param {RegExp} [classes] You can remove classes that match the RegEx
-   * pattern.
+   * @param {string} [classes] The classes that should be removed from the
+   *  elements.
+   * @param {Function} [classes] The function that will be called (with the
+   *  element index and current element classes) once for each element, and
+   *  returns which classes should be removed.
    *
    * @example &lt;caption>Using a string&lt;/caption>
    * _( 'div' ).removeClass( 'something blue' );
@@ -4029,34 +4028,35 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
    *   return 'two';
    * } );
    *
-   * @example &lt;caption>Using a pattern&lt;/caption>
-   * _( 'div' ).removeClass( /stuff-\d+/ );
-   *
    * @example &lt;caption>Remove all classes&lt;/caption>
    * _( 'div' ).removeClass();
    */
   removeClass: function ( classes ) {
-    var all = classes === undefined,
-        fn = !all &amp;&amp; typeof classes === 'function',
-        re = !fn &amp;&amp; getType( classes ) === 'regexp',
-        i = this.length - 1,
-        el;
+    var i = this.length - 1,
+        el, mode;
+
+    if ( classes === undefined ) {
+      mode = 0;
+    } else if ( typeof classes === 'function' ) {
+      mode = 1;
+    } else {
+      classes = toWords( classes );
+    }
 
     for ( ; i >= 0; --i ) {
-      if ( ( el = this[ i ] ).nodeType === 1 ) {
-        switch ( true ) {
-          case all:
-            el.className = '';
-            break;
-          case re:
-            classList.removeWithRegexp( el, classes );
-            break;
-          case fn:
-            classList.remove( el, classes.call( el, i, el.className ) );
-            break;
-          default:
-            classList.remove( el, classes );
-        }
+      if ( ( el = this[ i ] ).nodeType !== 1 ) {
+        continue;
+      }
+
+      // .removeClass()
+      if ( mode === 0 ) {
+        el.className = '';
+      // .removeClass( function () {} )
+      } else if ( mode === 1 ) {
+        classList.remove( el, toWords( classes.call( el, i, el.className ) ) );
+      // .removeClass( 'classes' )
+      } else {
+        classList.remove( el, classes );
       }
     }
 
@@ -4066,23 +4066,27 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   toggleClass: function ( classes, state ) {
     var callable, i, el;
 
-    if ( state !== undefined ) {
-      if ( state ) {
-        return this.addClass( classes );
-      }
-      
+    if ( state ) {
+      return this.addClass( classes );
+    } else if ( state !== undefined ) {
       return this.removeClass( classes );
     }
 
-    callable = typeof classes == 'function';
+    if ( typeof classes != 'function' ) {
+      classes = toWords( classes );
+    } else {
+      callable = true;
+    }
 
     for ( i = this.length - 1; i >= 0; --i ) {
-      if ( ( el = this[ i ] ).nodeType === 1 ) {
-        if ( callable ) {
-          classList.toggle( el, classes.call( el, i, el.className ) );
-        } else {
-          classList.toggle( el, classes );
-        }
+      if ( ( el = this[ i ] ).nodeType !== 1 ) {
+        continue;
+      }
+
+      if ( callable ) {
+        classList.toggle( el, toWords( classes.call( el, i, el.className ) ) );
+      } else {
+        classList.toggle( el, classes );
       }
     }
 
@@ -4091,10 +4095,23 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
 
   hasClass: function ( classes ) {
     var i = this.length - 1,
-        el;
+        el, callable;
+
+    if ( typeof classes != 'function' ) {
+      classes = toWords( classes );
+    } else {
+      callable = true;
+    }
 
     for ( ; i >= 0; --i ) {
-      if ( ( el = this[ i ] ).nodeType === 1 &amp;&amp; classList.has( el, classes ) ) {
+      if ( ( el = this[ i ] ).nodeType !== 1 ) {
+        continue;
+      }
+
+      if ( callable ?
+        classList.has( el, toWords( classes.call( el, i, el.className ) ) ) :
+        classList.has( el, classes ) )
+      {
         return true;
       }
     }
@@ -4103,7 +4120,7 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
   },
 
   offset: function ( options ) {
-    var el, doc, root, body,
+    var el, doc, docEl, body,
         off, callable, i, style, win;
 
     if ( options == null ) {
@@ -4113,19 +4130,19 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
         return null;
       }
 
+      if ( !el.getClientRects().length ) {
+        return { top: 0, left: 0 };
+      }
+
       doc = el.ownerDocument;
-      root = doc.docElement;
+      docEl = doc.documentElement;
       body = doc.body;
       win = doc.defaultView;
       off = el.getBoundingClientRect();
 
       return {
-        top: off.top +
-          ( win.pageYOffset || root.scrollTop || body.scrollTop ) -
-          ( root.clientTop || body.clientTop || 0 ),
-        left: off.left +
-          ( win.pageXOffset || root.scrollLeft || body.scrollLeft ) -
-          ( root.clientLeft || body.clientLeft || 0 )
+        top: off.top + ( win.pageYOffset || docEl.scrollTop || body.scrollTop ) - ( docEl.clientTop || body.clientTop || 0 ),
+        left: off.left + ( win.pageXOffset || docEl.scrollLeft || body.scrollLeft ) - ( docEl.clientLeft || body.clientLeft || 0 )
       };
     }
 
@@ -4295,11 +4312,9 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
         el, i;
 
     for ( i = 0; i &lt; len; ++i ) {
-      // disable the "Confusing use of '!'. (W018)" warning, because "a != b"
-      // and "!a == b" behave differently. we need to convert "a" to a boolean
-      // value.
+      // Disable the "Confusing use of '!'. (W018)" warning.
       // jshint -W018
-      if ( !is( el = this[ i ], selector, i ) == inverse ) {
+      if ( !is( el = this[ i ], selector, i ) === inverse ) {
       // jshint +W018
         els[ els.length++ ] = el;
       }
@@ -4578,8 +4593,10 @@ forOwnRight( {
         continue;
       }
 
-      // Skip some weird stuff (spaces, comments, whatever...)
-      while ( ( sib = el[ sibling ] ) &amp;&amp; sib.nodeType !== 1 );
+      // skip text nodes
+      do {
+        sib = el[ sibling ];
+      } while ( sib &amp;&amp; sib.nodeType !== 1 );
 
       if ( sib &amp;&amp; ( !selector || is( sib, selector, i ) ) ) {
         els[ els.length++ ] = sib;
@@ -4591,11 +4608,11 @@ forOwnRight( {
 }, prototype );
 
 forOwnRight( {
-  value   : 'value',
-  /* todo make it cross-browser */
-  text    : 'textContent' in body ? 'textContent' : 'innerText',
-  html    : 'innerHTML',
-  checked : 'checked',
+  value:    'value',
+  // todo make it cross-browser
+  text:     'textContent' in body ? 'textContent' : 'innerText',
+  html:     'innerHTML',
+  checked:  'checked',
   disabled: 'disabled'
 }, function ( name, methodName ) {
   this[ methodName ] = function ( val ) {
@@ -4614,17 +4631,20 @@ forOwnRight( {
         el[ name ] = val;
       }
     }
+
+    return this;
   };
 }, prototype );
 
 forOwnRight( {
-  on     : 'on',
-  one    : 'on',
-  off    : 'off',
+  on:      'on',
+  one:     'on',
+  off:     'off',
   trigger: 'trigger'
 }, function ( name, methodName ) {
   this[ methodName ] = function ( types, selector, listener, useCapture ) {
     var removeAll = name === 'off' &amp;&amp; !arguments.length,
+        one = methodName === 'one' ,
         el, i, j, k;
 
     if ( !removeAll ) {
@@ -4651,7 +4671,7 @@ forOwnRight( {
 
       if ( !removeAll ) {
         for ( j = 0; j &lt; k; ++j ) {
-          event[ name ]( el, types[ j ], selector, listener, useCapture, methodName === 'one' );
+          event[ name ]( el, types[ j ], selector, listener, useCapture, one );
         }
       } else {
         event.off( el );
@@ -4659,11 +4679,11 @@ forOwnRight( {
     }
 
     return this;
-  };      
+  };
 }, prototype );
 
 forOwnRight( {
-  width : 'Width',
+  width:  'Width',
   height: 'Height'
 }, function ( name, methodName ) {
   this[ methodName ] = function ( val ) {
@@ -4715,11 +4735,11 @@ var getWindow = function ( el ) {
 };
 
 forOwnRight( {
-  scrollTop : 'pageYOffset',
+  scrollTop:  'pageYOffset',
   scrollLeft: 'pageXOffset'
 }, function ( off, name ) {
   this[ name ] = function ( val ) {
-    var i, el, win, x, y;
+    var scrollTop, i, el, win, x, y;
 
     if ( val === undefined ) {
       if ( !( el = this[ 0 ] ) ) {
@@ -4732,6 +4752,8 @@ forOwnRight( {
 
       return el[ name ];
     }
+
+    scrollTop = name === 'scrollTop';
 
     for ( i = this.length - 1; i >= 0; --i ) {
       win = getWindow( el = this[ i ] );
@@ -4753,11 +4775,9 @@ forOwnRight( {
 
     return this;
   };
-
-  var scrollTop = name === 'scrollTop';
 }, prototype );
 
-( function ( getStyle ) {
+( function ( getStyle, getComputedStyle ) {
   var show = function ( force ) {
     var style;
 
@@ -4809,15 +4829,15 @@ forOwnRight( {
   prototype.hide = function () {
     return this.each( hide );
   };
-} )( getStyle );
+} )( getStyle, getComputedStyle );
 
 var cloneNode = function ( element, deep ) {
   return event.copy( element.cloneNode( deep ), element, deep );
 };
 
 var wrapMap = {
-  col     : [ 2, '&lt;table>&lt;colgroup>', '&lt;/colgroup>&lt;/table>' ],
-  tr      : [ 2, '&lt;table>&lt;tbody>', '&lt;/tbody>&lt;/table>' ],
+  col:      [ 2, '&lt;table>&lt;colgroup>', '&lt;/colgroup>&lt;/table>' ],
+  tr:       [ 2, '&lt;table>&lt;tbody>', '&lt;/tbody>&lt;/table>' ],
   defaults: [ 0, '', '' ]
 };
 
@@ -4928,7 +4948,7 @@ var jqAccess = function ( set, callback, key, val, chainable, ifEmptyVal, raw ) 
   if ( getType( key ) == 'object' ) {
     chainable = true;
     keysLen = ( keys = getKeys( key ) ).length;
-    
+
     for ( i = 0; i &lt; keysLen; ++i ) {
       jqAccess( set, callback, keys[ i ], key[ keys[ i ] ], chainable, ifEmptyVal, raw );
     }
@@ -4997,20 +5017,20 @@ var cssNumbers = {
   "zoom": true
 };
 
-var is = function ( element, selector, index ) {
+var is = function ( el, selector, index ) {
   if ( typeof selector == 'string' ) {
-    return element.nodeType === 1 &amp;&amp; matches.call( element, selector );
+    return el.nodeType === 1 &amp;&amp; matches.call( el, selector );
   }
 
   if ( isArrayLikeObject( selector ) ) {
-    return indexOf( selector, element ) >= 0;
+    return indexOf( selector, el ) >= 0;
   }
 
   if ( typeof selector == 'function' ) {
-    return selector.call( element, index, element );
+    return selector.call( el, index, el );
   }
 
-  return element === selector;
+  return el === selector;
 };
 
 var defaultVisibleDisplayMap = {};
@@ -5045,7 +5065,7 @@ var getDefaultVisibleDisplay = function ( target ) {
 };
 
 ( function ( jqAccess ) {
-  var supportAttrs = support.getAttribute = function () {
+  var supportAttrs = support.getAttribute = ( function () {
     var span = document.createElement( 'span' ),
         name = 'name';
 
@@ -5055,10 +5075,10 @@ var getDefaultVisibleDisplay = function ( target ) {
     } catch ( e ) {}
 
     return false;
-  }();
+  } )();
 
   var propFix = peako.propFix = {
-    'for'  : 'htmlFor',
+    'for':   'htmlFor',
     'class': 'className'
   };
 
@@ -5104,7 +5124,7 @@ var getDefaultVisibleDisplay = function ( target ) {
         }
       }
     }
-    
+
     return this;
   };
 
@@ -5120,7 +5140,7 @@ var getDefaultVisibleDisplay = function ( target ) {
         delete el[ names[ j ] ];
       }
     }
-    
+
     return this;
   };
 
@@ -5133,98 +5153,89 @@ var getDefaultVisibleDisplay = function ( target ) {
   };
 } )( jqAccess );
 
+// todo add smth like __add( el, val ), __remove( el, val ) to call it from
+// toggle for perf gain.
 var classList = {
-  add: function ( element, classes ) {
-    classes = toWords( classes );
+  add: function ( el, classes ) {
+    var len = classes.length,
+        className, val, i;
 
-    if ( !classes.length ) {
+    if ( !len ) {
       return;
     }
 
-    var i = 0,
-        length = classes.length,
-        className = ' ' + classList.getAsArray( element ).join( ' ' ) + ' ',
-        value;
+    className = classList.getClassName( el );
 
-    for ( ; i &lt; length; ++i ) {
-      value = classes[ i ] + ' ';
+    for ( i = 0; i &lt; len; ++i ) {
+      val = classes[ i ] + ' ';
 
-      if ( className.indexOf( ' ' + value ) &lt; 0 ) {
-        className += value;
+      if ( className.indexOf( ' ' + val ) &lt; 0 ) {
+        className += val;
       }
     }
 
-    element.className = trim( className );
+    el.className = trim( className );
   },
 
-  remove: function ( element, classes ) {
-    classes = toWords( classes );
+  remove: function ( el, classes ) {
+    var className, val, i;
 
     if ( !classes.length ) {
       return;
     }
 
-    var i = classes.length - 1,
-        className = ' ' + classList.getAsArray( element ).join( ' ' ) + ' ',
-        value;
+    className = classList.getClassName( el );
 
-    for ( ; i >= 0; --i ) {
-      value = ' ' + classes[ i ] + ' ';
+    for ( i = classes.length - 1; i >= 0; --i ) {
+      val = ' ' + classes[ i ] + ' ';
 
-      while ( className.indexOf( value ) >= 0 ) {
-        className = className.replace( value, ' ' );
+      while ( className.indexOf( val ) >= 0 ) {
+        className = className.replace( val, ' ' );
       }
+
+      // className = classList.__remove( className, ' ' + classes[ i ] + ' ' );
     }
 
-    element.className = trim( className );
+    el.className = trim( className );
   },
 
-  removeWithRegexp: function () {
-    var test = function ( value ) {
-      return classList.test( value );
-    };
+  toggle: function ( el, classes ) {
+    var len = classes.length,
+        className, val, i;
 
-    return function ( element, regexp ) {
-      element.className = reject( classList.getAsArray( element ), test, regexp ).join( ' ' );
-    };
-  }(),
-
-  toggle: function ( element, classes ) {
-    
-    classes = toWords( classes );
-
-    if ( !classes.length ) {
+    if ( !len ) {
       return;
     }
 
-    var i = 0,
-        length = classes.length,
-        className = ' ' + classList.getAsArray( element ).join( ' ' ) + ' ',
-        value;
+    className = classList.getClassName( el );
 
-    for ( ; i &lt; length; ++i ) {
-      value = classes[ i ];
+    for ( i = 0; i &lt; len; ++i ) {
+      val = classes[ i ] + ' ';
 
-      if ( className.indexOf( ' ' + value + ' ' ) &lt; 0 ) {
-        classList.add( element, value );
+      if ( className.indexOf( ' ' + val ) >= 0 ) {
+        val = ' ' + val;
+
+        while ( className.indexOf( val ) >= 0 ) {
+          className = className.replace( val, ' ' );
+        }
+
+        // className = classList.__remove( className, ' ' + val );
       } else {
-        classList.remove( element, value );
+        className += val;
       }
     }
+
+    el.className = trim( className );
   },
 
-  has: function ( element, classes ) {
+  has: function ( el, classes ) {
     var className, i;
-
-    classes = toWords( classes );
 
     if ( !classes.length ) {
       return false;
     }
 
-    className = ' ' + classList
-      .getAsArray( element )
-      .join( ' ' ) + ' ';
+    className = classList.getClassName( el );
 
     for ( i = classes.length - 1; i >= 0; --i ) {
       if ( className.indexOf( ' ' + classes[ i ] + ' ' ) &lt; 0 ) {
@@ -5235,12 +5246,8 @@ var classList = {
     return true;
   },
 
-  getAsArray: function ( element ) {
-    return toWords( element.className );
-  },
-
-  getAsString: function ( element ) {
-    return element.className.replace( regexps.not_spaces, ' ' );
+  getClassName: function ( el ) {
+    return ' ' + toWords( el.className ).join( ' ' ) + ' ';
   }
 };
 
@@ -5248,9 +5255,9 @@ var classList = {
  * Based on Taylor Hakes Promise polyfill.
  * https://github.com/taylorhakes/promise-polyfill
  */
-var Promise = window.Promise || function () {
+var Promise = window.Promise || ( function () {
   var Promise = function ( executor ) {
-    if ( !isObjectLike( this ) || !( this instanceof Promise ) ) {
+    if ( !this || !( this instanceof Promise ) ) {
       throw TypeError( this + ' is not a promise' );
     }
 
@@ -5258,251 +5265,234 @@ var Promise = window.Promise || function () {
       throw TypeError( 'Promise resolver ' + executor + ' is not a function' );
     }
 
-    execute( executor, addWrapper( this ) );
+    this._state = 0;
+    this._value = undefined;
+    this._handled = false;
+    this._deferreds = [];
+
+    execute( executor, this );
   };
 
   Promise.prototype = {
-    constructor: Promise,
-
     then: function ( fulfilled, rejected ) {
       var promise = new Promise( noop ),
-          wrapper = getWrapper( promise ),
-          deferred = new Deferred( fulfilled, rejected, wrapper );
+          deferred = new Deferred( fulfilled, rejected, promise );
 
-      handle( getWrapper( this ), deferred );
+      handle( this, deferred );
       return promise;
     },
 
-    'catch': function ( reject ) {
-      return this.then( null, reject );
-    }
+    'catch': function ( rej ) {
+      return this.then( null, rej );
+    },
+
+    'finally': function ( fun ) {
+      var Promise = this.constructor,
+
+          done = function ( val ) {
+            return Promise.resolve( fun() ).then( function () {
+              return val;
+            } );
+          },
+    
+          fail = function ( err ) {
+            return Promise.resolve( fun() ).then( function () {
+              return Promise.reject( err );
+            } );
+          };
+
+      return this.then( done, fail );
+    },
+
+    constructor: Promise
   };
 
-  assign( Promise, {
-    all: function ( iterable ) {
-      var args = arr_slice.call( iterable ),
-          remaining = args.length;
+  Promise.all = function ( arr ) {
+    var args = arr_slice.call( arr ),
+        remaining = args.length;
 
-      return new Promise( function ( resolve, reject ) {
-        if ( !remaining ) {
-          return resolve( args );
-        }
+    return new Promise( function ( resolve, reject ) {
+      var res, len, i;
 
-        var res = function ( value, args ) {
-          try {
-            if ( !isPrimitive( value ) &amp;&amp; typeof value.then == 'function' ) {
-              value.then( function ( value ) {
-                res( value, args );
-              }, reject );
-            } else if ( !--remaining ) {
-              resolve( args );
-            }
-          } catch ( error ) {
-            reject( error );
+      if ( !remaining ) {
+        return resolve( args );
+      }
+
+      res = function ( val, args ) {
+        try {
+          if ( !isPrimitive( val ) &amp;&amp; typeof val.then == 'function' ) {
+            val.then( function ( val ) {
+              res( val, args );
+            }, reject );
+          } else if ( !--remaining ) {
+            resolve( args );
           }
-        };
-
-        var i = 0,
-            length = remaining;
-
-        for ( ; i &lt; length; ++i ) {
-          res( args[ i ], args );
+        } catch ( reason ) {
+          reject( reason );
         }
-      } );
-    },
+      };
 
-    resolve: function ( value ) {
-      return new Promise( function ( resolve ) {
-        resolve( value );
-      } );
-    },
-
-    reject: function ( value ) {
-      return new Promise( function ( resolve, reject ) {
-        reject( value );
-      } );
-    },
-
-    race: function ( values ) {
-      return new Promise( function ( resolve, reject ) {
-        var i = 0,
-            length = values.length;
-
-        for ( ; i &lt; length; ++i ) {
-          values[ i ].then( resolve, reject );
-        }
-      } );
-    }
-  } );
-
-  var Wrapper = function ( promise ) {
-    this.promise = promise;
-    this.deferreds = [];
+      for ( i = 0, len = remaining; i &lt; len; ++i ) {
+        res( args[ i ], args );
+      }
+    } );
   };
 
-  Wrapper.prototype = {
-    constructor: Wrapper,
-    handled: false,
-    state: 0
+  Promise.resolve = function ( val ) {
+    return new Promise( function ( res ) {
+      res( val );
+    } );
   };
 
-  var Deferred = function ( onFulfilled, onRejected, promise ) {
-    if ( typeof onFulfilled == 'function' ) {
-      this.onFulfilled = onFulfilled;
+  Promise.reject = function ( val ) {
+    return new Promise( function ( res, rej ) {
+      rej( val );
+    } );
+  };
+
+  Promise.race = function ( promises ) {
+    return new Promise( function ( res, rej ) {
+      var i = 0,
+          len = promises.length;
+
+      for ( ; i &lt; len; ++i ) {
+        promises[ i ].then( res, rej );
+      }
+    } );
+  };
+
+  var Deferred = function ( fulfilled, rejected, promise ) {
+    if ( typeof fulfilled == 'function' ) {
+      this.fulfilled = fulfilled;
     }
 
-    if ( typeof onRejected == 'function' ) {
-      this.onRejected = onRejected;
+    if ( typeof rejected == 'function' ) {
+      this.rejected = rejected;
     }
 
     this.promise = promise;
   };
 
-  Deferred.prototype = {
-    constructor: Deferred,
-    onFulfilled: null,
-    onRejected: null
-  };
-
-  // Memory leak! Need to rewrite this polyfill.
-  var promises = [],
-      wrappers = [];
-
-  var addWrapper = function ( promise ) {
-    var wrapper = promise;
-
-    if ( !( promise instanceof Wrapper ) &amp;&amp; !getWrapper( promise ) ) {
-      promises.push( promise );
-      wrappers.push( wrapper = new Wrapper( wrapper ) );
-    }
-
-    return wrapper;
-  };
-
-  var getWrapper = function ( promise ) {
-    return ( promise = baseIndexOf( promises, promise ) ) &lt; 0 ?
-      null : wrappers[ promise ];
-  };
-
-  var execute = function ( executor, wrapper ) {
+  var execute = function ( executor, promise ) {
     var done = false;
 
     try {
       executor( function ( value ) {
         if ( !done ) {
           done = true;
-          resolve( wrapper, value );
+          resolve( promise, value );
         }
       }, function ( reason ) {
         if ( !done ) {
           done = true;
-          reject( wrapper, reason );
+          reject( promise, reason );
         }
       } );
-    } catch ( error ) {
+    } catch ( reason ) {
       if ( !done ) {
-        reject( wrapper, error );
+        reject( promise, reason );
       }
     }
   };
 
-  var resolve = function ( wrapper, value ) {
+  var resolve = function ( promise, val ) {
     try {
-      if ( value === wrapper.promise ) {
+      if ( promise === val ) {
         throw TypeError( "A promise can't be resolved with itself" );
       }
 
-      if ( isPrimitive( value ) || typeof value.then != 'function' ) {
-        wrapper.state = 1;
-        wrapper.value = value;
-        finale( wrapper );
-      } else if ( value instanceof Promise ) {
-        wrapper.state = 3;
-        wrapper.value = getWrapper( value );
-        finale( wrapper );
+      if ( isPrimitive( val ) || typeof val.then != 'function' ) {
+        promise._state = 1;
+        promise._value = val;
+        finale( promise );
+      } else if ( val instanceof Promise ) {
+        promise._state = 3;
+        promise._value = val;
+        finale( promise );
       } else {
-        execute( function ( resolve, reject ) {
-          value.then( resolve, reject );
-        }, wrapper );
+        execute( function ( res, rej ) {
+          val.then( res, rej );
+        }, promise );
       }
-    } catch ( error ) {
-      reject( wrapper, error );
+    } catch ( reason ) {
+      reject( promise, reason );
     }
   };
 
-  var reject = function ( wrapper, value ) {
-    wrapper.state = 2;
-    wrapper.value = value;
-    finale( wrapper );
+  var reject = function ( promise, val ) {
+    promise._state = 2;
+    promise._value = val;
+    finale( promise );
   };
 
-  var finale = function ( wrapper ) {
+  var finale = function ( promise ) {
     var i = 0,
-        length = wrapper.deferreds.length;
+        len = promise._deferreds.length;
 
-    if ( wrapper.state === 2 &amp;&amp; !length ) {
+    if ( promise._state === 2 &amp;&amp; !len ) {
       setImmediate( function () {
-        if ( !wrapper.handled ) {
-          warn( 'Possible Unhandled Promise Rejection: ', wrapper.value );
+        if ( !promise._handled ) {
+          warn( 'Possible Unhandled Promise Rejection: ', promise._value );
         }
       } );
     }
 
-    for ( ; i &lt; length; ++i ) {
-      handle( wrapper, wrapper.deferreds[ i ] );
+    for ( ; i &lt; len; ++i ) {
+      handle( promise, promise._deferreds[ i ] );
     }
 
-    delete wrapper.deferreds;
+    delete promise._deferreds;
   };
 
-  var handle = function ( wrapper, deferred ) {
-    while ( wrapper.state === 3 ) {
-      wrapper = wrapper.value;
+  var handle = function ( promise, deferred ) {
+    while ( promise._state === 3 ) {
+      promise = promise._value;
     }
 
-    if ( wrapper.state === 0 ) {
-      return wrapper.deferreds.push( deferred );
+    if ( promise._state === 0 ) {
+      promise._deferreds.push( deferred );
+      return;
     }
 
-    wrapper.handled = true;
+    promise._handled = true;
 
     setImmediate( function () {
-      var containsValue = wrapper.state === 1,
-          temp, callback;
+      var tmp, fun;
 
-      if ( containsValue ) {
-        callback = deferred.onFulfilled;
+      if ( promise._state === 1 ) {
+        fun = deferred.fulfilled;
       } else {
-        callback = deferred.onRejected;
+        fun = deferred.rejected;
       }
 
-      if ( !callback ) {
-        if ( containsValue ) {
-          callback = resolve;
+      if ( !fun ) {
+        if ( promise._state === 1 ) {
+          fun = resolve;
         } else {
-          callback = reject;
+          fun = reject;
         }
 
-        callback( deferred.promise, wrapper.value );
+        fun( deferred.promise, promise._value );
         return;
       }
 
       try {
-        temp = callback( wrapper.value );
-      } catch ( error ) {
-        return reject( deferred.promise, error );
+        tmp = fun( promise._value );
+      } catch ( err ) {
+        reject( deferred.promise, err );
+        return;
       }
 
-      resolve( deferred.promise, temp );
+      resolve( deferred.promise, tmp );
     } );
   };
 
-  var setImmediate = window.setImmediate || function ( callback ) {
-    window.setTimeout( callback, 0 );
+  var setImmediate = window.setImmediate || function ( fun ) {
+    window.setTimeout( fun, 0 );
   };
 
   return Promise;
-}();
+} )();
 
 baseForEach( [
   'blur',        'focus',       'focusin',
@@ -5516,11 +5506,11 @@ baseForEach( [
   'touchend',    'touchenter',  'touchleave',
   'touchcancel', 'load'
 ], function ( type ) {
-  this[ type ] = function ( argument ) {
+  this[ type ] = function ( arg ) {
     var len, i;
 
-    if ( typeof argument != 'function' ) {
-      return this.trigger( type, argument );
+    if ( typeof arg != 'function' ) {
+      return this.trigger( type, arg );
     }
 
     for ( len = arguments.length, i = 0; i &lt; len; ++i ) {
@@ -5531,22 +5521,22 @@ baseForEach( [
   };
 }, prototype, true );
 
-baseForIn( {
-  appendTo    : 'append',
-  prependTo   : 'prepend',
+forOwnRight( {
+  appendTo:     'append',
+  prependTo:    'prepend',
   insertBefore: 'before',
-  insertAfter : 'after'
+  insertAfter:  'after'
 }, function ( based, name ) {
-  this[ name ] = function ( element ) {
-    if ( element instanceof DOMWrapper == false ) {
-      new DOMWrapper( element )[ based ]( this );
+  this[ name ] = function ( el ) {
+    if ( el instanceof DOMWrapper ) {
+      el[ based ]( this );
     } else {
-      element[ based ]( this );
+      new DOMWrapper( el )[ based ]( this );
     }
 
     return this;
   };
-}, prototype, [ 'appendTo', 'prependTo', 'insertBefore', 'insertAfter' ], true );
+}, prototype );
 
 var warn = console &amp;&amp; console.warn || noop;
 
@@ -5686,13 +5676,13 @@ if ( !support.fetch ) {
     return file_reader_ready( reader );
   };
 
-  support.blob = has( 'FileReader', window ) &amp;&amp; has( 'Blob', window ) &amp;&amp; function () {
+  support.blob = has( 'FileReader', window ) &amp;&amp; has( 'Blob', window ) &amp;&amp; ( function () {
     try {
       return new Blob(), true;
     } catch ( e ) {}
 
     return false;
-  }();
+  } )();
 
   support.formData = has( 'FormData', window );
   support.arrayBuffer = has( 'ArrayBuffer', window );
@@ -6062,6 +6052,7 @@ if ( !support.fetch ) {
 prototype.css = prototype.style;
 prototype.val = prototype.value;
 peako.getComputedStyle = getComputedStyle;
+peako.getStyle = getStyle;
 peako.lowerFirst = lowerFirst;
 peako.upperFirst = upperFirst;
 peako.style = getStyle;
@@ -6087,7 +6078,6 @@ peako.eachRight = eachRight;
 peako.equal = peako.eq = equal;
 peako.every = every;
 peako.exec = exec;
-peako.file = file;
 peako.fill = fill;
 peako.filter = filter;
 peako.filterIn = filterIn;
@@ -6138,7 +6128,7 @@ peako.map = map;
 peako.mapIn = mapIn;
 peako.mapRight = mapRight;
 peako.merge = merge;
-peako.method = peako.call = method;
+peako.method = peako.invoke = method;
 peako.mixin = peako.extend = mixin;
 peako.noConflict = noConflict;
 peako.noop = noop;
@@ -6207,7 +6197,7 @@ window.peako = window._ = peako;
     
   </div>
 
-  <div id="footer">Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on 27 February 2018 (Wednesday)</div>
+  <div id="footer">Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on 11 March 2018 (Monday)</div>
 
   <!-- JSDoc stuff. -->
   <script src="scripts/prettify/prettify.js"></script>

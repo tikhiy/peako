@@ -128,13 +128,13 @@
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-3664">line 3664</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-3658">line 3658</a></span></div>
 </dl><p>This class representing a wrapper for the DOM elements.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
   <p><code>selector</code> <code class="doclet-type">(Node)</code> - This element will be added to the new object.</p>
 
-  <p><code>selector</code> <code class="doclet-type">(String)</code> - When the selector string contains HTML content, it
+  <p><code>selector</code> <code class="doclet-type">(string)</code> - When the selector string contains HTML content, it
  will be parsed and added to the new object, if it doesn't, then will be
  added elements selected by the CSS selector.</p>
 
@@ -183,13 +183,13 @@ _( onready );</code></pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-3779">line 3779</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-3773">line 3773</a></span></div>
 </dl><p>Returns the element at the <code>index</code> position (may be negative for
 counting from the end). If <code>index</code> isn't passed, then the built-in
 array with all elements of this object will be returned.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
-  <p><code>[index]</code> <code class="doclet-type">(Number)</code> - The position of the needed element.</p>
+  <p><code>[index]</code> <code class="doclet-type">(number)</code> - The position of the needed element.</p>
 
   
     <h6 class="doclet-subheader">Returns</h6>
@@ -219,11 +219,11 @@ var selected = _( 'div' ).get().find( function ( div ) {
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-orange">chainable</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-3876">line 3876</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-orange">chainable</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-3870">line 3870</a></span></div>
 </dl><p>Add classes to all elements.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
-  <p><code>classes</code> <code class="doclet-type">(String|function)</code> - The classes that should be added to the
+  <p><code>classes</code> <code class="doclet-type">(string|function)</code> - The classes that should be added to the
 elements, or the function that will be called (with the element index and
 current element classes) once for each element, and returns the classes
 that need to be added.</p>
@@ -254,19 +254,16 @@ _( document.body ).addClass( 'mobile' );</code></pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-orange">chainable</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-3924">line 3924</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-orange">chainable</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-3920">line 3920</a></span></div>
 </dl>
     <h6 class="doclet-subheader">Parameters</h6>
     
-  <p><code>[classes]</code> <code class="doclet-type">(String)</code> - The classes that should be removed from the
-elements.</p>
+  <p><code>[classes]</code> <code class="doclet-type">(string)</code> - The classes that should be removed from the
+ elements.</p>
 
   <p><code>[classes]</code> <code class="doclet-type">(function)</code> - The function that will be called (with the
-element index and current element classes) once for each element, and
-returns which classes should be removed.</p>
-
-  <p><code>[classes]</code> <code class="doclet-type">(RegExp)</code> - You can remove classes that match the RegEx
-pattern.</p>
+ element index and current element classes) once for each element, and
+ returns which classes should be removed.</p>
 
   <h6 class="doclet-subheader">Examples</h6>
       <p class="code-caption">Using a string</p>
@@ -285,11 +282,6 @@ _( document.body ).removeClass( 'mobile' );</code></pre>
 
   return 'two';
 } );</code></pre>
-
-      <p class="code-caption">Using a pattern</p>
-    
-
-    <pre class="prettyprint"><code>_( 'div' ).removeClass( /stuff-\d+/ );</code></pre>
 
       <p class="code-caption">Remove all classes</p>
     
@@ -314,10 +306,10 @@ _( document.body ).removeClass( 'mobile' );</code></pre>
   </div>
 
   <div id="nav">
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="-_.html">_</a></li><li><a href="-_.DOMWrapper.html">DOMWrapper</a></li></ul><h3><a href="global.html">Global</a></h3>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="-_.html">_</a></li><li><a href="-_.DOMWrapper.html">DOMWrapper</a></li></ul>
   </div>
 
-  <div id="footer">Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on 27 February 2018 (Wednesday)</div>
+  <div id="footer">Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on 11 March 2018 (Monday)</div>
 
   <!-- JSDoc stuff. -->
   <script src="scripts/prettify/prettify.js"></script>
