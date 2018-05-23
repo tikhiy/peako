@@ -3041,6 +3041,30 @@ var defaults = function ( defaults, object ) {
   return mixin( true, clone( true, defaults ), object );
 };
 
+( function () {
+  var create = function ( re, map ) {
+    var cb = function ( ch ) {
+      return map[ ch ];
+    };
+
+    return function ( val ) {
+      return val.replace( re, cb );
+    };
+  };
+
+  peako.unescapeHTML = create( /(&lt;|&gt;|&amp;)/g, {
+    '&lt;':  '<',
+    '&gt;':  '>',
+    '&amp;': '&'
+  } );
+
+  peako.escapeHTML = create( /([<>&])/g, {
+    '<': '&lt;',
+    '>': '&gt;',
+    '&': '&amp;'
+  } );
+} )();
+
 var assign = Object.assign || createAssign( getKeys ),
     assignIn = createAssign( getKeysIn ),
     each = createEach( false ),
