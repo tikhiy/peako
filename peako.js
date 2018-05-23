@@ -2362,12 +2362,44 @@ var access = function ( obj, path, val ) {
 };
 
 var dfltAjaxOpts = {
-  onerror: function ( path ) {
-    throw Error( "Can't load " + path + ' file, status: ' + this.status );
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
   },
 
-  type: 'GET',
-  timeout: 1000 * 60
+  timeout: 1000 * 60,
+  type: 'GET'
+};
+
+var jqBuildParams = function ( prefix, obj, add ) {
+  if ( isArray( obj ) ) {
+    forEach( obj, function ( val, i ) {
+      if ( /\[\]$/.test( prefix ) ) {
+        add( prefix, val );
+      } else {
+        jqBuildParams( prefix + '[' + ( isObjectLike( val ) ? i : '' ) + ']', val, add );
+      }
+    } );
+  } else if ( getType( obj ) == 'object' ) {
+    forOwn( obj, function ( val, key ) {
+      jqBuildParams( prefix + '[' + name + ']', val, add );
+    } );
+  } else {
+    add( prefix, obj );
+  }
+};
+
+peako.param = function ( data ) {
+  var params = [],
+
+      add = function ( key, val ) {
+        params.push( encodeURIComponent( key ) + '=' + encodeURIComponent( val == null ? '' : val ) );
+      };
+
+  forOwn( data, function ( val, prefix ) {
+    jqBuildParams( prefix, val, add );
+  } );
+
+  return params.join( '&' );
 };
 
 /**
@@ -2375,28 +2407,45 @@ var dfltAjaxOpts = {
  * @memberof _
  * @static
  * @param {string} path
- * @param {Object} options
- * @example
+ * @param {Object} [options]
  *
- * <caption>Get some JSON</caption>
+ * @example <caption>Send the data to the server</caption>
  *
- * _.ajax( 'data.json', {
- *   onload: function ( _data ) {
- *     data = JSON.parse( _data );
+ * _.ajax( '/add', {
+ *   // get server response
+ *   success: function ( data ) {
+ *     _( document.body ).html( data );
+ *   },
+ *
+ *   error: function () {
+ *     return alert( 'Something went wrong.' );
+ *   },
+ *
+ *   // when "data" exists in options type will be "POST"
+ *   data: {
+ *     content: _( '#content' ).value()
  *   }
  * } );
  *
- * @example <caption>Post some data to the server</caption>
+ * @example <caption>Get data</caption>
  *
- * _.ajax( 'server.js', {
- *   data: document.location.hash,
- *   type: 'POST'
+ * _.ajax( {
+ *   // get server response
+ *   success: function ( data ) {
+ *     _( document.body ).html( data );
+ *   },
+ * 
+ *   path: '/update'
  * } );
+ *
+ * @example <caption>Get data (sync)</caption>
+ *
+ * var data = JSON.parse( _.ajax( './data.json' ) );
  */
 peako.ajax = function ( path, options ) {
-
   var data = null,
-      async, req, timer;
+      xhr = new XMLHttpRequest(),
+      async, timer, ContentType;
 
   // _.file( options );
   // async = options.async || true
@@ -2418,46 +2467,59 @@ peako.ajax = function ( path, options ) {
     async = options.async === undefined || options.async;
   }
 
-  req = new XMLHttpRequest();
-
-  if ( options.type === 'GET' ) {
-    req.onreadystatechange = function () {
-      if ( this.readyState !== 4 ) {
-        return;
-      }
-
-      if ( this.status === 200 ) {
-        if ( timer != null ) {
-          window.clearTimeout( timer );
-        }
-
-        data = this.responseText;
-
-        if ( options.onload ) {
-          options.onload.call( this, data, path, options );
-        }
-      } else if ( options.onerror ) {
-        options.onerror.call( this, path, options );
-      }
-    };
-
-    req.open( 'GET', path, async );
-
-    if ( async ) {
-      timer = window.setTimeout( function () {
-        req.abort();
-      }, options.timeout );
+  xhr.onreadystatechange = function () {
+    if ( this.readyState !== 4 ) {
+      return;
     }
 
-    req.send();
-  } else if ( options.type === 'POST' ) {
-    req.open( 'POST', path, async );
-    req.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8' );
-    req.send( options.data );
+    if ( this.status === 200 ) {
+      if ( timer != null ) {
+        window.clearTimeout( timer );
+      }
+
+      data = this.responseText;
+
+      if ( options.success ) {
+        options.success.call( this, data, path, options );
+      }
+    } else if ( options.error ) {
+      options.error.call( this, path, options );
+    }
+  };
+
+  if ( options.type === 'POST' || 'data' in options ) {
+    xhr.open( 'POST', path, async );
+  } else {
+    xhr.open( 'GET', path, async );
+  }
+
+  if ( options.headers ) {
+    forOwn( options.headers, function ( value, name ) {
+      if ( name === 'Content-Type' ) {
+        ContentType = value;
+      }
+
+      xhr.setRequestHeader( name, value );
+    } );
+  }
+
+  if ( async ) {
+    timer = window.setTimeout( function () {
+      xhr.abort();
+    }, options.timeout );
+  }
+
+  if ( ContentType != null && ( options.type === 'POST' || 'data' in options ) ) {
+    if ( !ContentType.indexOf( 'application/x-www-form-urlencoded' ) ) {
+      xhr.send( peako.param( options.data ) );
+    } else if ( !ContentType.indexOf( 'application/json' ) ) {
+      xhr.send( JSON.stringify( options.data ) );
+    }
+  } else {
+    xhr.send();
   }
 
   return data;
-
 };
 
 /**
