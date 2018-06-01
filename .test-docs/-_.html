@@ -168,35 +168,54 @@
 
         
             <div class="doclet">
-  <pre class="doclet-header">ajax<span class="signature">( path, options )</span></pre>
+  <pre class="doclet-header">ajax<span class="signature">( path, [options] )</span></pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2375">line 2375</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2405">line 2405</a></span></div>
 </dl>
     <h6 class="doclet-subheader">Parameters</h6>
     
   <p><code>path</code> <code class="doclet-type">(string)</code></p>
 
-  <p><code>options</code> <code class="doclet-type">(Object)</code></p>
+  <p><code>[options]</code> <code class="doclet-type">(Object)</code></p>
 
   <h6 class="doclet-subheader">Examples</h6>
-      <p class="code-caption">Get some JSON</p>
+      <p class="code-caption">Send the data to the server</p>
     
 
-    <pre class="prettyprint"><code>_.ajax( 'data.json', {
-  onload: function ( _data ) {
-    data = JSON.parse( _data );
+    <pre class="prettyprint"><code>_.ajax( '/add', {
+  // get server response
+  success: function ( data ) {
+    _( document.body ).html( data );
+  },
+
+  error: function () {
+    return alert( 'Something went wrong.' );
+  },
+
+  // when "data" exists in options type will be "POST"
+  data: {
+    content: _( '#content' ).value()
   }
 } );</code></pre>
 
-      <p class="code-caption">Post some data to the server</p>
+      <p class="code-caption">Get data</p>
     
 
-    <pre class="prettyprint"><code>_.ajax( 'server.js', {
-  data: document.location.hash,
-  type: 'POST'
+    <pre class="prettyprint"><code>_.ajax( {
+  // get server response
+  success: function ( data ) {
+    _( document.body ).html( data );
+  },
+
+  path: '/update'
 } );</code></pre>
+
+      <p class="code-caption">Get data (sync)</p>
+    
+
+    <pre class="prettyprint"><code>var data = JSON.parse( _.ajax( './data.json' ) );</code></pre>
 
 </div>
 <hr />
@@ -237,7 +256,7 @@ Math.weirdFunc(); // -> 21...</code></pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1784">line 1784</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1782">line 1782</a></span></div>
 </dl><p>Binds the <code>target</code> function to the <code>context</code>.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -302,7 +321,7 @@ goodbye(); // -> 'goodbye.'</code></pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.1</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1846">line 1846</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.1</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1844">line 1844</a></span></div>
 </dl><p>Returns a number that doesn't go out of bounds <code>lower</code> and <code>upper</code>.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -328,7 +347,7 @@ _.clamp( 15, 0, 10 ); // -> 10</code></pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.1</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1889">line 1889</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.1</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1887">line 1887</a></span></div>
 </dl><p>Creates a clone of the <code>target</code> object.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -368,7 +387,7 @@ clone instanceof Person;
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1934">line 1934</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1932">line 1932</a></span></div>
 </dl><p>Creates an array with elements from the <code>iterable</code> array. NOTE: You can use
 <code>&lt;Array&gt;.slice()</code>, but in some situations <code>_.cloneArray()</code> works much faster
 (for array-like objects).</p>
@@ -398,7 +417,7 @@ _.cloneArray( weirdObject );
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1956">line 1956</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1954">line 1954</a></span></div>
 </dl><p>Returns array without falsy values.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -420,7 +439,7 @@ _.cloneArray( weirdObject );
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1977">line 1977</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-1975">line 1975</a></span></div>
 </dl><p>Polyfill for the <code>Object.create()</code> method.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -452,7 +471,7 @@ var object = _.create( prototype, descriptors );</code></pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.0</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2050">line 2050</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.0</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2048">line 2048</a></span></div>
 </dl><p>Returns <code>defaultValue</code> when <code>value</code> is <code>null</code>, <code>undefined</code>, or <code>NaN</code>.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -482,7 +501,7 @@ _.defaultTo( 0, 100 );
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2058">line 2058</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2056">line 2056</a></span></div>
 </dl><p>Polyfill for the <code>Object.defineProperties()</code> method.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -517,7 +536,7 @@ _.defineProperties( object, descriptors );</code></pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2114">line 2114</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2112">line 2112</a></span></div>
 </dl><p>Polyfill for the <code>Object.defineProperty()</code> method.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -548,7 +567,7 @@ _.defineProperty( person, 'name', descriptor );</code></pre>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.0</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2161">line 2161</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.0</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2159">line 2159</a></span></div>
 </dl><p>It's like <code>&lt;RegExp&gt;.exec()</code>, but it works as <code>&lt;String&gt;.match()</code> with the
 global flag.</p>
     <h6 class="doclet-subheader">Parameters</h6>
@@ -573,7 +592,7 @@ global flag.</p>
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2212">line 2212</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.4</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2210">line 2210</a></span></div>
 </dl><p>Fill the <code>iterable</code> array from <code>start</code> to <code>end</code> index with <code>value</code>.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -603,7 +622,7 @@ _.fill( [ 'a', null, null, null, 'z' ], '.', 1, -1 );
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.5</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2247">line 2247</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.0.5</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2245">line 2245</a></span></div>
 </dl><p>Flattens the <code>iterable</code> array by reduce the number of dimensions in it on
 <code>depth</code> value (default - Infinity).</p>
     <h6 class="doclet-subheader">Parameters</h6>
@@ -634,7 +653,7 @@ _.flatten( weirdArray, 2 );
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.0</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2273">line 2273</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-green">since 0.1.0</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2271">line 2271</a></span></div>
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
       <ul>
@@ -669,7 +688,7 @@ _.fromPairs( _.toPairs( { one: 1 } ) );
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2528">line 2528</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2588">line 2588</a></span></div>
 </dl><p>Creates an object whose keys and values are inverted.</p>
     <h6 class="doclet-subheader">Parameters</h6>
     
@@ -1263,7 +1282,7 @@ _.isWindowLike( new function () { this.window = this; } );
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2532">line 2532</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2592">line 2592</a></span></div>
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
       <ul>
@@ -1318,7 +1337,7 @@ _.keys( object );
 
   
 
-<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2285">line 2285</a></span></div>
+<dl class="details"><div class="doclet-attrs"><span class="color-deep-purple">static</span><br /><span class="color-blue"><a href="peako.js.html">peako.js</a> - <a href="peako.js.html#line-2283">line 2283</a></span></div>
 </dl><p>Polyfill for the <code>perfomance.now()</code> method.</p>
     <h6 class="doclet-subheader">Returns</h6>
 
@@ -1344,7 +1363,7 @@ _.keys( object );
     <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="-_.html">_</a></li><li><a href="-_.DOMWrapper.html">DOMWrapper</a></li></ul>
   </div>
 
-  <div id="footer">Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on 11 March 2018 (Monday)</div>
+  <div id="footer">Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on 29 May 2018 (Wednesday)</div>
 
   <!-- JSDoc stuff. -->
   <script src="scripts/prettify/prettify.js"></script>

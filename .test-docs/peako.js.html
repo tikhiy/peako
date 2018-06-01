@@ -1864,9 +1864,7 @@ var before = function ( n, target ) {
     if ( target ) {
       if ( --n >= 0 ) {
         value = apply( target, this, arguments );
-      }
-
-      if ( n &lt; 2 ) {
+      } else {
         target = null;
       }
     }
@@ -2478,12 +2476,44 @@ var access = function ( obj, path, val ) {
 };
 
 var dfltAjaxOpts = {
-  onerror: function ( path ) {
-    throw Error( "Can't load " + path + ' file, status: ' + this.status );
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
   },
 
-  type: 'GET',
-  timeout: 1000 * 60
+  timeout: 1000 * 60,
+  type: 'GET'
+};
+
+var jqBuildParams = function ( prefix, obj, add ) {
+  if ( isArray( obj ) ) {
+    forEach( obj, function ( val, i ) {
+      if ( /\[\]$/.test( prefix ) ) {
+        add( prefix, val );
+      } else {
+        jqBuildParams( prefix + '[' + ( isObjectLike( val ) ? i : '' ) + ']', val, add );
+      }
+    } );
+  } else if ( getType( obj ) == 'object' ) {
+    forOwn( obj, function ( val, key ) {
+      jqBuildParams( prefix + '[' + name + ']', val, add );
+    } );
+  } else {
+    add( prefix, obj );
+  }
+};
+
+peako.param = function ( data ) {
+  var params = [],
+
+      add = function ( key, val ) {
+        params.push( encodeURIComponent( key ) + '=' + encodeURIComponent( val == null ? '' : val ) );
+      };
+
+  forOwn( data, function ( val, prefix ) {
+    jqBuildParams( prefix, val, add );
+  } );
+
+  return params.join( '&amp;' );
 };
 
 /**
@@ -2491,28 +2521,45 @@ var dfltAjaxOpts = {
  * @memberof _
  * @static
  * @param {string} path
- * @param {Object} options
- * @example
+ * @param {Object} [options]
  *
- * &lt;caption>Get some JSON&lt;/caption>
+ * @example &lt;caption>Send the data to the server&lt;/caption>
  *
- * _.ajax( 'data.json', {
- *   onload: function ( _data ) {
- *     data = JSON.parse( _data );
+ * _.ajax( '/add', {
+ *   // get server response
+ *   success: function ( data ) {
+ *     _( document.body ).html( data );
+ *   },
+ *
+ *   error: function () {
+ *     return alert( 'Something went wrong.' );
+ *   },
+ *
+ *   // when "data" exists in options type will be "POST"
+ *   data: {
+ *     content: _( '#content' ).value()
  *   }
  * } );
  *
- * @example &lt;caption>Post some data to the server&lt;/caption>
+ * @example &lt;caption>Get data&lt;/caption>
  *
- * _.ajax( 'server.js', {
- *   data: document.location.hash,
- *   type: 'POST'
+ * _.ajax( {
+ *   // get server response
+ *   success: function ( data ) {
+ *     _( document.body ).html( data );
+ *   },
+ * 
+ *   path: '/update'
  * } );
+ *
+ * @example &lt;caption>Get data (sync)&lt;/caption>
+ *
+ * var data = JSON.parse( _.ajax( './data.json' ) );
  */
 peako.ajax = function ( path, options ) {
-
   var data = null,
-      async, req, timer;
+      xhr = new XMLHttpRequest(),
+      async, timer, ContentType;
 
   // _.file( options );
   // async = options.async || true
@@ -2534,46 +2581,59 @@ peako.ajax = function ( path, options ) {
     async = options.async === undefined || options.async;
   }
 
-  req = new XMLHttpRequest();
-
-  if ( options.type === 'GET' ) {
-    req.onreadystatechange = function () {
-      if ( this.readyState !== 4 ) {
-        return;
-      }
-
-      if ( this.status === 200 ) {
-        if ( timer != null ) {
-          window.clearTimeout( timer );
-        }
-
-        data = this.responseText;
-
-        if ( options.onload ) {
-          options.onload.call( this, data, path, options );
-        }
-      } else if ( options.onerror ) {
-        options.onerror.call( this, path, options );
-      }
-    };
-
-    req.open( 'GET', path, async );
-
-    if ( async ) {
-      timer = window.setTimeout( function () {
-        req.abort();
-      }, options.timeout );
+  xhr.onreadystatechange = function () {
+    if ( this.readyState !== 4 ) {
+      return;
     }
 
-    req.send();
-  } else if ( options.type === 'POST' ) {
-    req.open( 'POST', path, async );
-    req.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8' );
-    req.send( options.data );
+    if ( this.status === 200 ) {
+      if ( timer != null ) {
+        window.clearTimeout( timer );
+      }
+
+      data = this.responseText;
+
+      if ( options.success ) {
+        options.success.call( this, data, path, options );
+      }
+    } else if ( options.error ) {
+      options.error.call( this, path, options );
+    }
+  };
+
+  if ( options.type === 'POST' || 'data' in options ) {
+    xhr.open( 'POST', path, async );
+  } else {
+    xhr.open( 'GET', path, async );
+  }
+
+  if ( options.headers ) {
+    forOwn( options.headers, function ( value, name ) {
+      if ( name === 'Content-Type' ) {
+        ContentType = value;
+      }
+
+      xhr.setRequestHeader( name, value );
+    } );
+  }
+
+  if ( async ) {
+    timer = window.setTimeout( function () {
+      xhr.abort();
+    }, options.timeout );
+  }
+
+  if ( ContentType != null &amp;&amp; ( options.type === 'POST' || 'data' in options ) ) {
+    if ( !ContentType.indexOf( 'application/x-www-form-urlencoded' ) ) {
+      xhr.send( peako.param( options.data ) );
+    } else if ( !ContentType.indexOf( 'application/json' ) ) {
+      xhr.send( JSON.stringify( options.data ) );
+    }
+  } else {
+    xhr.send();
   }
 
   return data;
-
 };
 
 /**
@@ -3094,6 +3154,30 @@ var without = function ( iterable ) {
 var defaults = function ( defaults, object ) {
   return mixin( true, clone( true, defaults ), object );
 };
+
+( function () {
+  var create = function ( re, map ) {
+    var cb = function ( ch ) {
+      return map[ ch ];
+    };
+
+    return function ( val ) {
+      return val.replace( re, cb );
+    };
+  };
+
+  peako.unescapeHTML = create( /(&amp;lt;|&amp;gt;|&amp;amp;)/g, {
+    '&amp;lt;':  '&lt;',
+    '&amp;gt;':  '>',
+    '&amp;amp;': '&amp;'
+  } );
+
+  peako.escapeHTML = create( /([&lt;>&amp;])/g, {
+    '&lt;': '&amp;lt;',
+    '>': '&amp;gt;',
+    '&amp;': '&amp;amp;'
+  } );
+} )();
 
 var assign = Object.assign || createAssign( getKeys ),
     assignIn = createAssign( getKeysIn ),
@@ -6197,7 +6281,7 @@ window.peako = window._ = peako;
     
   </div>
 
-  <div id="footer">Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on 11 March 2018 (Monday)</div>
+  <div id="footer">Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on 29 May 2018 (Wednesday)</div>
 
   <!-- JSDoc stuff. -->
   <script src="scripts/prettify/prettify.js"></script>

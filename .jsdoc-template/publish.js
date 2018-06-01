@@ -34,7 +34,7 @@ exports.publish = ( data, options, tutorials ) => {
     // path of the templates
     template_path = path.normalize( options.template ),
     // path of the static files
-    static_path = path.join( template_path, 'static' ),
+    // static_path = path.join( template_path, 'static' ),
     // "template" object in the jsdoc config
     config = env.conf.templates,
     // url of the global.html file
@@ -127,9 +127,9 @@ exports.publish = ( data, options, tutorials ) => {
   fs.mkPath( dest_path );
 
   // copy the template static files into the destination dir
-  for ( let filename of fs.ls( static_path, 5 ) ) {
-    copy_to_dest( filename, static_path, dest_path );
-  }
+  // for ( let filename of fs.ls( static_path, 5 ) ) {
+  //   copy_to_dest( filename, static_path, dest_path );
+  // }
 
   // copy user-specified static files to outdir
   if ( ( conf_files = config.default.staticFiles ) ) {

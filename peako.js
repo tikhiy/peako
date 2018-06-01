@@ -13,7 +13,7 @@
  */
 
 /* jshint esversion: 3, unused: true, undef: true, noarg: true, curly: true, immed: true */
-/* global XMLHttpRequest, Element, FileReader, Blob, FormData, ArrayBuffer */
+/* global console, XMLHttpRequest, Element, FileReader, Blob, FormData, ArrayBuffer */
 
 ;( function ( window, undefined ) {
 
@@ -29,38 +29,39 @@ var peako = function ( selector ) {
   return new DOMWrapper( selector );
 };
 
-var document = window.document,
-    console = window.console,
-    body = document.body || document.createElement( 'body' ),
-    obj = Object.prototype,
+var obj = Object.prototype,
     str = String.prototype,
     arr = Array.prototype,
-    fn = Function.prototype,
+    fn = Function.prototype;
+
+var document = window.document,
+    body = document.body || document.createElement( 'body' ),
     hasOwnProperty = obj.hasOwnProperty,
     isPrototypeOf = obj.isPrototypeOf,
     toString = obj.toString,
     arr_concat = arr.concat,
     arr_slice = arr.slice,
     arr_push = arr.push,
-    fn_call = fn.call,
-    math_floor = Math.floor,
-    math_round = Math.round,
-    math_ceil = Math.ceil,
-    rand = Math.random,
-    max = Math.max,
-    min = Math.min,
-    pow = Math.pow,
-    ERR_INVALID_ARGS = 'Invalid arguments',
-    ERR_FUNCTION_EXPECTED = 'Expected a function',
-    ERR_STRING_EXPECTED = 'Expected a string',
-    ERR_UNDEFINED_OR_NULL = 'Cannot convert undefined or null to object',
-    ERR_REDUCE_OF_EMPTY_ARRAY = 'Reduce of empty array with no initial value';
+    fn_call = fn.call;
+
+var warn = function () {
+  if ( 'console' in window && console.warn ) {
+    console.warn.apply( console, arguments );
+  }
+};
+
+var ERR = {
+  INVALID_ARGS:          'Invalid arguments',
+  FUNCTION_EXPECTED:     'Expected a function',
+  STRING_EXPECTED:       'Expected a string',
+  UNDEFINED_OR_NULL:     'Cannot convert undefined or null to object',
+  REDUCE_OF_EMPTY_ARRAY: 'Reduce of empty array with no initial value'
+};
 
 var regexps = {
-  selector: /^(?:#([\w-]+)|([\w-]+)|\.([\w-]+))$/,
-  // bug we can't input smth like this "[ -1 ]" and "[ - 1 ]" (!)
-  property: /(^|\.)\s*([_a-z]\w*)\s*|\[\s*(\d+|\d*\.\d+|("|')(([^\\]\\(\\\\)*|[^\4])*)\4)\s*\]/gi,
-  deep_key: /(^|[^\\])(\\\\)*(\.|\[)/,
+  selector:   /^(?:#([\w-]+)|([\w-]+)|\.([\w-]+))$/,
+  property:   /(^|\.)\s*([_a-z]\w*)\s*|\[\s*((?:-)?(?:\d+|\d*\.\d+)|("|')(([^\\]\\(\\\\)*|[^\4])*)\4)\s*\]/gi,
+  deep_key:   /(^|[^\\])(\\\\)*(\.|\[)/,
   single_tag: /^(<([\w-]+)><\/[\w-]+>|<([\w-]+)(?:\s*\/)?>)$/,
   not_spaces: /[^\s\uFEFF\xA0]+/g
 };
@@ -75,7 +76,6 @@ var support = {};
  * @category Function
  * @memberof _
  * @static
- * @since 0.0.5
  * @param {Function} target The function that should be bound.
  * @param {*} context The `this` value in the bound function.
  * @returns {Function} A function bound to the `context`.
@@ -85,16 +85,16 @@ var support = {};
  *   alert( this.greeting );
  * };
  *
- * var goodbye = _.bindFast( hello, {
- *   greeting: 'goodbye.'
+ * var hallo = _.bindFast( hello, {
+ *   greeting: 'hallo.'
  * } );
  *
- * goodbye(); // -> 'goodbye.'
+ * goodbye(); // -> 'hallo.'
  */
 var bindFast = function ( target, context ) {
   // tode write about in modurn chrome bind works faster
   if ( typeof target != 'function' ) {
-    throw TypeError( ERR_FUNCTION_EXPECTED );
+    throw TypeError( ERR.FUNCTION_EXPECTED );
   }
 
   return function ( a, b, c, d, e, f, g, h ) {
@@ -122,7 +122,6 @@ var bindFast = function ( target, context ) {
  * @method isArray
  * @memberof _
  * @static
- * @since 0.0.4
  * @param {*} value The value to check.
  * @returns {boolean}
  * @example
@@ -142,7 +141,6 @@ var isArray = Array.isArray || function ( value ) {
  *
  * @memberof _
  * @static
- * @since 0.0.1
  * @param {*} value The value to check.
  * @returns {boolean}
  * @example
@@ -171,7 +169,6 @@ var isArrayLike = function ( value ) {
  *
  * @memberof _
  * @static
- * @since 0.1.4
  * @param {*} value The value to check.
  * @returns {boolean}
  * @example
@@ -192,7 +189,6 @@ var isArrayLikeObject = function ( value ) {
  *
  * @memberof _
  * @static
- * @since 0.0.4
  * @param {*} value The value to check.
  * @returns {boolean}
  * @example
@@ -211,7 +207,6 @@ var isBoolean = function ( value ) {
  *
  * @memberof _
  * @static
- * @since 0.0.4
  * @param {*} value The value to check.
  * @returns {boolean}
  * @example
@@ -232,7 +227,6 @@ var isFinite = function ( value ) {
  *
  * @memberof _
  * @static
- * @since 0.0.4
  * @param {*} value The value to check.
  * @returns {boolean}
  * @example
@@ -253,7 +247,6 @@ support.HTMLElement = toString.call( body ).indexOf( 'HTML' ) > 0;
  *
  * @memberof _
  * @static
- * @since 0.0.1
  * @param {*} value The value to check.
  * @returns {boolean}
  * @example
@@ -283,7 +276,6 @@ var isElement = function ( value ) {
  *
  * @memberof _
  * @static
- * @since 0.1.4
  * @param {*} value The value to check.
  * @returns {boolean}
  * @example
@@ -304,7 +296,6 @@ var isElementLike = function ( value ) {
  *
  * @memberof _
  * @static
- * @since 0.1.0
  * @param {*} value The value to check.
  * @param {Number} [length=Number.MAX_SAFE_INTEGER] Check for an array with a
  *  specific length.
@@ -341,7 +332,6 @@ var MAX_ARRAY_LENGTH = 4294967295;
  *
  * @memberof _
  * @static
- * @since 0.0.9
  * @param {*} value The value to check.
  * @returns {boolean}
  * @example
@@ -365,7 +355,6 @@ var isLength = function ( value ) {
  *
  * @memberof _
  * @static
- * @since 0.0.4
  * @param {*} value The value to check.
  * @returns {boolean}
  * @example
@@ -384,7 +373,6 @@ var isNaN = function ( value ) {
  *
  * @memberof _
  * @static
- * @since 0.0.1
  * @param {*} value The value to check.
  * @returns {boolean}
  * @example
@@ -405,7 +393,6 @@ var isNumber = function ( value ) {
  *
  * @memberof _
  * @static
- * @since 0.0.4
  * @param {*} value The value to check.
  * @returns {boolean}
  * @example
@@ -427,7 +414,6 @@ var isObject = function ( value ) {
  *
  * @memberof _
  * @static
- * @since 0.1.4
  * @param {*} value The value to check.
  * @returns {boolean}
  * @example
@@ -451,7 +437,6 @@ var fnToString = fn.toString,
  *
  * @memberof _
  * @static
- * @since 0.0.4
  * @param {*} value The value to check.
  * @returns {boolean}
  * @example
@@ -482,7 +467,6 @@ var isPlainObject = function ( value ) {
  *
  * @memberof _
  * @static
- * @since 0.0.4
  * @param {*} value The value to check.
  * @returns {boolean}
  * @example
@@ -508,7 +492,6 @@ var MAX_SAFE_INT = 9007199254740991,
  *
  * @memberof _
  * @static
- * @since 0.0.4
  * @param {*} value The value to check.
  * @returns {boolean}
  * @example
@@ -532,7 +515,6 @@ var isSafeInteger = function ( value ) {
  *
  * @memberof _
  * @static
- * @since 0.0.4
  * @param {*} value The value to check.
  * @returns {boolean}
  * @example
@@ -571,7 +553,6 @@ var isDOMElement = function ( value ) {
  *
  * @memberof _
  * @static
- * @since 0.0.4
  * @param {*} value The value to check.
  * @returns {boolean}
  * @example
@@ -590,7 +571,6 @@ var isString = function ( value ) {
  *
  * @memberof _
  * @static
- * @since 0.1.0
  * @param {*} value The value to check.
  * @returns {boolean}
  * @example
@@ -618,7 +598,6 @@ var isSymbol = function ( value ) {
  *
  * @memberof _
  * @static
- * @since 0.0.6
  * @param {*} value The value to check.
  * @returns {boolean}
  * @example
@@ -638,7 +617,6 @@ var isWindow = function ( value ) {
  *
  * @memberof _
  * @static
- * @since 0.1.4
  * @param {*} value The value to check.
  * @returns {boolean}
  * @example
@@ -1008,8 +986,8 @@ var baseIndexOf = function ( iterable, search, fromIndex, fromRight ) {
     fromIndex = baseToIndex( fromIndex, length );
 
     i += j = fromRight ?
-      min( j, fromIndex ) :
-      max( 0, fromIndex );
+      Math.min( j, fromIndex ) :
+      Math.max( 0, fromIndex );
   }
 
   for ( ; j >= 0; --j ) {
@@ -1204,7 +1182,7 @@ var baseMerge = function ( iterable, expander ) {
 
 var baseRange = function ( reverse, start, end, step ) {
   var i = -1,
-      j = math_ceil( ( end - start ) / step ),
+      j = Math.ceil( ( end - start ) / step ),
       temp = Array( j-- );
 
   for ( ; j >= 0; --j ) {
@@ -1330,7 +1308,7 @@ var createAssign = function ( getKeys ) {
         expander;
 
     if ( object == null ) {
-      throw TypeError( ERR_UNDEFINED_OR_NULL );
+      throw TypeError( ERR.UNDEFINED_OR_NULL );
     }
 
     for ( ; i < length; ++i ) {
@@ -1482,7 +1460,7 @@ var createRange = function ( reverse ) {
 var createToCaseFirst = function ( toCase ) {
   return function ( string ) {
     if ( string == null ) {
-      throw TypeError( ERR_UNDEFINED_OR_NULL );
+      throw TypeError( ERR.UNDEFINED_OR_NULL );
     }
 
     return ( string += '' ).charAt( 0 )[ toCase ]() + string.slice( 1 );
@@ -1500,7 +1478,7 @@ var createToPairs = function ( getKeys ) {
 var createTrim = function ( regexp ) {
   return function ( target ) {
     if ( target == null ) {
-      throw TypeError( ERR_UNDEFINED_OR_NULL );
+      throw TypeError( ERR.UNDEFINED_OR_NULL );
     }
 
     return ( '' + target ).replace( regexp, '' );
@@ -1519,7 +1497,7 @@ var createRound = function ( round ) {
       return round( value );
     }
 
-    return round( value * ( precision = pow( 10, precision ) ) ) / precision;
+    return round( value * ( precision = Math.pow( 10, precision ) ) ) / precision;
   };
 };
 
@@ -1542,7 +1520,7 @@ var getLength = function ( iterable ) {
 
 var toWords = function ( string ) {
   if ( typeof string != 'string' ) {
-    throw TypeError( ERR_STRING_EXPECTED );
+    throw TypeError( ERR.STRING_EXPECTED );
   }
 
   return string.match( regexps.not_spaces ) || [];
@@ -1596,7 +1574,7 @@ peako.iteratee = function ( value ) {
     return property( value );
   }
 
-  throw TypeError( ERR_FUNCTION_EXPECTED );
+  throw TypeError( ERR.FUNCTION_EXPECTED );
 };
 
 var getIterable = function ( value ) {
@@ -1705,7 +1683,6 @@ var has = function ( key, object ) {
  * @method now
  * @memberof _
  * @static
- * @since 0.0.4
  * @returns {Number}
  * @example
  *
@@ -1722,7 +1699,6 @@ var getTime = Date.now || function () {
  * @category Function
  * @memberof _
  * @static
- * @since 0.1.0
  * @param {Number} n
  * @param {Function} target
  * @returns {Function}
@@ -1741,7 +1717,7 @@ var before = function ( n, target ) {
   var value;
 
   if ( typeof target != 'function' ) {
-    throw TypeError( ERR_FUNCTION_EXPECTED );
+    throw TypeError( ERR.FUNCTION_EXPECTED );
   }
 
   n = defaultTo( n, 1 );
@@ -1786,7 +1762,6 @@ var bind = ( function () {
    * @method bind
    * @memberof _
    * @static
-   * @since 0.0.4
    * @param {Function} target
    * @param {*} context
    * @param {...*} partialArgs
@@ -1806,7 +1781,7 @@ var bind = ( function () {
     var partial_args;
 
     if ( typeof target != 'function' ) {
-      throw TypeError( ERR_FUNCTION_EXPECTED );
+      throw TypeError( ERR.FUNCTION_EXPECTED );
     }
 
     if ( arguments.length < 3 ) {
@@ -1831,7 +1806,6 @@ var bind = ( function () {
  * @category Number
  * @memberof _
  * @static
- * @since 0.0.1
  * @param {Number} value The number to clamp.
  * @param {Number} lower The lower bound.
  * @param {Number} upper The upper bound.
@@ -1859,7 +1833,6 @@ var clamp = function ( value, lower, upper ) {
  * @category Object
  * @memberof _
  * @static
- * @since 0.0.1
  * @param {boolean} [deep=true] Recursively clone the target?
  * @param {!*} target The object to clone.
  * @returns {Object} The clone of the object.
@@ -1915,7 +1888,6 @@ var clone = function ( deep, target, guard ) {
  * @category Collection
  * @memberof _
  * @static
- * @since 0.0.4
  * @param {Object|string} iterable The array-like value to clone.
  * @returns {Array} The clone of `iterable`.
  * @example
@@ -1931,7 +1903,7 @@ var clone = function ( deep, target, guard ) {
  */
 var cloneArray = function ( iterable ) {
   if ( iterable == null ) {
-    throw TypeError( ERR_UNDEFINED_OR_NULL );
+    throw TypeError( ERR.UNDEFINED_OR_NULL );
   }
 
   return baseCloneArray( iterable );
@@ -1943,7 +1915,6 @@ var cloneArray = function ( iterable ) {
  * @category Collection
  * @memberof _
  * @static
- * @since 0.0.4
  * @param {Object} iterable The array-like object to compact.
  * @returns {Array} A new compacted array.
  * @example
@@ -1979,7 +1950,6 @@ var constant = function ( value ) {
  * @method create
  * @memberof _
  * @static
- * @since 0.0.4
  * @param {null|Object} prototype The prototype of a new object.
  * @param {Object} [descriptors] The descriptors to assign in the new object via
  *  [`_.defineProperties()`]{@link _.defineProperties}.
@@ -2030,7 +2000,6 @@ var create = Object.create || ( function () {
  * @category Utility Methods
  * @memberof _
  * @static
- * @since 0.1.0
  * @param {*} value The value to check.
  * @param {*} defaultValue The default value.
  * @returns {*} Returns `value` or `defaultValue`.
@@ -2060,7 +2029,6 @@ var defaultTo = function ( value, defaultValue ) {
  * @method defineProperties
  * @memberof _
  * @static
- * @since 0.0.4
  * @param {Object} object The object to modificate.
  * @param {Object} descriptors The descriptors to define.
  * @returns {Object} The object in which properties were defined.
@@ -2116,7 +2084,6 @@ function ( object, descriptors ) {
  * @method defineProperty
  * @memberof _
  * @static
- * @since 0.0.4
  * @param {Object} object The object to modificate.
  * @param {string} key The key of defined property.
  * @param {Object} descriptor The descriptor to define.
@@ -2163,7 +2130,6 @@ var equal = function ( a, b ) {
  * @method exec
  * @memberof _
  * @static
- * @since 0.1.0
  * @param {RegExp} regexp
  * @param {string} string
  * @returns {Array}
@@ -2194,7 +2160,6 @@ var defaultIndex = function ( value, length, defaultValue ) {
  * @category Collection
  * @memberof _
  * @static
- * @since 0.0.4
  * @param {Object} iterable The array to fill the values in it.
  * @param {*} value The value that should be in the array.
  * @param {Number} [start=0] From where will be started filling the array?
@@ -2227,7 +2192,6 @@ var fill = function ( iterable, value, start, end ) {
  * @category Collection
  * @memberof _
  * @static
- * @since 0.0.5
  * @param {Object} iterable The array to flatten.
  * @param {Number} [depth=Infinity] How many levels to remove?
  * @returns {Object}
@@ -2252,7 +2216,6 @@ var flatten = function ( iterable, depth ) {
  * @category Object
  * @memberof _
  * @static
- * @since 0.1.0
  * @param {Array} pairs The array that contains "key-value" pairs, e.g.
  * `[ 'key', 'value' ]`.
  * @returns {Object}
@@ -2381,7 +2344,7 @@ var jqBuildParams = function ( prefix, obj, add ) {
     } );
   } else if ( getType( obj ) == 'object' ) {
     forOwn( obj, function ( val, key ) {
-      jqBuildParams( prefix + '[' + name + ']', val, add );
+      jqBuildParams( prefix + '[' + key + ']', val, add );
     } );
   } else {
     add( prefix, obj );
@@ -2531,7 +2494,7 @@ var getPrototypeOf = Object.getPrototypeOf || function ( target ) {
   var prototype, constructor;
 
   if ( target == null ) {
-    throw TypeError( ERR_UNDEFINED_OR_NULL );
+    throw TypeError( ERR.UNDEFINED_OR_NULL );
   }
 
   // jshint proto: true
@@ -2834,10 +2797,10 @@ var random = function ( lower, upper, floating ) {
   }
 
   if ( floating || lower % 1 || upper % 1 ) {
-    return lower + rand() * ( upper - lower );
+    return lower + Math.random() * ( upper - lower );
   }
 
-  return math_round( lower + rand() * ( upper - lower ) );
+  return Math.round( lower + Math.random() * ( upper - lower ) );
 };
 
 var reduce = function ( iterable, iteratee, value ) {
@@ -2853,7 +2816,7 @@ var reduce = function ( iterable, iteratee, value ) {
     }
 
     if ( i === length ) {
-      throw TypeError( ERR_REDUCE_OF_EMPTY_ARRAY );
+      throw TypeError( ERR.REDUCE_OF_EMPTY_ARRAY );
     }
 
     value = iterable[ i++ ];
@@ -2881,7 +2844,7 @@ var reduceRight = function ( iterable, iteratee, value ) {
     }
 
     if ( i < 0 ) {
-      throw TypeError( ERR_REDUCE_OF_EMPTY_ARRAY );
+      throw TypeError( ERR.REDUCE_OF_EMPTY_ARRAY );
     }
 
     value = iterable[ i-- ];
@@ -2902,7 +2865,7 @@ var sample = function ( arr ) {
 
 var sampleSize = function ( arr, size ) {
   if ( arr == null ) {
-    throw TypeError( ERR_UNDEFINED_OR_NULL );
+    throw TypeError( ERR.UNDEFINED_OR_NULL );
   }
 
   arr = toArray( arr );
@@ -2921,7 +2884,7 @@ var sampleSize = function ( arr, size ) {
  */
 var setPrototypeOf = Object.setPrototypeOf || function ( target, prototype ) {
   if ( target == null ) {
-    throw TypeError( ERR_UNDEFINED_OR_NULL );
+    throw TypeError( ERR.UNDEFINED_OR_NULL );
   }
 
   if ( prototype !== null && isPrimitive( prototype ) ) {
@@ -2939,7 +2902,7 @@ var setPrototypeOf = Object.setPrototypeOf || function ( target, prototype ) {
 
 var shuffle = function ( object ) {
   if ( object == null ) {
-    throw TypeError( ERR_UNDEFINED_OR_NULL );
+    throw TypeError( ERR.UNDEFINED_OR_NULL );
   }
 
   return baseShuffle( toArray( object ) );
@@ -2967,7 +2930,7 @@ var slice = function ( iterable, start, end ) {
 
 var times = function ( times, callback ) {
   if ( typeof callback != 'function' ) {
-    throw TypeError( ERR_FUNCTION_EXPECTED );
+    throw TypeError( ERR.FUNCTION_EXPECTED );
   }
 
   return baseTimes( times, callback );
@@ -2975,7 +2938,7 @@ var times = function ( times, callback ) {
 
 var toArray = function ( value ) {
   if ( value == null ) {
-    throw TypeError( ERR_UNDEFINED_OR_NULL );
+    throw TypeError( ERR.UNDEFINED_OR_NULL );
   }
 
   if ( isString( value ) ) {
@@ -2995,7 +2958,7 @@ var toIndex = function ( value, length ) {
 
 var toObject = function ( target ) {
   if ( target == null ) {
-    throw TypeError( ERR_UNDEFINED_OR_NULL );
+    throw TypeError( ERR.UNDEFINED_OR_NULL );
   }
 
   return Object( target );
@@ -3069,7 +3032,7 @@ var assign = Object.assign || createAssign( getKeys ),
     assignIn = createAssign( getKeysIn ),
     each = createEach( false ),
     eachRight = createEach( true ),
-    ceil = createRound( math_ceil ),
+    ceil = createRound( Math.ceil ),
     every = createEverySome( true ),
     some = createEverySome( false ),
     filter = createFilter( false, getKeys ),
@@ -3080,7 +3043,7 @@ var assign = Object.assign || createAssign( getKeys ),
     findIndex = arr.findIndex ? bindFast( fn_call, arr.findIndex ) : createFind( true, false ),
     findLast = createFind( false, true ),
     findLastIndex = createFind( true, true ),
-    floor = createRound( math_floor ),
+    floor = createRound( Math.floor ),
     forEach = createForEach( false ),
     forEachRight = createForEach( true ),
     forIn = createForIn( getKeysIn, false ),
@@ -3094,7 +3057,7 @@ var assign = Object.assign || createAssign( getKeys ),
     mapRight = createMap( true ),
     range = createRange( false ),
     rangeRight = createRange( true ),
-    round = createRound( math_round ),
+    round = createRound( Math.round ),
     upperFirst = createToCaseFirst( 'toUpperCase' ),
     lowerFirst = createToCaseFirst( 'toLowerCase' ),
     toPairs = Object.entries || createToPairs( getKeys ),
@@ -3558,7 +3521,7 @@ var getComputedStyle = window.getComputedStyle || ( function () {
       } else if ( name == 'height' ) {
         style[ name ] = element.offsetHeight + 'px';
       } else if ( style[ name ] != 'auto' && /(margin|padding|border).*W/.test( name ) ) {
-        style[ name ] = math_round( getComputedStylePixel( element, name, fontSize ) ) + 'px';
+        style[ name ] = Math.round( getComputedStylePixel( element, name, fontSize ) ) + 'px';
       } else if ( !name.indexOf( 'outline' ) ) {
         try {
           // errors on checking outline
@@ -3577,7 +3540,7 @@ var getComputedStyle = window.getComputedStyle || ( function () {
     setShortStyleProperty( style, 'margin' );
     setShortStyleProperty( style, 'padding' );
     setShortStyleProperty( style, 'border' );
-    style.fontSize = math_round( fontSize ) + 'px';
+    style.fontSize = Math.round( fontSize ) + 'px';
   };
 
   CSSStyleDeclaration.prototype = {
@@ -3637,7 +3600,7 @@ var timer = ( function () {
 
     timer.request = function ( frame ) {
       var now = timestamp(),
-          nextTime = max( lastTime + frameDuration, now );
+          nextTime = Math.max( lastTime + frameDuration, now );
 
       return window.setTimeout( function () {
         lastTime = nextTime;
@@ -3672,7 +3635,7 @@ function ( selector ) {
       elements, i;
 
   if ( typeof selector != 'string' ) {
-    throw TypeError( ERR_STRING_EXPECTED );
+    throw TypeError( ERR.STRING_EXPECTED );
   }
 
   if ( selector.charAt( 0 ) === '#' && !/\s/.test( selector ) ) {
@@ -4117,7 +4080,7 @@ var prototype = DOMWrapper.prototype = peako.prototype = peako.fn = {
     }
 
     if ( isPrimitive( options ) ) {
-      throw TypeError( ERR_INVALID_ARGS );
+      throw TypeError( ERR.INVALID_ARGS );
     }
 
     callable = typeof options == 'function';
@@ -4667,14 +4630,14 @@ forOwnRight( {
       val = null;
     // if it's window
     } else if ( el.window === el ) {
-      val = max( el[ 'inner' + name ] || 0,
+      val = Math.max( el[ 'inner' + name ] || 0,
         el.document.documentElement[ 'client' + name ] );
     // if it's document
     } else if ( el.nodeType === 9 ) {
       body = el.body;
       root = el.documentElement;
 
-      val = max(
+      val = Math.max(
         body[ 'scroll' + name ],
         root[ 'scroll' + name ],
         body[ 'offset' + name ],
@@ -5507,8 +5470,6 @@ forOwnRight( {
     return this;
   };
 }, prototype );
-
-var warn = console && console.warn || noop;
 
 // for _.typy method
 var types = create( null );
