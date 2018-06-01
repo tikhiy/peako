@@ -21,7 +21,7 @@ This is easy and only one way to do it:
 
 ##### Event Delegation
 
-```
+```javascript
 _( document ).on( 'click', 'button', function () {
   _( this ).toggleClass( 'active' );
 } );
@@ -31,7 +31,7 @@ _( document ).on( 'click', 'button', function () {
 
 POST:
 
-```
+```javascript
 _.ajax( '/add-task', {
   error: function () {
     alert( 'Something went wrong' );
@@ -45,7 +45,7 @@ _.ajax( '/add-task', {
 
 GET:
 
-```
+```javascript
 _.ajax( '/get-task/0', {
   success: function ( data ) {
     _( '#tasks' ).append( '<li>' + data.message + '</li>' );
@@ -55,7 +55,7 @@ _.ajax( '/get-task/0', {
 
 ##### Chains
 
-```
+```javascript
 _( 'button.active' )
   .siblings( 'button' )
     .css( 'color', 'black' )
