@@ -2,13 +2,13 @@
 
 With Peako, you can work in JavaScript, like with [jQuery](https://jquery.com) **and** [Lodash](https://lodash.com).
 
-Initially, Peako was aimed at speed and work in older browsers (IE8...) (Something really works).
+Initially, Peako was aimed at speed and work in older browsers (IE8).
 
-You can use some modern featurs in old browsers: `_.Promise`, `_.fetch()`... (Thanks to everyone who maked these polyfills).
+You can use some modern featurs in old browsers: `_.Promise`, `_.fetch()`... (Thanks to everyone who made these polyfills).
 
 ## Install
 
-This is easy and only one (not only) way to do it:
+This is easy and only one way to do it:
 
 ```html
 <!-- Import from GitHub CDN. -->
@@ -17,35 +17,48 @@ This is easy and only one (not only) way to do it:
 <script src="peako.js"></script>
 ```
 
-## Example
+## Examples
 
-```javascript
-// shortcut for _( document ).ready( fn )
-_( function ( _ ) {
-  _( 'button' ).click( function ( event ) {
-    // event.timeStamp is a DOMHighResTimeStamp always
-    if ( event.timeStamp > 5000 ) {
-      console.log( 'More than 5 seconds has been passed before you clicked this button.' );
-    }
+##### Event Delegation
 
-    _( this )
-      .siblings( 'button' )
-        .css( 'color', 'initial' )
-      .end()
-      .css( 'color', 'red' );
-  } );
-
-  _( window ).scroll( function () {
-    // for some optimization
-    var hidden = _( '#go-up' ).css( 'display' ) === 'none';
-
-    if ( _( this ).scrollTop() > _( this ).height() ) {
-      if ( hidden ) {
-        _( '#go-up' ).show();
-      }
-    } else if ( !hidden ) {
-      _( '#go-up' ).hide();
-    }
-  } );
+```
+_( document ).on( 'click', 'button', function () {
+  _( this ).toggleClass( 'active' );
 } );
+```
+
+##### AJAX
+
+POST:
+
+```
+_.ajax( '/add-task', {
+  error: function () {
+    alert( 'Something went wrong' );
+  },
+
+  data: {
+    message: 'Buy a milk.'
+  }
+} );
+```
+
+GET:
+
+```
+_.ajax( '/get-task/0', {
+  success: function ( data ) {
+    _( '#tasks' ).append( '<li>' + data.message + '</li>' );
+  }
+} );
+```
+
+##### Chains
+
+```
+_( 'button.active' )
+  .siblings( 'button' )
+    .css( 'color', 'black' )
+  .end()
+  .css( 'color', 'red' );
 ```
