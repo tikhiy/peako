@@ -1,0 +1,28 @@
+{
+  "globals": {
+    "XMLHttpRequest": true,
+    "ActiveXObject": true,
+    "clearTimeout": true,
+    "ArrayBuffer": true,
+    "FileReader": true,
+    "setTimeout": true,
+    "FormData": true,
+    "document": true,
+    "Element": true,
+    "console": true,
+    "require": true,
+    "module": true,
+    "Blob": true,
+    "JSON": true
+  },
+
+  "esversion": 3,
+  "strict": "global",
+  "eqeqeq": true,
+  "eqnull": true,
+  "unused": true,
+  "undef": true,
+  "noarg": true,
+  "curly": true,
+  "immed": true
+}

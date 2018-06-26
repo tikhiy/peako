@@ -1,21 +1,24 @@
 {
   "name": "peako",
-  "version": "0.1.4",
-  "description": "Simple JavaScript library which can be used as both jQuery and Lodash.",
+  "version": "0.2.0",
+  "description": "A library for work with the JS objects, and DOM.",
   "main": "peako.js",
   "scripts": {
-    "build-docs": "jsdoc peako.js -c .jsdoc.json --verbose"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/silent-tempest/Peako.git"
   },
+  "keywords": [
+    "dom",
+    "object",
+    "array"
+  ],
   "author": "SILENT",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/silent-tempest/Peako/issues"
   },
-  "homepage": "https://github.com/silent-tempest/Peako#readme",
-  "dependencies": {},
-  "devDependencies": {}
+  "homepage": "https://github.com/silent-tempest/Peako#readme"
 }

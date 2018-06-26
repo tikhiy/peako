@@ -1,8 +1,0 @@
-<%
-  for ( let example of obj ) {
-    if ( example.caption ) { %>
-      <p class="code-caption"><%= example.caption %></p>
-    <% } %>
-
-    <pre class="prettyprint"><code><%= this.htmlsafe( example.code ) %></code></pre>
-<% } %>
