@@ -1,9 +1,9 @@
 'use strict';
 
-var toObject = require( './to-object' ),
-    getKeys = require( './keys' ),
+var toObject      = require( './to-object' ),
+    getKeys       = require( './keys' ),
     isPlainObject = require( './is-plain-object' ),
-    isArray = require( './is-array' );
+    isArray       = require( './is-array' );
 
 function mixin ( deep, target ) {
   var length = arguments.length,
