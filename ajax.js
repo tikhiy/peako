@@ -1,8 +1,9 @@
 'use strict';
 
-var defaults = require( './defaults' ),
-    urlencode = require( './urlencode' ),
-    hasOwnProperty = {}.hasOwnProperty;
+var defaults  = require( './defaults' ),
+    urlencode = require( './urlencode' );
+
+var hasOwnProperty = {}.hasOwnProperty;
 
 var defaultOptions = {
   headers: {
@@ -117,7 +118,7 @@ function ajax ( path, options ) {
 
   if ( options.headers ) {
     for ( name in options.headers ) {
-      if ( ! hasOwnProperty.call( options.headers ) ) {
+      if ( ! hasOwnProperty.call( options.headers, name ) ) {
         continue;
       }
 
@@ -141,7 +142,7 @@ function ajax ( path, options ) {
     } else if ( ! ContentType.indexOf( 'application/json' ) ) {
       xhr.send( JSON.stringify( options.data ) );
     } else {
-      throw Error( 'Unknown Content-Type: ' + ContentType );
+      xhr.send( options.data );
     }
   } else {
     xhr.send();

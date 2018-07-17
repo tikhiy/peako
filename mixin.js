@@ -7,7 +7,7 @@ var toObject      = require( './to-object' ),
 
 function mixin ( deep, target ) {
   var length = arguments.length,
-      i, keys, exp, j, k, val, key, nowArray, src;
+      i, keys, exp, j, k, val, key, nowArray, src, targetIsArray;
 
   // example: mixin( {}, {} )
   if ( typeof deep !== 'boolean' ) {
@@ -31,6 +31,7 @@ function mixin ( deep, target ) {
     --i;
   }
 
+  // targetIsArray = isArray( target = toObject( target ) );
   target = toObject( target );
 
   // loop through all expanders.
@@ -47,18 +48,18 @@ function mixin ( deep, target ) {
 
         if ( nowArray ) {
           // don't replace the source if it's already an array.
-          if ( !isArray( src ) ) {
+          if ( ! isArray( src ) ) {
             src = [];
           }
 
           nowArray = false;
         // don't replace the source if it's already an abject.
-        } else if ( !isPlainObject( src ) ) {
+        } else if ( ! isPlainObject( src ) ) {
           src = {};
         }
 
         // extend the source (recursion).
-        target[ key ] = mixin( deep, src, val );
+        target[ key ] = mixin( true, src, val );
       // just assign the value
       } else {
         target[ key ] = val;

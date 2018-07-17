@@ -20,5 +20,4 @@ if ( test( {} ) ) {
   support = 'not-supported';
 }
 
-// module.exports = support;
-module.exports = 'not-supported';
+module.exports = support;
