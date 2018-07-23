@@ -1,7 +1,8 @@
 'use strict';
 
-var getType = require( './type' ),
-    ERR     = require( './constants' ).ERR;
+var ERR = require( './constants' ).ERR;
+
+var toString = Object.prototype.toString;
 
 module.exports = Object.getPrototypeOf || function getPrototypeOf ( obj ) {
   var prototype;
@@ -10,15 +11,13 @@ module.exports = Object.getPrototypeOf || function getPrototypeOf ( obj ) {
     throw TypeError( ERR.UNDEFINED_OR_NULL );
   }
 
-  // jshint proto: true
-  prototype = obj.__proto__;
-  // jshint proto: false
+  prototype = obj.__proto__; // jshint ignore: line
 
-  if ( prototype !== undefined ) {
+  if ( typeof prototype !== 'undefined' ) {
     return prototype;
   }
 
-  if ( getType( obj.constructor ) === 'function' ) {
+  if ( toString.call( obj.constructor ) === '[object Function]' ) {
     return obj.constructor.prototype;
   }
 

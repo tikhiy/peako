@@ -1,261 +1,225 @@
 'use strict';
 
-var create      = require( './create' ),
-    closestNode = require( './closest-node' ),
-    Event       = require( './classes/event' ),
-    root        = require( './root' );
+var closestNode = require( './closest-node' );
 
-var events = create( null ),
-    eventTypes = [],
-    isSupported = 'addEventListener' in this;
+var DOMWrapper = require( './DOMWrapper' );
 
-function on ( target, type, selector, listener, useCapture, one ) {
-  var item;
+var create = require( './create' );
 
-  if ( useCapture === undefined ) {
-    useCapture = false;
-  }
+var Event = require( './Event' );
 
-  item = {
+var events = {
+  items: create( null ),
+  types: []
+};
+
+var support = typeof self !== 'undefined' && 'addEventListener' in self;
+
+/**
+ * @param {Node} element The element to which the listener should be attached.
+ * @param {string} type The event type name.
+ * @param {string} [selector] The selector to which delegate an event.
+ * @param {function} listener The event listener.
+ * @param {boolean} useCapture
+ * @param {boolean} [one] Remove the listener after it first dispatching?
+ */
+
+// on( document, 'click', '.post__like-button', ( event ) => {
+//   const data = {
+//     id: _( this ).parent( '.post' ).attr( 'data-id' )
+//   }
+
+//   ajax( '/like', { data } )
+// }, false )
+
+exports.on = function on ( element, type, selector, listener, useCapture, one ) {
+
+  var item = {
     useCapture: useCapture,
     listener: listener,
-    selector: selector,
-    target: target,
+    element: element,
     one: one
   };
 
-  if ( isSupported ) {
-    item.wrapper = function ( ev, el ) {
-      if ( selector && ! el && ! ( el = closestNode( ev.target, selector ) ) ) {
+  if ( selector ) {
+    item.selector = selector;
+  }
+
+  if ( support ) {
+    item.wrapper = function wrapper ( event, _element ) {
+      if ( selector && ! _element && ! ( _element = closestNode( event.target, selector ) ) ) {
         return;
       }
 
       if ( one ) {
-        event.off( target, type, selector, listener, useCapture );
+        exports.off( element, type, selector, listener, useCapture );
       }
 
-      listener.call( el || target, new Event( ev ) );
+      listener.call( _element || element, new Event( event ) );
     };
 
-    target.addEventListener( type, item.wrapper, useCapture );
+    element.addEventListener( type, item.wrapper, useCapture );
   } else if ( typeof listener === 'function' ) {
-    // el to call from trigger
-    item.wrapper = function ( ev, el ) {
-      if ( selector && ! el && ! ( el = closestNode( ev.target, selector ) ) ) {
+    item.wrapper = function wrapper ( event, _element ) {
+      if ( selector && ! _element && ! ( _element = closestNode( event.target, selector ) ) ) {
         return;
       }
 
-      if ( type === 'DOMContentLoaded' && target.readyState !== 'complete' ) {
+      if ( type === 'DOMContentLoaded' && element.readyState !== 'complete' ) {
         return;
       }
 
       if ( one ) {
-        event.off( target, type, selector, listener, useCapture );
+        exports.off( element, type, selector, listener, useCapture );
       }
 
-      ev = new Event( ev || root.event );
-      ev.type = type;
-      listener.call( el || target, ev );
+      listener.call( _element || element, new Event( event, type ) );
     };
 
-    target.attachEvent( item.fixedType = fixType( type ), item.wrapper );
+    element.attachEvent( item.IEType = IEType( type ), item.wrapper );
   } else {
-    throw TypeError( 'This functionality not implemented' );
+    throw TypeError( 'not implemented' );
   }
 
-  if ( events[ type ] ) {
-    events[ type ].push( item );
+  if ( events.items[ type ] ) {
+    events.items[ type ].push( item );
   } else {
-    events[ type ] = [ item ];
-    // to remove using of indexOf later (in off())
-    events[ type ].index = eventTypes.length;
-    eventTypes.push( type );
+    events.items[ type ] = [ item ];
+    events.items[ type ].index = events.types.length;
+    events.types.push( type );
   }
-}
 
-function off ( target, type, selector, listener, useCapture ) {
-  var i, removeAllEvents, items, item;
+};
 
-  // remove all listeners.
-  // event.off( target );
-  if ( type === undefined ) {
-    for ( i = __event_list_types.length - 1; i >= 0; --i ) {
-      event.off( target, __event_list_types[ i ], selector );
+exports.off = function off ( element, type, selector, listener, useCapture ) {
+
+  var i, items, item;
+
+  if ( type == null ) {
+    for ( i = events.types.length - 1; i >= 0; --i ) {
+      event.off( element, events.types[ i ], selector );
     }
 
     return;
   }
 
-  items = __event_list[ type ];
-
-  if ( !items ) {
+  if ( ! ( items = events.items[ type ] ) ) {
     return;
-  }
-
-  // event.off( target, type );
-  removeAllEvents = listener === undefined;
-
-  if ( useCapture === undefined ) {
-    useCapture = false;
   }
 
   for ( i = items.length - 1; i >= 0; --i ) {
     item = items[ i ];
 
-    if ( item.target !== target || ( item.selector || selector ) && item.selector !== selector ||
-      !removeAllEvents && ( item.listener !== listener || item.useCapture !== useCapture ) )
+    if ( item.element !== element ||
+      listener != null && (
+        item.listener !== listener ||
+        item.useCapture !== useCapture ||
+        item.selector && item.selector !== selector ) )
     {
       continue;
     }
 
     items.splice( i, 1 );
 
-    if ( !items.length ) {
-      __event_list_types.splice( items.index, 1 );
-      __event_list[ type ] = null;
+    if ( ! items.length ) {
+      events.types.splice( items.index, 1 );
+      events.items[ type ] = null;
     }
 
-    if ( support.addEventListener ) {
-      target.removeEventListener( type, item.wrapper, item.useCapture );
+    if ( support ) {
+      element.removeEventListener( type, item.wrapper, item.useCapture );
     } else {
-      target.detachEvent( item.fixed_type, item.wrapper );
+      element.detachEvent( item.IEType, item.wrapper );
     }
   }
-}
 
-var event = {
-  on: on,
-  off: off,
+};
 
-  // event.on( window, 'some-event', function ( event ) {
-  //   alert( event.some_data );
-  // } );
-  //
-  // event.trigger( window, 'some-event', {
-  //   some_data: 'something'
-  // } );
-  //
-  // // trigger all 'some-event' listeners.
-  // event.trigger( null, 'some-event' );
+exports.trigger = function trigger ( element, type, data ) {
 
-  trigger: function ( target, type, data ) {
-    var i = 0,
-        items = __event_list[ type ],
-        item, clos;
+  var items = events.items[ type ];
 
-    if ( !items ) {
-      return;
+  var i, closest, item;
+
+  if ( ! items ) {
+    return;
+  }
+
+  for ( i = 0; i < items.length; ++i ) {
+    item = items[ i ];
+
+    if ( element ) {
+      closest = closestNode( element, item.selector || item.element );
+    } else if ( item.selector ) {
+
+      // jshint -W083
+
+      new DOMWrapper( item.selector ).each( function () {
+        item.wrapper( createEventWithTarget( type, data, this ), this );
+      } );
+
+      // jshint +W083
+
+      continue;
+
+    } else {
+      closest = item.element;
     }
 
-    for ( ; i < items.length; ++i ) {
-      item = items[ i ];
-
-      if ( target ) {
-        clos = closestNode( target, item.selector || item.target );
-      } else if ( item.selector ) {
-        // Disable "Functions declared within loops referencing an outer scoped
-        // variable may lead to confusing semantics.". Possibly it's temporary
-        // solution.
-        // jshint -W083
-        new DOMWrapper( item.selector ).each( function () {
-          item.wrapper( event.__create( type, data, this ), this );
-        } );
-        // jshint +W083
-
-        continue;
-      } else {
-        clos = item.target;
-      }
-
-      if ( clos ) {
-        item.wrapper( event.__create( type, data, target || clos ), clos );
-      }
+    if ( closest ) {
+      item.wrapper( createEventWithTarget( type, data, element || closest ), closest );
     }
-  },
+  }
 
-  __create: function ( type, data, target ) {
-    var ev = new Event( type, data );
-    ev.target = target;
-    return ev;
-  },
+};
 
-  copy: function ( target, source, deep ) {
-    var i = __event_list_types.length - 1,
-        type, items, item, j, len,
-        t_children, s_children;
+exports.copy = function copy ( target, source, deep ) {
 
-    for ( ; i >= 0; --i ) {
-      items = __event_list[ type = __event_list_types[ i ] ];
+  var i, j, l, items, item, type;
 
-      if ( !items ) {
-        continue;
-      }
+  for ( i = events.types.length - 1; i >= 0; --i ) {
 
-      for ( j = 0, len = items.length; j < len; ++j ) {
-        item = items[ j ];
+    if ( ( items = events.items[ type = events.types[ i ] ] ) ) {
 
-        if ( item.target === source ) {
+      for ( j = 0, l = items.length; j < l; ++j ) {
+
+        if ( ( item = items[ j ] ).target === source ) {
           event.on( target, type, null, item.listener, item.useCapture, item.one );
         }
+
       }
+
     }
 
-    if ( deep ) {
-      t_children = target.childNodes;
-      s_children = source.childNodes;
-
-      for ( i = t_children.length - 1; i >= 0; --i ) {
-        event.copy( t_children[ i ], s_children[ i ], deep );
-      }
-    }
-
-    return target;
-  },
-
-  // from jQuery
-  which: function ( event ) {
-    var button;
-
-    if ( !event.type.indexOf( 'touch' ) ) {
-      // It seems to me that this isn't correctly
-      return 1;
-    }
-
-    // Add which for key events
-    if ( event.which == null && !event.type.indexOf( 'key' ) ) {
-      return event.charCode != null ? event.charCode : event.keyCode;
-    }
-
-    button = event.button;
-
-    if ( event.which || button === undefined ||
-      !/^(?:mouse|pointer|contextmenu|drag|drop)|click/.test( event.type ) )
-    {
-      return event.which;
-    }
-
-    // Add which for click: 1 === left; 2 === middle; 3 === right
-
-    if ( button & 1 ) {
-      return 1;
-    }
-
-    if ( button & 2 ) {
-      return 3;
-    }
-
-    if ( button & 4 ) {
-      return 2;
-    }
-
-    return 0;
-  },
-
-  __fix_type: function ( type ) {
-    if ( type === 'DOMContentLoaded' ) {
-      return 'onreadystatechange';
-    }
-
-    return 'on' + type;
   }
+
+  if ( ! deep ) {
+    return;
+  }
+
+  target = target.childNodes;
+  source = source.childNodes;
+
+  for ( i = target.length - 1; i >= 0; --i ) {
+    event.copy( target[ i ], source[ i ], true );
+  }
+
 };
+
+function createEventWithTarget ( type, data, target ) {
+
+  var e = new Event( type, data );
+
+  e.target = target;
+
+  return e;
+
+}
+
+function IEType ( type ) {
+  if ( type === 'DOMContentLoaded' ) {
+    return 'onreadystatechange';
+  }
+
+  return 'on' + type;
+}

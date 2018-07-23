@@ -1,18 +1,12 @@
 'use strict';
 
-var defaults  = require( './defaults' ),
-    urlencode = require( './urlencode' );
+var defaults  = require( './defaults' );
+
+var qs = require( './qs' );
+
+var o = require( './ajax-options' );
 
 var hasOwnProperty = {}.hasOwnProperty;
-
-var defaultOptions = {
-  headers: {
-    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-  },
-
-  timeout: 1000 * 60,
-  type: 'GET'
-};
 
 /**
  * Cross-browser XMLHttpRequest: https://stackoverflow.com/a/2557268
@@ -48,11 +42,13 @@ function createHTTPRequest () {
 
   for ( i = 0; i < HTTPFactories.length; ++i ) {
     try {
+      // jshint -W067, -W021
       return ( createHTTPRequest = HTTPFactories[ i ] )();
+      // jshint +W067, +W021
     } catch ( ex ) {}
   }
 
-  throw Error( "Can't create a request object." );
+  throw Error( 'Cannot create XMLHttpRequest object' );
 }
 
 function ajax ( path, options ) {
@@ -63,25 +59,25 @@ function ajax ( path, options ) {
   // _.ajax( options );
   // async = options.async || true
   if ( typeof path !== 'string' ) {
-    options = defaults( defaultOptions, path );
+    options = defaults( o, path );
     async = ! ( 'async' in options ) || options.async;
     path = options.path;
 
   // _.ajax( path );
   // async = false
   } else if ( options == null ) {
-    options = defaultOptions;
+    options = o;
     async = false;
 
   // _.ajax( path, options );
   // async = options.async || true
   } else {
-    options = defaults( defaultOptions, options );
+    options = defaults( o, options );
     async = ! ( 'async' in options ) || options.async;
   }
 
   xhr.onreadystatechange = function () {
-    var status;
+    var status, ContentType;
 
     if ( this.readyState !== 4 ) {
       return;
@@ -95,18 +91,28 @@ function ajax ( path, options ) {
       status = 204;
     }
 
+    data = this.responseText;
+
+    if ( ( ContentType = this.getResponseHeader( 'Content-Type' ) ) ) {
+      try {
+        if ( ! ContentType.indexOf( 'application/x-www-form-urlencoded' ) ) {
+          data = qs.parse( data );
+        } else if ( ! ContentType.indexOf( 'application/json' ) ) {
+          data = JSON.parse( data );
+        }
+      } catch ( ex ) {}
+    }
+
     if ( status === 200 ) {
       if ( timeoutID != null ) {
         clearTimeout( timeoutID );
       }
 
-      data = this.responseText;
-
       if ( options.success ) {
         options.success.call( this, data, path, options );
       }
     } else if ( options.error ) {
-      options.error.call( this, path, options );
+      options.error.call( this, data, path, options );
     }
   };
 
@@ -130,7 +136,7 @@ function ajax ( path, options ) {
     }
   }
 
-  if ( async ) {
+  if ( async && options.timeout != null ) {
     timeoutID = setTimeout( function () {
       xhr.abort();
     }, options.timeout );
@@ -138,7 +144,7 @@ function ajax ( path, options ) {
 
   if ( ContentType != null && ( options.type === 'POST' || 'data' in options ) ) {
     if ( ! ContentType.indexOf( 'application/x-www-form-urlencoded' ) ) {
-      xhr.send( urlencode( options.data ) );
+      xhr.send( qs.stringify( options.data ) );
     } else if ( ! ContentType.indexOf( 'application/json' ) ) {
       xhr.send( JSON.stringify( options.data ) );
     } else {

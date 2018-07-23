@@ -1,10 +1,11 @@
 'use strict';
 
-var toObject  = require( '../to-object' ),
-    baseForIn = require( '../base/base-for-in' );
+var baseForIn = require( '../base/base-for-in' ),
+    toObject  = require( '../to-object' ),
+    iteratee  = require( '../iteratee' ).iteratee;
 
-module.exports = function createForIn ( getKeys, fromRight ) {
-  return function ( obj, fun, ctx ) {
-    return baseForIn( obj = toObject( obj ), fun, ctx, getKeys( obj ), fromRight );
+module.exports = function createForIn ( keys, fromRight ) {
+  return function forIn ( obj, fn, ctx ) {
+    return baseForIn( obj = toObject( obj ), iteratee( fn ), ctx, keys( obj ), fromRight );
   };
 };

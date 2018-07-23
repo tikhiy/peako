@@ -2,7 +2,7 @@
 
 var isArrayLikeObject = require( './is-array-like-object' ),
     baseValues        = require( './base/base-values' ),
-    getKeys           = require( './keys' );
+    keys              = require( './keys' );
 
 module.exports = function iterable ( value ) {
   if ( isArrayLikeObject( value ) ) {
@@ -13,5 +13,5 @@ module.exports = function iterable ( value ) {
     return value.split( '' );
   }
 
-  return baseValues( value, getKeys( value ) );
+  return baseValues( value, keys( value ) );
 };

@@ -1,21 +1,21 @@
 'use strict';
 
-var has          = require( '../has' ),
-    callIteratee = require( '../call-iteratee' );
+var callIteratee = require( '../call-iteratee' ),
+    isset        = require( '../isset' );
 
-module.exports = function baseForEach ( arr, fun, ctx, fromRight ) {
-  var i = -1,
-      j = arr.length - 1,
-      index;
+module.exports = function baseForEach ( arr, fn, ctx, fromRight ) {
+  var j = arr.length - 1,
+      i = -1,
+      idx;
 
   for ( ; j >= 0; --j ) {
     if ( fromRight ) {
-      index = j;
+      idx = j;
     } else {
-      index = ++i;
+      idx = ++i;
     }
 
-    if ( has( index, arr ) && callIteratee( fun, ctx, arr[ index ], index, arr ) === false ) {
+    if ( isset( idx, arr ) && callIteratee( fn, ctx, arr[ idx ], idx, arr ) === false ) {
       break;
     }
   }

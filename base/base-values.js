@@ -1,11 +1,11 @@
 'use strict';
 
-module.exports = function baseValues ( object, keys ) {
+module.exports = function baseValues ( obj, keys ) {
   var i = keys.length,
       values = Array( i-- );
 
   for ( ; i >= 0; --i ) {
-    values[ i ] = object[ keys[ i ] ];
+    values[ i ] = obj[ keys[ i ] ];
   }
 
   return values;

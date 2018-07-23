@@ -1,21 +1,24 @@
 'use strict';
 
-var toObject     = require( '../to-object' ),
-    isArrayLike  = require( '../is-array-like' ),
-    baseForEach  = require( '../base/base-for-each' ),
+var baseForEach  = require( '../base/base-for-each' ),
     baseForIn    = require( '../base/base-for-in' ),
-    getKeys      = require( '../keys' ),
-    wrapIteratee = require( '../iteratee' );
+    isArrayLike  = require( '../is-array-like' ),
+    toObject     = require( '../to-object' ),
+    iteratee     = require( '../iteratee' ).iteratee,
+    keys         = require( '../keys' );
 
 module.exports = function createEach ( fromRight ) {
-  return function ( iterable, iteratee, context ) {
-    iterable = toObject( iterable );
-    iteratee = wrapIteratee( iteratee );
+  return function each ( obj, fn, ctx ) {
 
-    if ( isArrayLike( iterable ) ) {
-      return baseForEach( iterable, iteratee, context, fromRight );
+    obj = toObject( obj );
+
+    fn  = iteratee( fn );
+
+    if ( isArrayLike( obj ) ) {
+      return baseForEach( obj, fn, ctx, fromRight );
     }
 
-    return baseForIn( iterable, iteratee, context, getKeys( iterable ), fromRight );
+    return baseForIn( obj, fn, ctx, keys( obj ), fromRight );
+
   };
 };

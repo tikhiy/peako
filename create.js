@@ -1,10 +1,12 @@
 'use strict';
 
-var isPrimitive      = require( './is-primitive' ),
-    setPrototypeOf   = require( './set-prototype-of' ),
-    defineProperties = require( './define-properties' );
+var defineProperties = require( './define-properties' );
 
-function Constructor () {}
+var setPrototypeOf = require( './set-prototype-of' );
+
+var isPrimitive = require( './is-primitive' );
+
+function C () {}
 
 module.exports = Object.create || function create ( prototype, descriptors ) {
   var object;
@@ -13,14 +15,14 @@ module.exports = Object.create || function create ( prototype, descriptors ) {
     throw TypeError( 'Object prototype may only be an Object or null: ' + prototype );
   }
 
-  Constructor.prototype = prototype;
+  C.prototype = prototype;
 
-  object = new Constructor();
+  object = new C();
 
-  Constructor.prototype = null;
+  C.prototype = null;
 
   if ( prototype === null ) {
-    setPrototypeOf( object, prototype );
+    setPrototypeOf( object, null );
   }
 
   if ( arguments.length >= 2 ) {

@@ -9,7 +9,7 @@ var create         = require( './create' ),
 module.exports = function clone ( deep, target, guard ) {
   var cln;
 
-  if ( target === undefined || guard ) {
+  if ( typeof target === 'undefined' || guard ) {
     target = deep;
     deep = true;
   }

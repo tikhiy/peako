@@ -1,23 +1,33 @@
 'use strict';
 
-var isObject       = require( './is-object' ),
-    getPrototypeOf = require( './get-prototype-of' );
+var getPrototypeOf = require( './get-prototype-of' );
 
-var hasOwnProperty = {}.hasOwnProperty,
-    fnToString = hasOwnProperty.toString;
+var isObject = require( './is-object' );
 
-var fnObject = fnToString.call( Object );
+var hasOwnProperty = Object.prototype.hasOwnProperty;
 
-module.exports = function isPlainObject ( value ) {
-  var prototype;
+var toString = Function.prototype.toString;
 
-  if ( ! isObject( value ) ) {
+var OBJECT = toString.call( Object );
+
+module.exports = function isPlainObject ( v ) {
+  var p, c;
+
+  if ( ! isObject( v ) ) {
     return false;
   }
 
-  prototype = getPrototypeOf( value );
+  p = getPrototypeOf( v );
 
-  return prototype === null ||
-    hasOwnProperty.call( prototype, 'constructor' ) &&
-    fnToString.call( prototype.constructor ) === fnObject;
+  if ( p === null ) {
+    return true;
+  }
+
+  if ( ! hasOwnProperty.call( p, 'constructor' ) ) {
+    return false;
+  }
+
+  c = p.constructor;
+
+  return typeof c === 'function' && toString.call( c ) === OBJECT;
 };

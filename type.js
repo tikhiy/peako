@@ -12,12 +12,10 @@ module.exports = function getType ( value ) {
     return 'null';
   }
 
-  if ( value === undefined ) {
-    return 'undefined';
-  }
+  type = typeof value;
 
-  if ( typeof value !== 'object' && typeof value !== 'function' ) {
-    return typeof value;
+  if ( type !== 'object' && type !== 'function' ) {
+    return type;
   }
 
   type = types[ tag = toString.call( value ) ];

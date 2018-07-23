@@ -7,31 +7,34 @@ var toObject      = require( './to-object' ),
 
 function mixin ( deep, target ) {
   var length = arguments.length,
-      i, keys, exp, j, k, val, key, nowArray, src, targetIsArray;
+      i, keys, exp, j, k, val, key, nowArray, src;
 
   // example: mixin( {}, {} )
   if ( typeof deep !== 'boolean' ) {
     target = deep;
     deep = true;
     i = 1;
+
   // example: mixin( false, {}, {} )
-  // NOTE: use assign( {}, {} ) function instead.
   } else {
     i = 2;
   }
 
   // example:
+
   // var extendable = {
   //   extend: require( 'peako/mixin' )
   // };
 
   // extendable.extend( { name: 'Extendable Object' } );
+
   if ( i === length ) {
+    // jshint validthis: true
     target = this;
+    // jshint validthis: false
     --i;
   }
 
-  // targetIsArray = isArray( target = toObject( target ) );
   target = toObject( target );
 
   // loop through all expanders.

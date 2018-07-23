@@ -2,9 +2,9 @@
 
 var callIteratee = require( '../call-iteratee' );
 
-module.exports = function baseForIn ( object, iteratee, context, keys, fromRight ) {
-  var i = -1,
-      j = keys.length - 1,
+module.exports = function baseForIn ( obj, fn, ctx, keys, fromRight ) {
+  var j = keys.length - 1,
+      i = -1,
       key;
 
   for ( ; j >= 0; --j ) {
@@ -14,10 +14,10 @@ module.exports = function baseForIn ( object, iteratee, context, keys, fromRight
       key = keys[ ++i ];
     }
 
-    if ( callIteratee( iteratee, context, object[ key ], key, object ) === false ) {
+    if ( callIteratee( fn, ctx, obj[ key ], key, obj ) === false ) {
       break;
     }
   }
 
-  return object;
+  return obj;
 };

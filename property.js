@@ -1,27 +1,29 @@
 'use strict';
 
-var toPath       = require( './to-path' ),
-    baseAccessor = require( './base/base-accessor' ),
-    noop         = require( './noop' );
+var castPath = require( './cast-path' ),
+    noop     = require( './noop' ),
+    get      = require( './base/base-get' );
 
 module.exports = function property ( path ) {
-  var len = ( path = toPath( path ) ).length;
+  var l = ( path = castPath( path ) ).length;
 
-  if ( len > 1 ) {
-    return function ( object ) {
-      if ( object != null ) {
-        return baseAccessor( object, path, 0 );
+  if ( ! l ) {
+    return noop;
+  }
+
+  if ( l > 1 ) {
+    return function ( obj ) {
+      if ( obj != null ) {
+        return get( obj, path, 0 );
       }
     };
   }
 
-  if ( len ) {
-    return function ( object ) {
-      if ( object != null ) {
-        return object[ path ];
-      }
-    };
-  }
+  path = path[ 0 ];
 
-  return noop;
+  return function ( obj ) {
+    if ( obj != null ) {
+      return obj[ path ];
+    }
+  };
 };

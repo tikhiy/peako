@@ -15,45 +15,43 @@
 
 var timestamp = require( './timestamp' );
 
-var request = window[ 'requestAnimationFrame' ] ||
-  window[ 'webkitRequestAnimationFrame' ] ||
-  window[ 'mozRequestAnimationFrame' ];
+var request, cancel;
 
-var cancel = window[ 'cancelAnimationFrame' ] ||
-  window[ 'webkitCancelAnimationFrame' ] ||
-  window[ 'webkitCancelRequestAnimationFrame' ] ||
-  window[ 'mozCancelAnimationFrame' ] ||
-  window[ 'mozCancelRequestAnimationFrame' ];
+if ( typeof window !== 'undefined' ) {
+  cancel = window.cancelAnimationFrame ||
+    window.webkitCancelAnimationFrame ||
+    window.webkitCancelRequestAnimationFrame ||
+    window.mozCancelAnimationFrame ||
+    window.mozCancelRequestAnimationFrame;
+  request = window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame;
+}
 
-var usePolyfill = ! request || ! cancel ||
-  typeof navigator !== 'undefined' &&
-  /iP(ad|hone|od).*OS\s6/.test( navigator.userAgent );
+var noRequestAnimationFrame = ! request || ! cancel ||
+  typeof navigator !== 'undefined' && /iP(ad|hone|od).*OS\s6/.test( navigator.userAgent );
 
-var timer = {};
-
-if ( usePolyfill ) {
+if ( noRequestAnimationFrame ) {
   var lastRequestTime = 0,
       frameDuration   = 1000 / 60;
 
-  timer.request = function request ( frame ) {
+  exports.request = function request ( animate ) {
     var now             = timestamp(),
         nextRequestTime = Math.max( lastRequestTime + frameDuration, now );
 
     return setTimeout( function () {
       lastRequestTime = nextRequestTime;
-      frame( now );
+      animate( now );
     }, nextRequestTime - now );
   };
 
-  timer.cancel = clearTimeout;
+  exports.cancel = clearTimeout;
 } else {
-  timer.request = function request ( frame ) {
-    return request( frame );
+  exports.request = function request ( animate ) {
+    return request( animate );
   };
 
-  timer.cancel = function cancel ( id ) {
+  exports.cancel = function cancel ( id ) {
     return cancel( id );
   };
 }
-
-module.exports = timer;

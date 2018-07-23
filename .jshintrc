@@ -1,28 +1,24 @@
 {
-  "globals": {
-    "XMLHttpRequest": true,
-    "ActiveXObject": true,
-    "clearTimeout": true,
-    "ArrayBuffer": true,
-    "FileReader": true,
-    "setTimeout": true,
-    "FormData": true,
-    "document": true,
-    "Element": true,
-    "console": true,
-    "require": true,
-    "module": true,
-    "Blob": true,
-    "JSON": true
-  },
+  "predef": [
+    "ActiveXObject",
+    "perfomance",
+    "JSON",
+    "self",
+    "-hasOwnProperty"
+  ],
 
+  "browserify": true,
   "esversion": 3,
+  "browser": true,
   "strict": "global",
+  "shadow": true,
   "eqeqeq": true,
   "eqnull": true,
   "unused": true,
   "undef": true,
+  "nonew": true,
   "noarg": true,
   "curly": true,
-  "immed": true
+  "immed": true,
+  "node": true
 }

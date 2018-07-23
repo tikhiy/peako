@@ -1,17 +1,17 @@
 'use strict';
 
-var isKey    = require( './is-key' ),
-    property = require( './property' ),
-    ERR      = require( './constants' ).ERR;
+var isObjectLike = require( './is-object-like' ),
+    baseMatches  = require( './base/base-matches' ),
+    property     = require( './property' );
 
-module.exports = function iteratee ( value ) {
-  if ( typeof value === 'function' ) {
-    return value;
+exports.iteratee = function iteratee ( v ) {
+  if ( typeof v === 'function' ) {
+    return v;
   }
 
-  if ( isKey( value ) ) {
-    return property( value );
+  if ( isObjectLike( v ) ) {
+    return baseMatches( v );
   }
 
-  throw TypeError( ERR.FUNCTION_EXPECTED );
+  return property( v );
 };

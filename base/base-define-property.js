@@ -1,13 +1,15 @@
 'use strict';
 
-var has = require( '../has' );
+var isset = require( '../isset' );
+
+var undefined; // jshint ignore: line
 
 var defineGetter = Object.prototype.__defineGetter__,
     defineSetter = Object.prototype.__defineSetter__;
 
 function baseDefineProperty ( object, key, descriptor ) {
-  var hasGetter = has( 'get', descriptor ),
-      hasSetter = has( 'set', descriptor ),
+  var hasGetter = isset( 'get', descriptor ),
+      hasSetter = isset( 'set', descriptor ),
       get, set;
 
   if ( hasGetter || hasSetter ) {
@@ -19,7 +21,7 @@ function baseDefineProperty ( object, key, descriptor ) {
       throw TypeError( 'Setter must be a function: ' + set );
     }
 
-    if ( has( 'writable', descriptor ) ) {
+    if ( isset( 'writable', descriptor ) ) {
       throw TypeError( 'Invalid property descriptor. Cannot both specify accessors and a value or writable attribute' );
     }
 
@@ -32,10 +34,12 @@ function baseDefineProperty ( object, key, descriptor ) {
         defineSetter.call( object, key, set );
       }
     } else {
-      throw Error( "Can't define setter/getter" );
+      throw Error( 'Cannot define getter or setter' );
     }
-  } else if ( has( 'value', descriptor ) || ! has( key, object ) ) {
+  } else if ( isset( 'value', descriptor ) ) {
     object[ key ] = descriptor.value;
+  } else if ( ! isset( key, object ) ) {
+    object[ key ] = undefined;
   }
 
   return object;

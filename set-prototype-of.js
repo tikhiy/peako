@@ -12,10 +12,8 @@ module.exports = Object.setPrototypeOf || function setPrototypeOf ( target, prot
     throw TypeError( 'Object prototype may only be an Object or null: ' + prototype );
   }
 
-  if ( ! isPrimitive( target ) && '__proto__' in target ) {
-    // jshint proto: true
-    target.__proto__ = prototype;
-    // jshint proto: false
+  if ( '__proto__' in target ) {
+    target.__proto__ = prototype; // jshint ignore: line
   }
 
   return target;

@@ -2,7 +2,7 @@
 
 ### The Usage
 
-Node/CommonJS:
+Node.js/CommonJS:
 
 ```javascript
 var peako = require( 'peako' );

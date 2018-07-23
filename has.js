@@ -1,9 +1,21 @@
 'use strict';
 
-module.exports = function has ( key, obj ) {
-  if ( obj == null ) {
-    return false;
+var castPath = require( './cast-path' ),
+    toObject = require( './to-object' ),
+    isset    = require( './isset' ),
+    baseHas  = require( './base/base-has' ),
+    ERR      = require( './constants' ).ERR;
+
+module.exports = function has ( obj, path ) {
+  var l = ( path = castPath( path ) ).length;
+
+  if ( ! l ) {
+    throw Error( ERR.NO_PATH );
   }
 
-  return obj[ key ] !== undefined || key in obj;
+  if ( l > 1 ) {
+    return baseHas( toObject( obj ), path );
+  }
+
+  return isset( toObject( obj ), path[ 0 ] );
 };

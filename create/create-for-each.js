@@ -1,12 +1,12 @@
 'use strict';
 
-var getIterable  = require( '../iterable' ),
-    wrapIteratee = require( '../iteratee' ),
-    toObject     = require( '../to-object' ),
-    baseForEach  = require( '../base/base-for-each' );
+var baseForEach = require( '../base/base-for-each' ),
+    toObject    = require( '../to-object' ),
+    iteratee    = require( '../iteratee' ).iteratee,
+    iterable    = require( '../iterable' );
 
 module.exports = function createForEach ( fromRight ) {
-  return function ( iterable, iteratee, context ) {
-    return baseForEach( getIterable( toObject( iterable ) ), wrapIteratee( iteratee ), context, fromRight );
+  return function forEach ( arr, fn, ctx ) {
+    return baseForEach( iterable( toObject( arr ) ), iteratee( fn ), ctx, fromRight );
   };
 };

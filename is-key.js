@@ -1,24 +1,26 @@
 'use strict';
 
-var isArray  = require( './is-array' ),
-    rDeepKey = require( './regexps' ).deepKey;
+var rDeepKey = require( './regexps' ).deepKey,
+    _type    = require( './_type' );
 
-module.exports = function isKey ( value ) {
+function isKey ( val ) {
   var type;
 
-  if ( ! value ) {
+  if ( ! val ) {
     return true;
   }
 
-  if ( isArray( value ) ) {
+  if ( _type( val ) === 'array' ) {
     return false;
   }
 
-  type = typeof value;
+  type = typeof val;
 
-  if ( type === 'number' || type === 'symbol' || type === 'boolean' ) {
+  if ( type === 'number' || type === 'boolean' || _type( val ) === 'symbol' ) {
     return true;
   }
 
-  return ! rDeepKey.test( value );
-};
+  return ! rDeepKey.test( val );
+}
+
+module.exports = isKey;

@@ -1,25 +1,38 @@
 {
   "name": "peako",
   "version": "0.0.1",
-  "description": "A library for work with the JS objects, and DOM.",
+  "description": "A library for manipulating JS objects, HTML, & CSS.",
   "main": "peako.js",
   "scripts": {
-    "test": "make"
+    "build": "make",
+    "lint": "jshint . --verbose"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/silent-tempest/Peako.git"
+    "url": "git+https://github.com/silent-tempest/peako.git"
   },
   "keywords": [
-    "dom",
     "object",
-    "array"
+    "peako",
+    "array",
+    "html",
+    "css"
   ],
   "author": "SILENT",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/silent-tempest/Peako/issues"
+    "url": "https://github.com/silent-tempest/peako/issues"
   },
-  "homepage": "https://github.com/silent-tempest/Peako#readme",
-  "directories": {}
+  "homepage": "https://github.com/silent-tempest/peako#readme",
+  "directories": {},
+  "dependencies": {},
+  "devDependencies": {
+    "browserify": "^16.2.2",
+    "browserify-optional": "^1.0.1"
+  },
+  "browserify": {
+    "transform": [
+      "browserify-optional"
+    ]
+  }
 }

@@ -2,8 +2,8 @@
 
 var ERR = require( '../constants' ).ERR;
 
-module.exports = function createStringTrim ( regexp ) {
-  return function ( string ) {
+module.exports = function createTrim ( regexp ) {
+  return function trim ( string ) {
     if ( string == null ) {
       throw TypeError( ERR.UNDEFINED_OR_NULL );
     }
