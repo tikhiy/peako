@@ -38,5 +38,5 @@ module.exports = function style ( key, val ) {
     }
 
     element.style[ key ] = val;
-  }, key, val, arguments.length > 1, null );
+  }, key, val, arguments.length > 1 );
 };

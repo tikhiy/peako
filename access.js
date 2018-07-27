@@ -4,18 +4,18 @@ var DOMWrapper = require( './DOMWrapper' ),
     type       = require( './type' ),
     keys       = require( './keys' );
 
-var undefined; // jshint ignore: line
-
-function access ( obj, fn, key, val, chainable, ifEmptyVal, raw ) {
+function access ( obj, fn, key, val, chainable ) {
   var bulk = key == null;
 
   var len = obj.length;
+
+  var raw = false;
 
   var i, k, l, e;
 
   if ( type( key ) === 'object' ) {
     for ( i = 0, k = keys( key ), l = k.length; i < l; ++i ) {
-      access( obj, fn, k[ i ], key[ k[ i ] ], true, ifEmptyVal, raw );
+      access( obj, fn, k[ i ], key[ k[ i ] ], true );
     }
 
     chainable = true;
@@ -64,7 +64,7 @@ function access ( obj, fn, key, val, chainable, ifEmptyVal, raw ) {
     return fn( obj[ 0 ], key );
   }
 
-  return ifEmptyVal;
+  return null;
 }
 
 module.exports = access;

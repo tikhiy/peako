@@ -1,10 +1,8 @@
 'use strict';
 
-var defaults  = require( './defaults' );
-
-var qs = require( './qs' );
-
-var o = require( './ajax-options' );
+var qs        = require( './qs' ),
+    defaults  = require( './defaults' ),
+    o         = require( './ajax-options' );
 
 var hasOwnProperty = {}.hasOwnProperty;
 
