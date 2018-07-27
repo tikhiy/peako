@@ -5,16 +5,16 @@ var castPath = require( './cast-path' ),
     baseGet  = require( './base/base-get' ),
     ERR      = require( './constants' ).ERR;
 
-module.exports = function get ( obj, path ) {
-  var l = ( path = castPath( path ) ).length;
+module.exports = function get ( object, path ) {
+  var length = ( path = castPath( path ) ).length;
 
-  if ( ! l ) {
+  if ( ! length ) {
     throw Error( ERR.NO_PATH );
   }
 
-  if ( l > 1 ) {
-    return baseGet( toObject( obj ), path, 0 );
+  if ( length > 1 ) {
+    return baseGet( toObject( object ), path, 0 );
   }
 
-  return toObject( obj )[ path[ 0 ] ];
+  return toObject( object )[ path[ 0 ] ];
 };

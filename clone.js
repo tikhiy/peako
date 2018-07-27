@@ -4,7 +4,7 @@ var create         = require( './create' ),
     getPrototypeOf = require( './get-prototype-of' ),
     toObject       = require( './to-object' ),
     each           = require( './each' ),
-    isPrimitive    = require( './is-primitive' );
+    isObjectLike   = require( './is-object-like' );
 
 module.exports = function clone ( deep, target, guard ) {
   var cln;
@@ -19,7 +19,7 @@ module.exports = function clone ( deep, target, guard ) {
   each( target, function ( value, key, target ) {
     if ( value === target ) {
       this[ key ] = this;
-    } else if ( deep && ! isPrimitive( value ) ) {
+    } else if ( deep && isObjectLike( value ) ) {
       this[ key ] = clone( deep, value );
     } else {
       this[ key ] = value;

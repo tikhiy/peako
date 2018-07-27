@@ -1,6 +1,6 @@
 'use strict';
 
-var matches = require( './matches' );
+var matches = require( './matches-selector' );
 
 var closest;
 

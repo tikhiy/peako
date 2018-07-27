@@ -4,11 +4,9 @@ var callIteratee = require( '../call-iteratee' ),
     isset        = require( '../isset' );
 
 module.exports = function baseForEach ( arr, fn, ctx, fromRight ) {
-  var j = arr.length - 1,
-      i = -1,
-      idx;
+  var i, j, idx;
 
-  for ( ; j >= 0; --j ) {
+  for ( i = -1, j = arr.length - 1; j >= 0; --j ) {
     if ( fromRight ) {
       idx = j;
     } else {

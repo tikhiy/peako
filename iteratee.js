@@ -1,17 +1,17 @@
 'use strict';
 
-var isObjectLike = require( './is-object-like' ),
-    baseMatches  = require( './base/base-matches' ),
-    property     = require( './property' );
+var isArrayLikeObject = require( './is-array-like-object' ),
+    matchesProperty   = require( './matches-property' ),
+    property          = require( './property' );
 
-exports.iteratee = function iteratee ( v ) {
-  if ( typeof v === 'function' ) {
-    return v;
+exports.iteratee = function iteratee ( value ) {
+  if ( typeof value === 'function' ) {
+    return value;
   }
 
-  if ( isObjectLike( v ) ) {
-    return baseMatches( v );
+  if ( isArrayLikeObject( value ) ) {
+    return matchesProperty( value );
   }
 
-  return property( v );
+  return property( value );
 };

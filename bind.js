@@ -4,9 +4,6 @@ var constants = require( './constants' );
 
 var indexOf = require( './index-of' );
 
-var apply = require( './apply' );
-
-
 // Function::bind() polyfill.
 
 var _bind = Function.prototype.bind || function bind ( c ) {
@@ -16,14 +13,14 @@ var _bind = Function.prototype.bind || function bind ( c ) {
 
   if ( arguments.length <= 2 ) {
     return function bound () {
-      return apply( f, c, arguments );
+      return f.apply( c, arguments );
     };
   }
 
   a = Array.prototype.slice.call( arguments, 1 );
 
   return function bound () {
-    return apply( f, c, a.concat( Array.prototype.slice.call( arguments ) ) );
+    return f.apply( c, a.concat( Array.prototype.slice.call( arguments ) ) );
   };
 };
 
@@ -95,6 +92,6 @@ module.exports = function bind ( f, c ) {
   }
 
   return function bound () {
-    return apply( f, c, process( p, arguments ) );
+    return f.apply( c, process( p, arguments ) );
   };
 };

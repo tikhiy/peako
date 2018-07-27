@@ -19,7 +19,9 @@ console.log( type( [] ) ); // -> "array"
 Browser:
 
 ```html
-<script src="https://rawgit.com/silent-tempest/Peako/dev/build/peako.js"></script>
+<script src="https://rawgit.com/silent-tempest/peako/dev/build/peako.js"></script>
+<!-- optional dependency for ajax function -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.5.2/qs.min.js"></script>
 ```
 
 ```javascript

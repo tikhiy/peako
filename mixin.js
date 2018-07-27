@@ -1,26 +1,29 @@
 'use strict';
 
-var toObject      = require( './to-object' ),
-    getKeys       = require( './keys' ),
-    isPlainObject = require( './is-plain-object' ),
-    isArray       = require( './is-array' );
+var isPlainObject = require( './is-plain-object' );
 
-function mixin ( deep, target ) {
-  var length = arguments.length,
-      i, keys, exp, j, k, val, key, nowArray, src;
+var toObject = require( './to-object' );
 
-  // example: mixin( {}, {} )
+var isArray = require( './is-array' );
+
+var keys = require( './keys' );
+
+module.exports = function mixin ( deep, object ) {
+
+  var l = arguments.length;
+
+  var i = 2;
+
+
+  var names, exp, j, k, val, key, nowArray, src;
+
+  //  mixin( {}, {} )
+
   if ( typeof deep !== 'boolean' ) {
-    target = deep;
-    deep = true;
-    i = 1;
-
-  // example: mixin( false, {}, {} )
-  } else {
-    i = 2;
+    object = deep;
+    deep   = true;
+    i      = 1;
   }
-
-  // example:
 
   // var extendable = {
   //   extend: require( 'peako/mixin' )
@@ -28,49 +31,42 @@ function mixin ( deep, target ) {
 
   // extendable.extend( { name: 'Extendable Object' } );
 
-  if ( i === length ) {
-    // jshint validthis: true
-    target = this;
-    // jshint validthis: false
+  if ( i === l ) {
+
+    object = this; // jshint ignore: line
+
     --i;
+
   }
 
-  target = toObject( target );
+  object = toObject( object );
 
-  // loop through all expanders.
-  for ( ; i < length; ++i ) {
-    keys = getKeys( exp = toObject( arguments[ i ] ) );
+  for ( ; i < l; ++i ) {
+    names = keys( exp = toObject( arguments[ i ] ) );
 
-    // loop through all expander's properties.
-    for ( j = 0, k = keys.length; j < k; ++j ) {
-      val = exp[ key = keys[ j ] ];
+    for ( j = 0, k = names.length; j < k; ++j ) {
+      val = exp[ key = names[ j ] ];
 
-      // fall into recursion
       if ( deep && val !== exp && ( isPlainObject( val ) || ( nowArray = isArray( val ) ) ) ) {
-        src = target[ key ];
+        src = object[ key ];
 
         if ( nowArray ) {
-          // don't replace the source if it's already an array.
           if ( ! isArray( src ) ) {
             src = [];
           }
 
           nowArray = false;
-        // don't replace the source if it's already an abject.
         } else if ( ! isPlainObject( src ) ) {
           src = {};
         }
 
-        // extend the source (recursion).
-        target[ key ] = mixin( true, src, val );
-      // just assign the value
+        object[ key ] = mixin( true, src, val );
       } else {
-        target[ key ] = val;
+        object[ key ] = val;
       }
     }
+
   }
 
-  return target;
-}
-
-module.exports = mixin;
+  return object;
+};

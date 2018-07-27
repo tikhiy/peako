@@ -1,6 +1,12 @@
 'use strict';
 
-function peako () {}
+var DOMWrapper = require( './DOMWrapper' );
+
+function peako ( selector ) {
+  return new DOMWrapper( selector );
+}
+
+peako.prototype = DOMWrapper.prototype;
 
 peako.ajax              = require( './ajax' );
 peako.assign            = require( './assign' );
@@ -38,6 +44,8 @@ peako.mixin             = require( './mixin' );
 peako.noop              = require( './noop' );
 peako.property          = require( './property' );
 peako.propertyOf        = require( './property-of' );
+peako.method            = require( './method' );
+peako.methodOf          = require( './method-of' );
 peako.setPrototypeOf    = require( './set-prototype-of' );
 peako.toObject          = require( './to-object' );
 peako.type              = require( './type' );
@@ -67,6 +75,10 @@ peako.get               = require( './get' );
 peako.set               = require( './set' );
 peako.iteratee          = require( './iteratee' );
 peako.identity          = require( './identity' );
+peako.escapeHTML        = require( './escape-html' );
+peako.unescapeHTML      = require( './unescape-html' );
+peako.random            = require( './random' );
+peako.fromPairs         = require( './from-pairs' );
 
 if ( typeof self !== 'undefined' ) {
   self.peako = self._ = peako;

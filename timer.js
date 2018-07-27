@@ -15,20 +15,20 @@
 
 var timestamp = require( './timestamp' );
 
-var request, cancel;
+var requestAF, cancelAF;
 
 if ( typeof window !== 'undefined' ) {
-  cancel = window.cancelAnimationFrame ||
+  cancelAF = window.cancelAnimationFrame ||
     window.webkitCancelAnimationFrame ||
     window.webkitCancelRequestAnimationFrame ||
     window.mozCancelAnimationFrame ||
     window.mozCancelRequestAnimationFrame;
-  request = window.requestAnimationFrame ||
+  requestAF = window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     window.mozRequestAnimationFrame;
 }
 
-var noRequestAnimationFrame = ! request || ! cancel ||
+var noRequestAnimationFrame = ! requestAF || ! cancelAF ||
   typeof navigator !== 'undefined' && /iP(ad|hone|od).*OS\s6/.test( navigator.userAgent );
 
 if ( noRequestAnimationFrame ) {
@@ -48,10 +48,10 @@ if ( noRequestAnimationFrame ) {
   exports.cancel = clearTimeout;
 } else {
   exports.request = function request ( animate ) {
-    return request( animate );
+    return requestAF( animate );
   };
 
   exports.cancel = function cancel ( id ) {
-    return cancel( id );
+    return cancelAF( id );
   };
 }

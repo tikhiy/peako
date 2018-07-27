@@ -2,9 +2,9 @@
 
 var upperFirst = require( './upper-first' );
 
-// camelCase( 'background-repeat-x' ); // -> 'backgroundRepeatX'
+// camelize( 'background-repeat-x' ); // -> 'backgroundRepeatX'
 
-module.exports = function camelCase ( string ) {
+module.exports = function camelize ( string ) {
 
   var words = string.match( /[0-9a-z]+/gi );
 

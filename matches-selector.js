@@ -6,7 +6,7 @@ var matches;
 
 if ( typeof Element === 'undefined' || ! ( matches = Element.prototype.matches || Element.prototype.oMatchesSelector || Element.prototype.msMatchesSelector || Element.prototype.mozMatchesSelector || Element.prototype.webkitMatchesSelector ) ) {
   matches = function matches ( selector ) {
-    if ( /#[\w\-]+/.test( selector += '' ) ) {
+    if ( /^#[\w\-]+$/.test( selector += '' ) ) {
       return '#' + this.id === selector;
     }
 
@@ -14,4 +14,4 @@ if ( typeof Element === 'undefined' || ! ( matches = Element.prototype.matches |
   };
 }
 
-module.exports = null;
+module.exports = matches;

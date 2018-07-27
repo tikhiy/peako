@@ -1,13 +1,12 @@
 'use strict';
 
 var ERR       = require( './constants' ).ERR,
-    defaultTo = require( './default-to' ),
-    apply     = require( './apply' );
+    defaultTo = require( './default-to' );
 
-module.exports = function before ( n, target ) {
+module.exports = function before ( n, fn ) {
   var value;
 
-  if ( typeof target !== 'function' ) {
+  if ( typeof fn !== 'function' ) {
     throw TypeError( ERR.FUNCTION_EXPECTED );
   }
 
@@ -15,7 +14,7 @@ module.exports = function before ( n, target ) {
 
   return function () {
     if ( --n >= 0 ) {
-      value = apply( target, this, arguments );
+      value = fn.apply( this, arguments );
     }
 
     return value;

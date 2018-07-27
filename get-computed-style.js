@@ -5,9 +5,9 @@
 
 'use strict';
 
-var DOMString = require( './to-dom-string' );
+var DOMString = require( './dom-string' );
 
-var camelCase = require( './camel-case' );
+var camelize = require( './camelize' );
 
 var keys = require( './keys' );
 
@@ -183,7 +183,7 @@ if ( typeof window !== 'undefined' || ! ( getComputedStyle = window.getComputedS
      * @returns {string}
      */
     getPropertyValue: function getPropertyValue ( k ) {
-      return this[ camelCase( k ) ] || '';
+      return this[ camelize( k ) ] || '';
     },
 
     /**

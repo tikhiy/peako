@@ -18,7 +18,7 @@ module.exports = function createEach ( fromRight ) {
       return baseForEach( obj, fn, ctx, fromRight );
     }
 
-    return baseForIn( obj, fn, ctx, keys( obj ), fromRight );
+    return baseForIn( obj, fn, ctx, fromRight, keys( obj ) );
 
   };
 };
