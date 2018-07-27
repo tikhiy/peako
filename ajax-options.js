@@ -3,7 +3,7 @@
 /**
  * @property {Object} headers
  * @property {number} timeout
- * @property {string} type
+ * @property {string} method
  */
 module.exports = {
 
@@ -20,7 +20,7 @@ module.exports = {
   timeout: 1000 * 60,
 
   /**
-   * The request type: 'GET', 'POST' (others are ignored, instead, 'GET' will be used).
+   * The request method: 'GET', 'POST' (others are ignored, instead, 'GET' will be used).
    */
-  type: 'GET'
+  method: 'GET'
 };

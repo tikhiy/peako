@@ -79,6 +79,7 @@ peako.escapeHTML        = require( './escape-html' );
 peako.unescapeHTML      = require( './unescape-html' );
 peako.random            = require( './random' );
 peako.fromPairs         = require( './from-pairs' );
+peako.constants         = require( './constants' );
 
 if ( typeof self !== 'undefined' ) {
   self.peako = self._ = peako;

@@ -116,7 +116,7 @@ function ajax ( path, options ) {
     }
   };
 
-  if ( options.type === 'POST' || 'data' in options ) {
+  if ( options.method === 'POST' || 'data' in options ) {
     xhr.open( 'POST', path, async );
   } else {
     xhr.open( 'GET', path, async );
@@ -142,7 +142,7 @@ function ajax ( path, options ) {
     }, options.timeout );
   }
 
-  if ( ContentType != null && ( options.type === 'POST' || 'data' in options ) ) {
+  if ( ContentType != null && 'data' in options ) {
     if ( ! ContentType.indexOf( 'application/x-www-form-urlencoded' ) ) {
       xhr.send( qs.stringify( options.data ) );
     } else if ( ! ContentType.indexOf( 'application/json' ) ) {
