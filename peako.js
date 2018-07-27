@@ -1,12 +1,20 @@
 'use strict';
 
-var DOMWrapper = require( './DOMWrapper' );
+var peako;
 
-function peako ( selector ) {
-  return new DOMWrapper( selector );
+if ( typeof document !== 'undefined' ) {
+
+  peako = function peako ( selector ) {
+    return new peako.DOMWrapper( selector );
+  };
+
+  peako.DOMWrapper = require( './DOMWrapper' );
+
+  peako.prototype = peako.DOMWrapper.prototype;
+
+} else {
+  peako = function peako () {};
 }
-
-peako.prototype = DOMWrapper.prototype;
 
 peako.ajax              = require( './ajax' );
 peako.assign            = require( './assign' );

@@ -135,7 +135,7 @@ module.exports = function style(key, val) {
             val += 'px';
         }
         element.style[key] = val;
-    }, key, val, arguments.length > 1, null);
+    }, key, val, arguments.length > 1);
 };
 },{"./access":18,"./camelize":43,"./css-numbers":62,"./get-style":84,"./is-object-like":98}],13:[function(require,module,exports){
 'use strict';
@@ -472,14 +472,14 @@ module.exports = function _type(val) {
 },{"./type":140}],18:[function(require,module,exports){
 'use strict';
 var DOMWrapper = require('./DOMWrapper'), type = require('./type'), keys = require('./keys');
-var undefined;
-function access(obj, fn, key, val, chainable, ifEmptyVal, raw) {
+function access(obj, fn, key, val, chainable) {
     var bulk = key == null;
     var len = obj.length;
+    var raw = false;
     var i, k, l, e;
     if (type(key) === 'object') {
         for (i = 0, k = keys(key), l = k.length; i < l; ++i) {
-            access(obj, fn, k[i], key[k[i]], true, ifEmptyVal, raw);
+            access(obj, fn, k[i], key[k[i]], true);
         }
         chainable = true;
     } else if (typeof val !== 'undefined') {
@@ -518,7 +518,7 @@ function access(obj, fn, key, val, chainable, ifEmptyVal, raw) {
     if (len) {
         return fn(obj[0], key);
     }
-    return ifEmptyVal;
+    return null;
 }
 module.exports = access;
 },{"./DOMWrapper":14,"./keys":111,"./type":140}],19:[function(require,module,exports){
@@ -530,9 +530,7 @@ module.exports = {
 };
 },{}],20:[function(require,module,exports){
 'use strict';
-var defaults = require('./defaults');
-var qs = require('./qs');
-var o = require('./ajax-options');
+var qs = require('./qs'), defaults = require('./defaults'), o = require('./ajax-options');
 var hasOwnProperty = {}.hasOwnProperty;
 function createHTTPRequest() {
     var HTTPFactories, i;
@@ -2023,11 +2021,17 @@ module.exports = function parseHTML(data, ctx) {
 };
 },{"./base/base-clone-array":24,"./fragment":81}],122:[function(require,module,exports){
 'use strict';
-var DOMWrapper = require('./DOMWrapper');
-function peako(selector) {
-    return new DOMWrapper(selector);
+var peako;
+if (typeof document !== 'undefined') {
+    peako = function peako(selector) {
+        return new peako.DOMWrapper(selector);
+    };
+    peako.DOMWrapper = require('./DOMWrapper');
+    peako.prototype = peako.DOMWrapper.prototype;
+} else {
+    peako = function peako() {
+    };
 }
-peako.prototype = DOMWrapper.prototype;
 peako.ajax = require('./ajax');
 peako.assign = require('./assign');
 peako.assignIn = require('./assign-in');
