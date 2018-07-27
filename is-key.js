@@ -1,7 +1,8 @@
 'use strict';
 
-var rDeepKey = require( './regexps' ).deepKey,
-    _type    = require( './_type' );
+var _type    = require( './_type' );
+
+var rDeepKey = /(^|[^\\])(\\\\)*(\.|\[)/;
 
 function isKey ( val ) {
   var type;

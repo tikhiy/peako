@@ -9,11 +9,12 @@ var isArrayLikeObject = require( './is-array-like-object' ),
     baseForEach       = require( './base/base-for-each' ),
     baseForIn         = require( './base/base-for-in' ),
     parseHTML         = require( './parse-html' ),
-    regexps           = require( './regexps' ),
     _first            = require( './_first' ),
     event             = require( './event' );
 
 var undefined; // jshint ignore: line
+
+var rSelector = /^(?:#([\w-]+)|([\w-]+)|\.([\w-]+))$/;
 
 function DOMWrapper ( selector ) {
   var match, list, i;
@@ -33,7 +34,7 @@ function DOMWrapper ( selector ) {
 
   if ( typeof selector === 'string' ) {
     if ( selector.charAt( 0 ) !== '<' ) {
-      match = regexps.selector.exec( selector );
+      match = rSelector.exec( selector );
 
       // _( 'a > b + c' );
 

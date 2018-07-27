@@ -1,11 +1,12 @@
 'use strict';
 
-var rProperty = require( './regexps' ).property,
-    baseExec  = require( './base/base-exec' ),
+var baseExec  = require( './base/base-exec' ),
     unescape  = require( './unescape' ),
     isKey     = require( './is-key' ),
     toKey     = require( './to-key' ),
     _type     = require( './_type' );
+
+var rProperty = /(^|\.)\s*([_a-z]\w*)\s*|\[\s*((?:-)?(?:\d+|\d*\.\d+)|("|')(([^\\]\\(\\\\)*|[^\4])*)\4)\s*\]/gi;
 
 function stringToPath ( str ) {
   var path = baseExec( rProperty, str ),
