@@ -1,7 +1,5 @@
 'use strict';
 
-var ERR = require( '../constants' ).ERR;
-
 module.exports = function createEscape ( regexp, map ) {
   function replacer ( c ) {
     return map[ c ];
@@ -9,7 +7,7 @@ module.exports = function createEscape ( regexp, map ) {
 
   return function escape ( string ) {
     if ( string == null ) {
-      throw TypeError( ERR.UNDEFINED_OR_NULL );
+      return '';
     }
 
     return ( string += '' ).replace( regexp, replacer );

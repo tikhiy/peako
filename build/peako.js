@@ -1188,19 +1188,18 @@ module.exports = function createEach(fromRight) {
 };
 },{"../base/base-for-each":28,"../base/base-for-in":29,"../is-array-like":90,"../iteratee":109,"../keys":111,"../to-object":136}],53:[function(require,module,exports){
 'use strict';
-var ERR = require('../constants').ERR;
 module.exports = function createEscape(regexp, map) {
     function replacer(c) {
         return map[c];
     }
     return function escape(string) {
         if (string == null) {
-            throw TypeError(ERR.UNDEFINED_OR_NULL);
+            return '';
         }
         return (string += '').replace(regexp, replacer);
     };
 };
-},{"../constants":49}],54:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 'use strict';
 var callIteratee = require('../call-iteratee'), toObject = require('../to-object'), iterable = require('../iterable'), iteratee = require('../iteratee').iteratee, isset = require('../isset');
 module.exports = function createFind(returnIndex, fromRight) {
@@ -2228,7 +2227,7 @@ module.exports = {
     safe: '<%-\\s*([^]*?)\\s*%>',
     html: '<%=\\s*([^]*?)\\s*%>',
     comm: '<%#([^]*?)%>',
-    code: '<%[^%]\\s*([^]*?)\\s*%>'
+    code: '<%\\s*([^]*?)\\s*%>'
 };
 },{}],132:[function(require,module,exports){
 'use strict';
@@ -2236,7 +2235,7 @@ var escapeHTML = require('./escape-html');
 var regexps = require('./template-regexps');
 function replacer(match, safe, html, comm, code) {
     if (safe != null) {
-        return '\'+(' + escapeHTML(safe.replace(/\\n/g, '\n')) + ')+\'';
+        return '\'+_e(' + safe.replace(/\\n/g, '\n') + ')+\'';
     }
     if (html != null) {
         return '\'+(' + html.replace(/\\n/g, '\n') + ')+\'';
@@ -2249,12 +2248,16 @@ function replacer(match, safe, html, comm, code) {
 module.exports = function template(source) {
     var regexp = RegExp(regexps.safe + '|' + regexps.html + '|' + regexps.comm + '|' + regexps.code, 'g');
     var result = '';
+    var _render;
     result += 'function print(){_r+=Array.prototype.join.call(arguments,\'\');}';
     result += 'var _r=\'';
     result += source.replace(/\n/g, '\\n').replace(regexp, replacer);
     result += '\';return _r;';
+    _render = Function('data', '_e', result);
     return {
-        render: Function('data', result),
+        render: function render(data) {
+            return _render.call(this, data, escapeHTML);
+        },
         source: source
     };
 };

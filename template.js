@@ -56,7 +56,7 @@ module.exports = function template ( source ) {
   _render = Function( 'data', '_e', result ); // jshint ignore: line
 
   return {
-    render: function ( data ) {
+    render: function render ( data ) {
       return _render.call( this, data, escapeHTML );
     },
 
