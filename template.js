@@ -6,7 +6,7 @@ var regexps = require( './template-regexps' );
 
 function replacer ( match, safe, html, comm, code ) {
   if ( safe != null ) {
-    return "'+(" + escapeHTML( safe.replace( /\\n/g, '\n' ) ) + ")+'";
+    return "'+_e(" + safe.replace( /\\n/g, '\n' ) + ")+'";
   }
 
   if ( html != null ) {
@@ -41,6 +41,8 @@ module.exports = function template ( source ) {
 
   var result = '';
 
+  var _render;
+
   result += "function print(){_r+=Array.prototype.join.call(arguments,'');}";
 
   result += "var _r='";
@@ -51,8 +53,13 @@ module.exports = function template ( source ) {
 
   result += "';return _r;";
 
+  _render = Function( 'data', '_e', result ); // jshint ignore: line
+
   return {
-    render: Function( 'data', result ), // jshint ignore: line
+    render: function ( data ) {
+      return _render.call( this, data, escapeHTML );
+    },
+
     source: source
   };
 
