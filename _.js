@@ -2,6 +2,11 @@
 
 var DOMWrapper = require( './DOMWrapper' );
 
-module.exports = function _ ( selector ) {
+function _ ( selector ) {
   return new DOMWrapper( selector );
-};
+}
+
+_.prototype = DOMWrapper.prototype;
+_.prototype.constructor = _;
+
+module.exports = _;

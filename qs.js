@@ -1,10 +1,12 @@
 'use strict';
 
+var optional = require;
+
 if ( typeof qs === 'undefined' ) {
   var qs;
 
   try {
-    qs = require( 'qs' );
+    qs = optional( 'qs' );
   } catch ( e ) {}
 }
 

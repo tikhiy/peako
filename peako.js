@@ -12,6 +12,8 @@ if ( typeof document !== 'undefined' ) {
 
   peako.prototype = peako.DOMWrapper.prototype;
 
+  peako.prototype.constructor = peako;
+
 } else {
   peako = function peako () {};
 }

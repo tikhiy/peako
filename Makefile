@@ -1,5 +1,8 @@
-NAME := peako
+all: lint
+	node_modules/.bin/browserify -o dist/peako.js     peako.js
 
-all:
-	node_modules/browserify/bin/cmd.js -o build/$(NAME).js $(NAME).js
-	node_modules/uglify-js/bin/uglifyjs build/$(NAME).js -o build/$(NAME).min.js -cm
+min: all
+	node_modules/.bin/uglifyjs   -o dist/peako.min.js dist/peako.js -cm
+
+lint:
+	node_modules/.bin/jshint . --verbose
