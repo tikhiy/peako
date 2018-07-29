@@ -19,7 +19,7 @@ console.log( type( [] ) ); // -> "array"
 Browser:
 
 ```html
-<script src="https://rawgit.com/silent-tempest/peako/dev/build/peako.js"></script>
+<script src="https://rawgit.com/silent-tempest/dist/dev/build/peako.min.js"></script>
 ```
 
 ```javascript
