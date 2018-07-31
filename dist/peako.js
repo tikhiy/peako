@@ -392,6 +392,10 @@ baseForIn( {
       selector = null;
     }
 
+    if ( typeof useCapture === 'undefined' ) {
+      useCapture = false;
+    }
+
     for ( i = this.length - 1; i >= 0; --i ) {
       element = this[ i ];
 
