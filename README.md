@@ -1,31 +1,25 @@
 # peako
 
-### The Usage
+### Installation ([Node.js](https://nodejs.org/en/about/) / [Browserify](http://browserify.org/))
 
-Node.js/CommonJS:
-
-```javascript
-var peako = require( 'peako' );
-console.log( peako.type( [] ) ); // -> "array"
-```
-
-Or
+`$ npm i --save peako` or `$ npm i -D peako`
 
 ```javascript
-var type = require( 'peako/type' );
-console.log( type( [] ) ); // -> "array"
+var _ = require( 'peako/_' );
+
+_( document ).on( 'click', 'a', function ( event ) {
+  event.preventDefault();
+} );
 ```
 
-Browser:
+### Installation (Browser / Workers)
 
 ```html
-<script src="https://rawgit.com/silent-tempest/dist/dev/build/peako.min.js"></script>
+<script src="https://rawgit.com/silent-tempest/dist/dev/dist/peako.min.js"></script>
 ```
 
 ```javascript
-console.log( peako.type( [] ) ); // -> "array"
+_( self ).scroll( function ( event ) {
+  console.log( 'beep boop', peako.type( event.original ) );
+} );
 ```
-
-### Build
-
-`$ make`
