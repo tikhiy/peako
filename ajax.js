@@ -1,8 +1,15 @@
 'use strict';
 
-var qs        = require( './qs' ),
-    defaults  = require( './defaults' ),
-    o         = require( './ajax-options' );
+if ( typeof qs === 'undefined' ) {
+  var qs;
+
+  try {
+    qs = require( 'qs' );
+  } catch ( error ) {}
+}
+
+var _options = require( './ajax-options' );
+var defaults = require( './defaults' );
 
 var hasOwnProperty = {}.hasOwnProperty;
 
@@ -57,20 +64,20 @@ function ajax ( path, options ) {
   // _.ajax( options );
   // async = options.async || true
   if ( typeof path !== 'string' ) {
-    options = defaults( o, path );
+    options = defaults( _options, path );
     async = ! ( 'async' in options ) || options.async;
     path = options.path;
 
   // _.ajax( path );
   // async = false
   } else if ( options == null ) {
-    options = o;
+    options = _options;
     async = false;
 
   // _.ajax( path, options );
   // async = options.async || true
   } else {
-    options = defaults( o, options );
+    options = defaults( _options, options );
     async = ! ( 'async' in options ) || options.async;
   }
 
