@@ -99,13 +99,15 @@ DOMWrapper.prototype = {
   get:    require( './DOMWrapper#get' ),
   last:   require( './DOMWrapper#last' ),
   map:    require( './DOMWrapper#map' ),
+  parent: require( './DOMWrapper#parent' ),
   ready:  require( './DOMWrapper#ready' ),
   remove: require( './DOMWrapper#remove' ),
   stack:  require( './DOMWrapper#stack' ),
   style:  require( './DOMWrapper#style' ),
   styles: require( './DOMWrapper#styles' ),
   css:    require( './DOMWrapper#css' ),
-  constructor: DOMWrapper
+  constructor: DOMWrapper,
+  length: 0
 };
 
 baseForIn( {
