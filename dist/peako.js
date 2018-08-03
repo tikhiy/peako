@@ -2311,13 +2311,13 @@ if (noRequestAnimationFrame) {
 'use strict';
 var getTime = require('./now');
 var timestamp, navigatorStart;
-if (typeof perfomance === 'undefined' || !perfomance.now) {
+if (typeof performance === 'undefined' || !performance.now) {
     navigatorStart = getTime();
     timestamp = function timestamp() {
         return getTime() - navigatorStart;
     };
 } else {
-    timestamp = perfomance.now;
+    timestamp = performance.now;
 }
 module.exports = timestamp;
 },{"./now":120}],135:[function(require,module,exports){
