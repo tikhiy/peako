@@ -1,5 +1,9 @@
 'use strict';
 
-module.exports = function unescape ( string ) {
-  return string.replace( /\\(\\)?/g, '$1' );
-};
+module.exports = require( './create/create-escape' )( /&(?:lt|gt|#34|#39|amp);/g, {
+  '&lt;':  '<',
+  '&gt;':  '>',
+  '&#34;': '"',
+  '&#39;': "'",
+  '&amp;': '&'
+} );

@@ -1,13 +1,13 @@
 'use strict';
 
-var unescape = require( './unescape' ),
-    isSymbol = require( './is-symbol' );
+var _unescape = require( './_unescape' ),
+    isSymbol  = require( './is-symbol' );
 
 module.exports = function toKey ( val ) {
   var key;
 
   if ( typeof val === 'string' ) {
-    return unescape( val );
+    return _unescape( val );
   }
 
   if ( isSymbol( val ) ) {
@@ -20,5 +20,5 @@ module.exports = function toKey ( val ) {
     return '-0';
   }
 
-  return unescape( key );
+  return _unescape( key );
 };

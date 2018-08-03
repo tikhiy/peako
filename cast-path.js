@@ -1,7 +1,7 @@
 'use strict';
 
 var baseExec  = require( './base/base-exec' ),
-    unescape  = require( './unescape' ),
+    _unescape = require( './_unescape' ),
     isKey     = require( './is-key' ),
     toKey     = require( './to-key' ),
     _type     = require( './_type' );
@@ -21,7 +21,7 @@ function stringToPath ( str ) {
       path[ i ] = val[ 2 ];
     // [ "" ] || [ '' ]
     } else if ( val[ 5 ] !== null ) {
-      path[ i ] = unescape( val[ 5 ] );
+      path[ i ] = _unescape( val[ 5 ] );
     // [ 0 ]
     } else {
       path[ i ] = val[ 3 ];

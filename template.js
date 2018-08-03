@@ -1,8 +1,7 @@
 'use strict';
 
-var escapeHTML = require( './escape-html' );
-
 var regexps = require( './template-regexps' );
+var escape  = require( './escape' );
 
 function replacer ( match, safe, html, comm, code ) {
   if ( safe != null ) {
@@ -57,7 +56,7 @@ module.exports = function template ( source ) {
 
   return {
     render: function render ( data ) {
-      return _render.call( this, data, escapeHTML );
+      return _render.call( this, data, escape );
     },
 
     source: source
