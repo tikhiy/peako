@@ -14,7 +14,7 @@ var isArrayLikeObject = require( './is-array-like-object' ),
 
 var undefined; // jshint ignore: line
 
-var rSelector = /^(?:#([\w-]+)|([\w-]+)|\.([\w-]+))$/;
+var rselector = /^(?:#([\w-]+)|([\w-]+)|\.([\w-]+))$/;
 
 function DOMWrapper ( selector ) {
   var match, list, i;
@@ -34,7 +34,7 @@ function DOMWrapper ( selector ) {
 
   if ( typeof selector === 'string' ) {
     if ( selector.charAt( 0 ) !== '<' ) {
-      match = rSelector.exec( selector );
+      match = rselector.exec( selector );
 
       // _( 'a > b + c' );
 
@@ -92,20 +92,22 @@ function DOMWrapper ( selector ) {
 }
 
 DOMWrapper.prototype = {
-  each:   require( './DOMWrapper#each' ),
-  end:    require( './DOMWrapper#end' ),
-  eq:     require( './DOMWrapper#eq' ),
-  first:  require( './DOMWrapper#first' ),
-  get:    require( './DOMWrapper#get' ),
-  last:   require( './DOMWrapper#last' ),
-  map:    require( './DOMWrapper#map' ),
-  parent: require( './DOMWrapper#parent' ),
-  ready:  require( './DOMWrapper#ready' ),
-  remove: require( './DOMWrapper#remove' ),
-  stack:  require( './DOMWrapper#stack' ),
-  style:  require( './DOMWrapper#style' ),
-  styles: require( './DOMWrapper#styles' ),
-  css:    require( './DOMWrapper#css' ),
+  each:       require( './DOMWrapper#each' ),
+  end:        require( './DOMWrapper#end' ),
+  eq:         require( './DOMWrapper#eq' ),
+  first:      require( './DOMWrapper#first' ),
+  get:        require( './DOMWrapper#get' ),
+  last:       require( './DOMWrapper#last' ),
+  map:        require( './DOMWrapper#map' ),
+  parent:     require( './DOMWrapper#parent' ),
+  ready:      require( './DOMWrapper#ready' ),
+  remove:     require( './DOMWrapper#remove' ),
+  removeAttr: require( './DOMWrapper#removeAttr' ),
+  removeProp: require( './DOMWrapper#removeProp' ),
+  stack:      require( './DOMWrapper#stack' ),
+  style:      require( './DOMWrapper#style' ),
+  styles:     require( './DOMWrapper#styles' ),
+  css:        require( './DOMWrapper#css' ),
   constructor: DOMWrapper,
   length: 0
 };
@@ -217,3 +219,41 @@ baseForIn( {
     return this;
   };
 }, undefined, true, [ 'disabled', 'checked', 'value', 'text', 'html' ] );
+
+( function () {
+  var support = require( './support/support-get-attribute' );
+  var access  = require( './access' );
+  var props   = require( './props' );
+
+  function _attr ( element, key, value, chainable ) {
+    if ( element.nodeType !== 1 ) {
+      return null;
+    }
+
+    if ( props[ key ] || ! support ) {
+      return _prop( element, props[ key ] || key, value, chainable );
+    }
+
+    if ( ! chainable ) {
+      return element.getAttribute( key );
+    }
+
+    element.setAttribute( key, value );
+  }
+
+  function _prop ( element, key, value, chainable ) {
+    if ( ! chainable ) {
+      return element[ key ];
+    }
+
+    element[ key ] = value;
+  }
+
+  DOMWrapper.prototype.attr = function attr ( key, value ) {
+    return access( this, _attr, key, value, typeof value !== 'undefined' );
+  };
+
+  DOMWrapper.prototype.prop = function prop ( key, value ) {
+    return access( this, _prop, key, value, typeof value !== 'undefined' );
+  };
+} )();
