@@ -2,8 +2,8 @@
 
 var DOMWrapper = require( './DOMWrapper' );
 
-function _ ( selector ) {
-  return new DOMWrapper( selector );
+function _ ( selector, context ) {
+  return new DOMWrapper( selector, context );
 }
 
 _.prototype = DOMWrapper.prototype;

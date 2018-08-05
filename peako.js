@@ -13,17 +13,8 @@
 var peako;
 
 if ( typeof document !== 'undefined' ) {
-
-  peako = function peako ( selector ) {
-    return new peako.DOMWrapper( selector );
-  };
-
+  peako = require( './_' );
   peako.DOMWrapper = require( './DOMWrapper' );
-
-  peako.prototype = peako.DOMWrapper.prototype;
-
-  peako.prototype.constructor = peako;
-
 } else {
   peako = function peako () {};
 }
