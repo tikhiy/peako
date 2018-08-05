@@ -3,12 +3,10 @@
 var baseCloneArray = require( './base/base-clone-array' ),
     fragment       = require( './fragment' );
 
-module.exports = function parseHTML ( data, ctx ) {
-  var match = /^(?:<([\w-]+)><\/[\w-]+>|<([\w-]+)(?:\s*\/)?>)$/.exec( data );
-
-  if ( match ) {
-    return [ document.createElement( match[ 1 ] || match[ 2 ] ) ];
+module.exports = function parseHTML ( string, context ) {
+  if ( /^(?:<([\w-]+)><\/[\w-]+>|<([\w-]+)(?:\s*\/)?>)$/.test( string ) ) {
+    return [ document.createElement( RegExp.$1 || RegExp.$2 ) ];
   }
 
-  return baseCloneArray( fragment( [ data ], ctx || document ).childNodes );
+  return baseCloneArray( fragment( [ string ], context || document ).childNodes );
 };

@@ -12,11 +12,9 @@ var isArrayLikeObject = require( './is-array-like-object' ),
     _first            = require( './_first' ),
     event             = require( './event' );
 
-var undefined; // jshint ignore: line
-
 var rselector = /^(?:#([\w-]+)|([\w-]+)|\.([\w-]+))$/;
 
-function DOMWrapper ( selector ) {
+function DOMWrapper ( selector, context ) {
   var match, list, i;
 
   // _();
@@ -33,18 +31,37 @@ function DOMWrapper ( selector ) {
   }
 
   if ( typeof selector === 'string' ) {
+    if ( typeof context !== 'undefined' ) {
+      if ( ! context._peako ) {
+        context = new DOMWrapper( context );
+      }
+
+      if ( ! context[ 0 ] ) {
+        return;
+      }
+
+      context = context[ 0 ];
+    } else {
+      context = document;
+    }
+
     if ( selector.charAt( 0 ) !== '<' ) {
       match = rselector.exec( selector );
 
       // _( 'a > b + c' );
+      // _( '#id', '.another-element' )
 
-      if ( ! match || ! document.getElementsByClassName && match[ 3 ] ) {
-        list = document.querySelectorAll( selector );
+      if ( ! match || ! context.getElementById && match[ 1 ] || ! context.getElementsByClassName && match[ 3 ] ) {
+        if ( match[ 1 ] ) {
+          list = [ context.querySelector( selector ) ];
+        } else {
+          list = context.querySelectorAll( selector );
+        }
 
       // _( '#id' );
 
       } else if ( match[ 1 ] ) {
-        if ( ( list = document.getElementById( match[ 1 ] ) ) ) {
+        if ( ( list = context.getElementById( match[ 1 ] ) ) ) {
           _first( this, list );
         }
 
@@ -53,18 +70,18 @@ function DOMWrapper ( selector ) {
       // _( 'tag' );
 
       } else if ( match[ 2 ] ) {
-        list = document.getElementsByTagName( match[ 2 ] );
+        list = context.getElementsByTagName( match[ 2 ] );
 
       // _( '.class' );
 
       } else {
-        list = document.getElementsByClassName( match[ 3 ] );
+        list = context.getElementsByClassName( match[ 3 ] );
       }
 
     // _( '<div>' );
 
     } else {
-      list = parseHTML( selector );
+      list = parseHTML( selector, context );
     }
 
   // _( [ ... ] );
@@ -95,6 +112,7 @@ DOMWrapper.prototype = {
   each:       require( './DOMWrapper#each' ),
   end:        require( './DOMWrapper#end' ),
   eq:         require( './DOMWrapper#eq' ),
+  find:       require( './DOMWrapper#find' ),
   first:      require( './DOMWrapper#first' ),
   get:        require( './DOMWrapper#get' ),
   last:       require( './DOMWrapper#last' ),
@@ -109,7 +127,8 @@ DOMWrapper.prototype = {
   styles:     require( './DOMWrapper#styles' ),
   css:        require( './DOMWrapper#css' ),
   constructor: DOMWrapper,
-  length: 0
+  length: 0,
+  _peako: true
 };
 
 baseForIn( {
@@ -163,7 +182,7 @@ baseForIn( {
 
     return this;
   };
-}, undefined, true, [ 'trigger', 'off', 'one', 'on' ] );
+}, void 0, true, [ 'trigger', 'off', 'one', 'on' ] );
 
 baseForEach( [
   'blur',        'focus',       'focusin',
@@ -190,7 +209,7 @@ baseForEach( [
 
     return this;
   };
-}, undefined, true );
+}, void 0, true );
 
 baseForIn( {
   disabled: 'disabled',
@@ -218,7 +237,7 @@ baseForIn( {
 
     return this;
   };
-}, undefined, true, [ 'disabled', 'checked', 'value', 'text', 'html' ] );
+}, void 0, true, [ 'disabled', 'checked', 'value', 'text', 'html' ] );
 
 ( function () {
   var support = require( './support/support-get-attribute' );

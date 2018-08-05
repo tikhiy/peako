@@ -12,7 +12,7 @@ module.exports = function style ( key, val ) {
 
   // Compute px or 'px' to `val` now.
 
-  if ( typeof k === 'string' && ! cssNumbers[ camelize( key ) ] ) {
+  if ( typeof key === 'string' && ! cssNumbers[ camelize( key ) ] ) {
     if ( typeof val === 'number' ) {
       val += 'px';
     } else if ( typeof val === 'function' ) {
