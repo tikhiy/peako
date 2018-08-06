@@ -20,7 +20,7 @@ function stringToPath ( str ) {
     if ( val[ 2 ] ) {
       path[ i ] = val[ 2 ];
     // [ "" ] || [ '' ]
-    } else if ( val[ 5 ] !== null ) {
+    } else if ( val[ 5 ] != null ) {
       path[ i ] = _unescape( val[ 5 ] );
     // [ 0 ]
     } else {

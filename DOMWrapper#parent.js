@@ -4,9 +4,7 @@ var baseIndexOf = require( './base/base-index-of' );
 var matches     = require( './matches-selector' );
 
 module.exports = function parent ( selector ) {
-
   var elements = this.stack();
-
   var i, l, parent, element;
 
   for ( i = 0, l = this.length; i < l; ++i ) {

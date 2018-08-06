@@ -59,6 +59,7 @@ module.exports = function template ( source ) {
       return _render.call( this, data, escape );
     },
 
+    result: result,
     source: source
   };
 

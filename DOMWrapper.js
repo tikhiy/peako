@@ -276,3 +276,17 @@ baseForIn( {
     return access( this, _prop, key, value, typeof value !== 'undefined' );
   };
 } )();
+
+baseForIn( { height: require( './get-element-h' ), width: require( './get-element-w' ) }, function ( get, name ) {
+  DOMWrapper.prototype[ name ] = function () {
+    if ( arguments.length ) {
+      throw Error( '_().' + name + "( value ) is deprecated now. use _().style( '" + name + "', value ) instead" );
+    }
+
+    if ( this[ 0 ] ) {
+      return get( this[ 0 ] );
+    }
+
+    return null;
+  };
+}, void 0, true, [ 'height', 'width' ] );
