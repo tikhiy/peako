@@ -93,6 +93,7 @@ peako.fromPairs         = require( './from-pairs' );
 peako.constants         = require( './constants' );
 peako.template          = require( './template' );
 peako.templateRegexps   = require( './template-regexps' );
+peako.invert            = require( './invert' );
 
 if ( typeof self !== 'undefined' ) {
   self.peako = self._ = peako;
