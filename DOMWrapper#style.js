@@ -10,7 +10,7 @@ module.exports = function style ( key, val ) {
 
   var px = 'do-not-add';
 
-  // Compute px or 'px' to `val` now.
+  // Compute px or add 'px' to `val` now.
 
   if ( typeof key === 'string' && ! cssNumbers[ camelize( key ) ] ) {
     if ( typeof val === 'number' ) {
@@ -22,7 +22,7 @@ module.exports = function style ( key, val ) {
     px = 'got-an-object';
   }
 
-  return access( this, function ( element, key, val, chainable ) {
+  return access( this, key, val, function ( element, key, val, chainable ) {
     if ( element.nodeType !== 1 ) {
       return null;
     }
@@ -38,5 +38,5 @@ module.exports = function style ( key, val ) {
     }
 
     element.style[ key ] = val;
-  }, key, val, arguments.length > 1 );
+  } );
 };

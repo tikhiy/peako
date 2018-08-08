@@ -4,18 +4,16 @@ var DOMWrapper = require( './DOMWrapper' ),
     type       = require( './type' ),
     keys       = require( './keys' );
 
-function access ( obj, fn, key, val, chainable ) {
+function access ( obj, key, val, fn, _noCheck ) {
+  var chainable = _noCheck || typeof val === 'undefined';
   var bulk = key == null;
-
   var len = obj.length;
-
   var raw = false;
-
   var i, k, l, e;
 
-  if ( type( key ) === 'object' ) {
+  if ( ! _noCheck && type( key ) === 'object' ) {
     for ( i = 0, k = keys( key ), l = k.length; i < l; ++i ) {
-      access( obj, fn, k[ i ], key[ k[ i ] ], true );
+      access( obj, k[ i ], key[ k[ i ] ], fn, true );
     }
 
     chainable = true;

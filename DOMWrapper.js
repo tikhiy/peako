@@ -4,14 +4,13 @@
 
 module.exports = DOMWrapper;
 
-var isArrayLikeObject = require( './is-array-like-object' ),
-    isDOMElement      = require( './is-dom-element' ),
-    baseForEach       = require( './base/base-for-each' ),
-    baseForIn         = require( './base/base-for-in' ),
-    parseHTML         = require( './parse-html' ),
-    _first            = require( './_first' ),
-    event             = require( './event' );
-
+var isArrayLikeObject = require( './is-array-like-object' );
+var isDOMElement      = require( './is-dom-element' );
+var baseForEach       = require( './base/base-for-each' );
+var baseForIn         = require( './base/base-for-in' );
+var parseHTML         = require( './parse-html' );
+var _first            = require( './_first' );
+var event             = require( './event' );
 var rselector = /^(?:#([\w-]+)|([\w-]+)|\.([\w-]+))$/;
 
 function DOMWrapper ( selector, context ) {
@@ -260,6 +259,10 @@ baseForIn( {
     element.setAttribute( key, value );
   }
 
+  DOMWrapper.prototype.attr = function attr ( key, value ) {
+    return access( this, key, value, _attr );
+  };
+
   function _prop ( element, key, value, chainable ) {
     if ( ! chainable ) {
       return element[ key ];
@@ -268,12 +271,26 @@ baseForIn( {
     element[ key ] = value;
   }
 
-  DOMWrapper.prototype.attr = function attr ( key, value ) {
-    return access( this, _attr, key, value, typeof value !== 'undefined' );
+  DOMWrapper.prototype.prop = function prop ( key, value ) {
+    return access( this, key, value, _prop );
   };
 
-  DOMWrapper.prototype.prop = function prop ( key, value ) {
-    return access( this, _prop, key, value, typeof value !== 'undefined' );
+  var _data;
+
+  if ( require( './support/support-data' ) ) {
+    _data = function _data ( element, key, value, chainable ) {
+      if ( chainable ) {
+        element.dataset[ key ] = value;
+      } else {
+        return element.dataset[ key ];
+      }
+    };
+  } else {
+    _data = _attr;
+  }
+
+  DOMWrapper.prototype.data = function data ( key, value ) {
+    return access( this, key, value, _data );
   };
 } )();
 

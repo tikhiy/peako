@@ -3,7 +3,7 @@
 var span = document.createElement( 'span' );
 
 try {
-  if ( span.setAttribute( 'x', 'y' ), span.getAttribute( 'x' ) === 'y' ) {
+  if ( span.dataset.x = 'y', span.getAttribute( 'data-x' ) === 'y' ) {
     module.exports = true;
   } else {
     throw null;

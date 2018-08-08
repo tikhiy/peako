@@ -6,7 +6,7 @@ function _ ( selector, context ) {
   return new DOMWrapper( selector, context );
 }
 
-_.prototype = DOMWrapper.prototype;
-_.prototype.constructor = _;
+_.fn = _.prototype = DOMWrapper.prototype;
+_.fn.constructor = _;
 
 module.exports = _;
