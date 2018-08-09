@@ -94,6 +94,8 @@ peako.constants         = require( './constants' );
 peako.template          = require( './template' );
 peako.templateRegexps   = require( './template-regexps' );
 peako.invert            = require( './invert' );
+peako.compound          = require( './compound' );
+peako.debounce          = require( './debounce' );
 
 if ( typeof self !== 'undefined' ) {
   self.peako = self._ = peako;

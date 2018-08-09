@@ -233,8 +233,14 @@ baseForIn( {
     }
 
     for ( i = this.length - 1; i >= 0; --i ) {
-      if ( ( element = this[ i ] ).nodeType === 1 ) {
+      if ( ( element = this[ i ] ).nodeType !== 1 ) {
+        continue;
+      }
+
+      if ( typeof key !== 'function' ) {
         element[ key ] = value;
+      } else {
+        key( element, value );
       }
     }
 
