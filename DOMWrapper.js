@@ -214,23 +214,27 @@ baseForIn( {
   disabled: 'disabled',
   checked:  'checked',
   value:    'value',
-  text:     'textContent' in document.body ? 'textContent' : 'innerText',
+  text:     'textContent' in document.body ? 'textContent' : require( './_text-content' ),
   html:     'innerHTML'
-}, function ( name, methodName ) {
+}, function ( key, methodName ) {
   DOMWrapper.prototype[ methodName ] = function ( value ) {
     var element, i;
 
     if ( typeof value === 'undefined' ) {
-      if ( ( element = this[ 0 ] ) && element.nodeType === 1 ) {
-        return element[ name ];
+      if ( ! ( element = this[ 0 ] ) || element.nodeType !== 1 ) {
+        return null;
       }
 
-      return null;
+      if ( typeof key !== 'function' ) {
+        return element[ key ];
+      }
+
+      return key( element );
     }
 
     for ( i = this.length - 1; i >= 0; --i ) {
       if ( ( element = this[ i ] ).nodeType === 1 ) {
-        element[ name ] = value;
+        element[ key ] = value;
       }
     }
 
@@ -276,29 +280,29 @@ baseForIn( {
 
 ( function () {
   var _peakoId = 0;
-
-  function _loadId ( element ) {
-    if ( typeof element._peakoId !== 'number' ) {
-      element._peakoId = ++_peakoId;
-    }
-  }
-
   var _data = {};
 
-  function _loadData ( element ) {
-    if ( ! _data[ element._peakoId ] ) {
-      _data[ element._peakoId ] = {};
-    }
-  }
-
   function _accessData ( element, key, value, chainable ) {
-    _loadId( element );
-    _loadData( element );
+    var attributes, attribute, data, i, l;
+
+    if ( ! element._peakoId ) {
+      element._peakoId = ++_peakoId;
+    }
+
+    if ( ! ( data = _data[ element._peakoId ] ) ) {
+      data = _data[ element._peakoId ] = {};
+
+      for ( attributes = element.attributes, i = 0, l = attributes.length; i < l; ++i ) {
+        if ( ! ( attribute = attributes[ i ] ).nodeName.indexOf( 'data-' ) ) {
+          data[ attribute.nodeName.slice( 5 ) ] = attribute.nodeValue;
+        }
+      }
+    }
 
     if ( chainable ) {
-      _data[ element._peakoId ][ key ] = value;
+      data[ key ] = value;
     } else {
-      return _data[ element._peakoId ][ key ];
+      return data[ key ];
     }
   }
 
