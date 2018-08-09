@@ -1,9 +1,8 @@
 'use strict';
 
 var type = require( './type' );
-
-var lastRes = 'undefined',
-    lastVal;
+var lastRes = 'undefined';
+var lastVal;
 
 module.exports = function _type ( val ) {
   if ( val === lastVal ) {

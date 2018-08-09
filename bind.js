@@ -1,14 +1,13 @@
 'use strict';
 
+var _throwArgumentException = require( './_throw-argument-exception' );
 var constants = require( './constants' );
-
 var indexOf = require( './index-of' );
 
 // Function::bind() polyfill.
 
 var _bind = Function.prototype.bind || function bind ( c ) {
   var f = this;
-
   var a;
 
   if ( arguments.length <= 2 ) {
@@ -31,9 +30,7 @@ var _bind = Function.prototype.bind || function bind ( c ) {
  */
 function process ( p, a ) {
   var r = [];
-
   var j = -1;
-
   var i, l;
 
   for ( i = 0, l = p.length; i < l; ++i ) {
@@ -74,7 +71,7 @@ module.exports = function bind ( f, c ) {
   var p;
 
   if ( typeof f !== 'function' ) {
-    throw TypeError( constants.ERR.FUNCTION_EXPECTED );
+    _throwArgumentException( f, 'a function' );
   }
 
   // no partial arguments were provided

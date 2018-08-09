@@ -1,10 +1,10 @@
 'use strict';
 
-var ERR = require( './constants' ).ERR;
+var _throwArgumentException = require( './_throw-argument-exception' );
 
 module.exports = function words ( string ) {
   if ( typeof string !== 'string' ) {
-    throw TypeError( ERR.STRING_EXPECTED );
+    _throwArgumentException( string, 'a string' );
   }
 
   return string.match( /[^\s\uFEFF\xA0]+/g ) || [];

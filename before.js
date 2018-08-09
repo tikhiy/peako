@@ -1,13 +1,13 @@
 'use strict';
 
-var ERR       = require( './constants' ).ERR,
-    defaultTo = require( './default-to' );
+var _throwArgumentException = require( './_throw-argument-exception' );
+var defaultTo = require( './default-to' );
 
 module.exports = function before ( n, fn ) {
   var value;
 
   if ( typeof fn !== 'function' ) {
-    throw TypeError( ERR.FUNCTION_EXPECTED );
+    _throwArgumentException( fn, 'a function' );
   }
 
   n = defaultTo( n, 1 );

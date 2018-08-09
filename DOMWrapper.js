@@ -5,12 +5,14 @@
 module.exports = DOMWrapper;
 
 var isArrayLikeObject = require( './is-array-like-object' );
-var isDOMElement      = require( './is-dom-element' );
-var baseForEach       = require( './base/base-for-each' );
-var baseForIn         = require( './base/base-for-in' );
-var parseHTML         = require( './parse-html' );
-var _first            = require( './_first' );
-var event             = require( './event' );
+var isDOMElement = require( './is-dom-element' );
+var baseForEach = require( './base/base-for-each' );
+var baseForIn = require( './base/base-for-in' );
+var parseHTML = require( './parse-html' );
+var _first = require( './_first' );
+var event = require( './event' );
+var support = require( './support/support-get-attribute' );
+var access = require( './access' );
 var rselector = /^(?:#([\w-]+)|([\w-]+)|\.([\w-]+))$/;
 
 function DOMWrapper ( selector, context ) {
@@ -138,9 +140,7 @@ baseForIn( {
 }, function ( name, methodName ) {
   DOMWrapper.prototype[ methodName ] = function ( types, selector, listener, useCapture ) {
     var removeAll = name === 'off' && ! arguments.length;
-
     var one = name === 'one';
-
     var element, i, j, l;
 
     if ( ! removeAll ) {
@@ -220,7 +220,7 @@ baseForIn( {
   DOMWrapper.prototype[ methodName ] = function ( value ) {
     var element, i;
 
-    if ( value == null ) {
+    if ( typeof value === 'undefined' ) {
       if ( ( element = this[ 0 ] ) && element.nodeType === 1 ) {
         return element[ name ];
       }
@@ -239,9 +239,7 @@ baseForIn( {
 }, void 0, true, [ 'disabled', 'checked', 'value', 'text', 'html' ] );
 
 ( function () {
-  var support = require( './support/support-get-attribute' );
-  var access  = require( './access' );
-  var props   = require( './props' );
+  var props = require( './props' );
 
   function _attr ( element, key, value, chainable ) {
     if ( element.nodeType !== 1 ) {
@@ -274,24 +272,45 @@ baseForIn( {
   DOMWrapper.prototype.prop = function prop ( key, value ) {
     return access( this, key, value, _prop );
   };
+} )();
 
-  var _data;
+( function () {
+  var _peakoId = 0;
 
-  if ( require( './support/support-data' ) ) {
-    _data = function _data ( element, key, value, chainable ) {
-      if ( chainable ) {
-        element.dataset[ key ] = value;
-      } else {
-        return element.dataset[ key ];
-      }
-    };
-  } else {
-    _data = _attr;
+  function _loadId ( element ) {
+    if ( typeof element._peakoId !== 'number' ) {
+      element._peakoId = ++_peakoId;
+    }
+  }
+
+  var _data = {};
+
+  function _loadData ( element ) {
+    if ( ! _data[ element._peakoId ] ) {
+      _data[ element._peakoId ] = {};
+    }
+  }
+
+  function _accessData ( element, key, value, chainable ) {
+    _loadId( element );
+    _loadData( element );
+
+    if ( chainable ) {
+      _data[ element._peakoId ][ key ] = value;
+    } else {
+      return _data[ element._peakoId ][ key ];
+    }
   }
 
   DOMWrapper.prototype.data = function data ( key, value ) {
-    return access( this, key, value, _data );
+    return access( this, key, value, _accessData );
   };
+
+  DOMWrapper.prototype.removeData = require( './create/create-remove-prop' )( function _removeData ( element, key ) {
+    if ( element._peakoId ) {
+      delete _data[ element._peakoId ][ key ];
+    }
+  } );
 } )();
 
 baseForIn( { height: require( './get-element-h' ), width: require( './get-element-w' ) }, function ( get, name ) {
