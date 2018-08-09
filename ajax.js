@@ -10,11 +10,11 @@ if ( typeof qs === 'undefined' ) {
 
 var _options = require( './ajax-options' );
 var defaults = require( './defaults' );
-
 var hasOwnProperty = {}.hasOwnProperty;
 
 /**
  * Cross-browser XMLHttpRequest: https://stackoverflow.com/a/2557268
+ * @private
  */
 function createHTTPRequest () {
   var HTTPFactories, i;
@@ -47,19 +47,62 @@ function createHTTPRequest () {
 
   for ( i = 0; i < HTTPFactories.length; ++i ) {
     try {
-      // jshint -W067, -W021
-      return ( createHTTPRequest = HTTPFactories[ i ] )();
-      // jshint +W067, +W021
+      return ( createHTTPRequest = HTTPFactories[ i ] )(); // jshint ignore: line
     } catch ( ex ) {}
   }
 
-  throw Error( 'Cannot create XMLHttpRequest object' );
+  throw Error( 'cannot create XMLHttpRequest object' );
 }
 
+/**
+ * @memberof peako
+ * @param {string|object} path A URL or options.
+ * @param {object} [options]
+ * @param {string} [options.path] A URL.
+ * @param {string} [options.method] Default to 'GET' when no options or no `data` in options, or 'POST' when `data` in options.
+ * @param {boolean} [options.async] Default to `true` when options specified, or `false` when no options.
+ * @param {function} [options.success] Will be called when a server respond with 2XX status code.
+ * @param {function} [options.error] Will be called when a server respond with other status code or an error occurs while parsing response.
+ * @example <caption>Synchronous (do not use) GET request</caption>
+ * var data = ajax('./data.json');
+ * @example <caption>Synchronous (do not use) GET request, with callbacks</caption>
+ * var data = ajax('./data.json', {
+ *   success: success,
+ *   async:   false
+ * });
+ *
+ * function success(sameData) {
+ *   console.log(sameData);
+ * }
+ * @example <caption>Asynchronous POST request</caption>
+ * function success(response) {
+ *   console.log(response);
+ * }
+ *
+ * function error(message) {
+ *   console.error(message || this.status + ': ' + this.statusText);
+ * }
+ *
+ * var headers = {
+ *   'Content-Type': 'application/json'
+ * };
+ *
+ * var data = {
+ *   username: document.forms.signup.elements.username.value,
+ *   sex:      document.forms.signup.elements.sex.value
+ * }
+ *
+ * ajax('/api/signup/?step=0', {
+ *   headers: headers,
+ *   success: success,
+ *   error:   error,
+ *   data:    data
+ * });
+ */
 function ajax ( path, options ) {
   var data = null,
       xhr = createHTTPRequest(),
-      async, timeoutID, ContentType, name;
+      async, timeoutId, type, name;
 
   // _.ajax( options );
   // async = options.async || true
@@ -82,42 +125,42 @@ function ajax ( path, options ) {
   }
 
   xhr.onreadystatechange = function () {
-    var status, ContentType;
+    var object, error, type;
 
     if ( this.readyState !== 4 ) {
       return;
     }
 
-    status = this.status;
-
-    // normalize status code in IE
-    // https://stackoverflow.com/questions/10046972/
-    if ( status === 1223 ) {
-      status = 204;
-    }
+    object = {
+      status: this.status === 1223 ? 204 : this.status,
+      type: this.getResponseHeader( 'content-type' ),
+      path: path
+    };
 
     data = this.responseText;
 
-    if ( ( ContentType = this.getResponseHeader( 'Content-Type' ) ) ) {
+    if ( object.type ) {
       try {
-        if ( ! ContentType.indexOf( 'application/x-www-form-urlencoded' ) ) {
-          data = qs.parse( data );
-        } else if ( ! ContentType.indexOf( 'application/json' ) ) {
+        if ( ! type.indexOf( 'application/json' ) ) {
           data = JSON.parse( data );
+        } else if ( ! type.indexOf( 'application/x-www-form-urlencoded' ) ) {
+          data = qs.parse( data );
         }
-      } catch ( ex ) {}
+      } catch ( _error ) {
+        error = true;
+      }
     }
 
-    if ( status === 200 ) {
-      if ( timeoutID != null ) {
-        clearTimeout( timeoutID );
+    if ( ! error && data.status >= 200 && data.status < 300 ) {
+      if ( timeoutId != null ) {
+        clearTimeout( timeoutId );
       }
 
       if ( options.success ) {
-        options.success.call( this, data, path, options );
+        options.success.call( this, data, object );
       }
     } else if ( options.error ) {
-      options.error.call( this, data, path, options );
+      options.error.call( this, data, object );
     }
   };
 
@@ -133,8 +176,8 @@ function ajax ( path, options ) {
         continue;
       }
 
-      if ( name === 'Content-Type' ) {
-        ContentType = options.headers[ name ];
+      if ( name.toLowerCase() === 'content-type' ) {
+        type = options.headers[ name ];
       }
 
       xhr.setRequestHeader( name, options.headers[ name ] );
@@ -142,16 +185,16 @@ function ajax ( path, options ) {
   }
 
   if ( async && options.timeout != null ) {
-    timeoutID = setTimeout( function () {
+    timeoutId = setTimeout( function () {
       xhr.abort();
     }, options.timeout );
   }
 
-  if ( ContentType != null && 'data' in options ) {
-    if ( ! ContentType.indexOf( 'application/x-www-form-urlencoded' ) ) {
-      xhr.send( qs.stringify( options.data ) );
-    } else if ( ! ContentType.indexOf( 'application/json' ) ) {
+  if ( type != null && 'data' in options ) {
+    if ( ! type.indexOf( 'application/json' ) ) {
       xhr.send( JSON.stringify( options.data ) );
+    } else if ( ! type.indexOf( 'application/x-www-form-urlencoded' ) ) {
+      xhr.send( qs.stringify( options.data ) );
     } else {
       xhr.send( options.data );
     }

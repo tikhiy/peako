@@ -1,5 +1,6 @@
 node_modules
 bench
-*.log
+out
 _mixin.js
-peako-old.js
+_peako-old.js
+*.log

@@ -1,0 +1,13 @@
+{
+  "source": {
+    "exclude": [
+      "./dist/",
+      "./node_modules/",
+      "./bench/",
+      "./_peako-old.js",
+      "./_mixin.js"
+    ],
+
+    "excludePattern": "(^|/)_"
+  }
+}

@@ -10,6 +10,11 @@
 
 'use strict';
 
+/**
+ * @constructor peako
+ * @param {string} selector
+ * @alias _
+ */
 var peako;
 
 if ( typeof document !== 'undefined' ) {

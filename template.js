@@ -17,29 +17,23 @@ function replacer ( match, safe, html, comm, code ) {
   }
 
   // comment is matched - do nothing
-
   return '';
 }
 
 /**
+ * @memberof peako
  * @param {string} source The template source.
+ * @example
+ * var template = peako.template('<title><%- data.username %></title>');
+ * var html = template.render({ username: 'John' });
+ * // -> '<title>John</title>'
  */
-
-// var template = peako.template( '<title><%- data.username %></title>' );
-
-// var html = template.render( {
-//   username: 'John'
-// } );
-
-module.exports = function template ( source ) {
-
+function template ( source ) {
   var regexp = RegExp( regexps.safe +
     '|' + regexps.html +
     '|' + regexps.comm +
     '|' + regexps.code, 'g' );
-
   var result = '';
-
   var _render;
 
   result += "function print(){_r+=Array.prototype.join.call(arguments,'');}";
@@ -62,5 +56,6 @@ module.exports = function template ( source ) {
     result: result,
     source: source
   };
+}
 
-};
+module.exports = template;

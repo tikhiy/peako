@@ -1,4 +1,4 @@
-/**
+/*!
  * Adapted from Jonathan Neal getComputedStyle polyfill.
  * https://github.com/jonathantneal/polyfill/blob/master/polyfills/getComputedStyle/polyfill.js
  */
@@ -6,14 +6,10 @@
 'use strict';
 
 var DOMString = require( './dom-string' );
-
 var camelize = require( './camelize' );
-
 var keys = require( './keys' );
-
 var push = Array.prototype.push;
-
-var getComputedStyle;
+var getComputedStyle, getComputedStylePixel, setShortStyleProperty, CSSStyleDeclaration, reject;
 
 if ( typeof window !== 'undefined' || ! ( getComputedStyle = window.getComputedStyle ) ) {
 
@@ -21,25 +17,24 @@ if ( typeof window !== 'undefined' || ! ( getComputedStyle = window.getComputedS
   // jshint -W082
 
   /**
-   * @param {Element} e
-   * @param {string} k
+   * @private
+   * @param {Node} element
+   * @param {string} key
    * @param {number?} fz
    * @returns {number}
    */
-  function getComputedStylePixel ( e, k, fz ) {
+  getComputedStylePixel = function getComputedStylePixel ( element, key, fz ) {
 
     // Internet Explorer sometimes struggles to read currentStyle until the
     // element's document is accessed.
 
-    var v = e.currentStyle[ k ].match( /(\d+|\d*\.\d+)(em|\u0025|cm|in|mm|pc|pt)?/ ) || [ null, 0, '' ];
-
-    var size = v[ 1 ],
-        suff = v[ 2 ];
-
+    var value = element.currentStyle[ key ].match( /(\d+|\d*\.\d+)(em|\u0025|cm|in|mm|pc|pt)?/ ) || [ null, 0, '' ];
+    var size = value[ 1 ];
+    var suff = value[ 2 ];
     var rz, parent;
 
     if ( typeof fz === 'undefined' ) {
-      parent = e.parentElement;
+      parent = element.parentElement;
 
       if ( ! parent || suff !== '\u0025' && suff !== 'em' ) {
         fz = 16;
@@ -48,12 +43,12 @@ if ( typeof window !== 'undefined' || ! ( getComputedStyle = window.getComputedS
       }
     }
 
-    if ( k === 'fontSize' ) {
+    if ( key === 'fontSize' ) {
       rz = fz;
-    } else if ( /width/i.test( k ) ) {
-      rz = e.clientWidth;
+    } else if ( /width/i.test( key ) ) {
+      rz = element.clientWidth;
     } else {
-      rz = e.clientHeight;
+      rz = element.clientHeight;
     }
 
     switch ( suff ) {
@@ -76,47 +71,46 @@ if ( typeof window !== 'undefined' || ! ( getComputedStyle = window.getComputedS
     // no suffix or suffix is 'px' (default case)
 
     return size;
-  }
+  };
 
   /**
+   * @private
    * @param {Object} style
-   * @param {string} k
+   * @param {string} key
    */
-  function setShortStyleProperty ( style, k ) {
+  setShortStyleProperty = function setShortStyleProperty ( style, key ) {
     var suff, t, r, b, l;
 
-    if ( k === 'border' ) {
+    if ( key === 'border' ) {
       suff = 'Width';
     } else {
       suff = '';
     }
 
-    t = k + 'Top' + suff;
-    r = k + 'Right' + suff;
-    b = k + 'Bottom' + suff;
-    l = k + 'Left' + suff;
+    t = key + 'Top' + suff;
+    r = key + 'Right' + suff;
+    b = key + 'Bottom' + suff;
+    l = key + 'Left' + suff;
 
     if ( style[ t ] === style[ r ] && style[ t ] === style[ b ] && style[ t ] === style[ l ] ) {
-      style[ k ] = style[ t ];
+      style[ key ] = style[ t ];
     } else if ( style[ t ] === style[ b ] && style[ l ] === style[ r ] ) {
-      style[ k ] = style[ t ] + ' ' + style[ r ];
+      style[ key ] = style[ t ] + ' ' + style[ r ];
     } else if ( style[ l ] === style[ r ] ) {
-      style[ k ] = style[ t ] + ' ' + style[ r ] + ' ' + style[ b ];
+      style[ key ] = style[ t ] + ' ' + style[ r ] + ' ' + style[ b ];
     } else {
-      style[ k ] = style[ t ] + ' ' + style[ r ] + ' ' + style[ b ] + ' ' + style[ l ];
+      style[ key ] = style[ t ] + ' ' + style[ r ] + ' ' + style[ b ] + ' ' + style[ l ];
     }
-  }
+  };
 
   /**
+   * @private
    * @constructor
-   * @param {Element} e
+   * @param {Node} element
    */
-  function CSSStyleDeclaration ( e ) {
-
-    var fz = getComputedStylePixel( e, 'fontSize' );
-
-    var c = e.currentStyle;
-
+  CSSStyleDeclaration = function CSSStyleDeclaration ( element ) {
+    var fz = getComputedStylePixel( element, 'fontSize' );
+    var c = element.currentStyle;
     var k, i, j, l;
 
     for ( j = 0, k = keys( c ), l = k.length - 1; j < l; ++j ) {
@@ -131,18 +125,18 @@ if ( typeof window !== 'undefined' || ! ( getComputedStyle = window.getComputedS
       if ( i === 'styleFloat' ) {
         this[ 'float' ] = c.styleFloat;
       } else if ( i === 'width' ) {
-        this.width = e.offsetWidth + 'px';
+        this.width = element.offsetWidth + 'px';
       } else if ( i === 'height' ) {
-        this.height = e.offsetHeight + 'px';
+        this.height = element.offsetHeight + 'px';
       } else if ( c[ i ] !== 'auto' && /margin.|padding.|border.*W/.test( i ) ) {
-        this[ i ] = Math.round( getComputedStylePixel( e, i, fz ) ) + 'px';
+        this[ i ] = Math.round( getComputedStylePixel( element, i, fz ) ) + 'px';
       } else if ( ! i.indexOf( 'outline' ) ) {
 
         // errors on checking outline
 
         try {
           this[ i ] = c[ i ];
-        } catch ( e ) {
+        } catch ( element ) {
           if ( ! this.outlineColor ) {
             this.outlineColor = c.outlineColor || c.color;
           }
@@ -170,20 +164,20 @@ if ( typeof window !== 'undefined' || ! ( getComputedStyle = window.getComputedS
     setShortStyleProperty( this, 'margin' );
     setShortStyleProperty( this, 'border' );
 
-  }
+  };
 
-  function reject () {
+  reject = function reject () {
     throw Error();
-  }
+  };
 
   CSSStyleDeclaration.prototype = {
 
     /**
-     * @param {string} k
+     * @param {string} key
      * @returns {string}
      */
-    getPropertyValue: function getPropertyValue ( k ) {
-      return this[ camelize( k ) ] || '';
+    getPropertyValue: function getPropertyValue ( key ) {
+      return this[ camelize( key ) ] || '';
     },
 
     /**
@@ -201,7 +195,7 @@ if ( typeof window !== 'undefined' || ! ( getComputedStyle = window.getComputedS
   };
 
   /**
-   * @param {Element} element
+   * @param {Node} element
    * @returns {CSSStyleDeclaration}
    */
   getComputedStyle = function getComputedStyle ( element ) {

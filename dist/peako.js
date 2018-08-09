@@ -763,10 +763,10 @@ function createHTTPRequest() {
         } catch (ex) {
         }
     }
-    throw Error('Cannot create XMLHttpRequest object');
+    throw Error('cannot create XMLHttpRequest object');
 }
 function ajax(path, options) {
-    var data = null, xhr = createHTTPRequest(), async, timeoutID, ContentType, name;
+    var data = null, xhr = createHTTPRequest(), async, timeoutId, type, name;
     if (typeof path !== 'string') {
         options = defaults(_options, path);
         async = !('async' in options) || options.async;
@@ -779,34 +779,36 @@ function ajax(path, options) {
         async = !('async' in options) || options.async;
     }
     xhr.onreadystatechange = function () {
-        var status, ContentType;
+        var object, error, type;
         if (this.readyState !== 4) {
             return;
         }
-        status = this.status;
-        if (status === 1223) {
-            status = 204;
-        }
+        object = {
+            status: this.status === 1223 ? 204 : this.status,
+            type: this.getResponseHeader('content-type'),
+            path: path
+        };
         data = this.responseText;
-        if (ContentType = this.getResponseHeader('Content-Type')) {
+        if (object.type) {
             try {
-                if (!ContentType.indexOf('application/x-www-form-urlencoded')) {
-                    data = qs.parse(data);
-                } else if (!ContentType.indexOf('application/json')) {
+                if (!type.indexOf('application/json')) {
                     data = JSON.parse(data);
+                } else if (!type.indexOf('application/x-www-form-urlencoded')) {
+                    data = qs.parse(data);
                 }
-            } catch (ex) {
+            } catch (_error) {
+                error = true;
             }
         }
-        if (status === 200) {
-            if (timeoutID != null) {
-                clearTimeout(timeoutID);
+        if (!error && data.status >= 200 && data.status < 300) {
+            if (timeoutId != null) {
+                clearTimeout(timeoutId);
             }
             if (options.success) {
-                options.success.call(this, data, path, options);
+                options.success.call(this, data, object);
             }
         } else if (options.error) {
-            options.error.call(this, data, path, options);
+            options.error.call(this, data, object);
         }
     };
     if (options.method === 'POST' || 'data' in options) {
@@ -819,22 +821,22 @@ function ajax(path, options) {
             if (!hasOwnProperty.call(options.headers, name)) {
                 continue;
             }
-            if (name === 'Content-Type') {
-                ContentType = options.headers[name];
+            if (name.toLowerCase() === 'content-type') {
+                type = options.headers[name];
             }
             xhr.setRequestHeader(name, options.headers[name]);
         }
     }
     if (async && options.timeout != null) {
-        timeoutID = setTimeout(function () {
+        timeoutId = setTimeout(function () {
             xhr.abort();
         }, options.timeout);
     }
-    if (ContentType != null && 'data' in options) {
-        if (!ContentType.indexOf('application/x-www-form-urlencoded')) {
-            xhr.send(qs.stringify(options.data));
-        } else if (!ContentType.indexOf('application/json')) {
+    if (type != null && 'data' in options) {
+        if (!type.indexOf('application/json')) {
             xhr.send(JSON.stringify(options.data));
+        } else if (!type.indexOf('application/x-www-form-urlencoded')) {
+            xhr.send(qs.stringify(options.data));
         } else {
             xhr.send(options.data);
         }
@@ -1713,10 +1715,9 @@ module.exports = require('./create/create-escape')(/[<>"'&]/g, {
 'use strict';
 var closestNode = require('./closest-node');
 var DOMWrapper = require('./DOMWrapper');
-var create = require('./create');
 var Event = require('./Event');
 var events = {
-        items: create(null),
+        items: {},
         types: []
     };
 var support = typeof self !== 'undefined' && 'addEventListener' in self;
@@ -1848,7 +1849,7 @@ function IEType(type) {
     }
     return 'on' + type;
 }
-},{"./DOMWrapper":18,"./Event":19,"./closest-node":57,"./create":61}],85:[function(require,module,exports){
+},{"./DOMWrapper":18,"./Event":19,"./closest-node":57}],85:[function(require,module,exports){
 'use strict';
 module.exports = require('./create/create-find')(true);
 },{"./create/create-find":65}],86:[function(require,module,exports){
@@ -2574,7 +2575,7 @@ function replacer(match, safe, html, comm, code) {
     }
     return '';
 }
-module.exports = function template(source) {
+function template(source) {
     var regexp = RegExp(regexps.safe + '|' + regexps.html + '|' + regexps.comm + '|' + regexps.code, 'g');
     var result = '';
     var _render;
@@ -2590,7 +2591,8 @@ module.exports = function template(source) {
         result: result,
         source: source
     };
-};
+}
+module.exports = template;
 },{"./escape":83,"./template-regexps":149}],151:[function(require,module,exports){
 'use strict';
 var timestamp = require('./timestamp');

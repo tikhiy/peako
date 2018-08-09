@@ -1,15 +1,11 @@
 'use strict';
 
 var closestNode = require( './closest-node' );
-
-var DOMWrapper = require( './DOMWrapper' );
-
-var create = require( './create' );
-
-var Event = require( './Event' );
+var DOMWrapper  = require( './DOMWrapper' );
+var Event       = require( './Event' );
 
 var events = {
-  items: create( null ),
+  items: {},
   types: []
 };
 
@@ -18,7 +14,7 @@ var support = typeof self !== 'undefined' && 'addEventListener' in self;
 /**
  * @param {Node} element The element to which the listener should be attached.
  * @param {string} type The event type name.
- * @param {string} [selector] The selector to which delegate an event.
+ * @param {string?} selector The selector to which delegate an event.
  * @param {function} listener The event listener.
  * @param {boolean} useCapture
  * @param {boolean} [one] Remove the listener after it first dispatching?
@@ -33,7 +29,6 @@ var support = typeof self !== 'undefined' && 'addEventListener' in self;
 // }, false )
 
 exports.on = function on ( element, type, selector, listener, useCapture, one ) {
-
   var item = {
     useCapture: useCapture,
     listener: listener,
@@ -88,11 +83,9 @@ exports.on = function on ( element, type, selector, listener, useCapture, one ) 
     events.items[ type ].index = events.types.length;
     events.types.push( type );
   }
-
 };
 
 exports.off = function off ( element, type, selector, listener, useCapture ) {
-
   var i, items, item;
 
   if ( type == null ) {
@@ -132,13 +125,10 @@ exports.off = function off ( element, type, selector, listener, useCapture ) {
       element.detachEvent( item.IEType, item.wrapper );
     }
   }
-
 };
 
 exports.trigger = function trigger ( element, type, data ) {
-
   var items = events.items[ type ];
-
   var i, closest, item;
 
   if ( ! items ) {
@@ -170,11 +160,9 @@ exports.trigger = function trigger ( element, type, data ) {
       item.wrapper( createEventWithTarget( type, data, element || closest ), closest );
     }
   }
-
 };
 
 exports.copy = function copy ( target, source, deep ) {
-
   var i, j, l, items, item, type;
 
   for ( i = events.types.length - 1; i >= 0; --i ) {
@@ -203,7 +191,6 @@ exports.copy = function copy ( target, source, deep ) {
   for ( i = target.length - 1; i >= 0; --i ) {
     event.copy( target[ i ], source[ i ], true );
   }
-
 };
 
 function createEventWithTarget ( type, data, target ) {

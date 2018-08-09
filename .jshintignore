@@ -1,5 +1,6 @@
 dist
 node_modules
 bench
-peako-old.js
+out
+_peako-old.js
 _mixin.js

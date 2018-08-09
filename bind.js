@@ -24,6 +24,7 @@ var _bind = Function.prototype.bind || function bind ( c ) {
 };
 
 /**
+ * @private
  * @param {Array} p The partial arguments.
  * @param {Array} a The arguments.
  * @returns {Array} A processed arguments.
