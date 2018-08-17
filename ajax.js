@@ -125,7 +125,7 @@ function ajax ( path, options ) {
   }
 
   xhr.onreadystatechange = function () {
-    var object, error, type;
+    var object, error;
 
     if ( this.readyState !== 4 ) {
       return;
@@ -141,9 +141,9 @@ function ajax ( path, options ) {
 
     if ( object.type ) {
       try {
-        if ( ! type.indexOf( 'application/json' ) ) {
+        if ( ! object.type.indexOf( 'application/json' ) ) {
           data = JSON.parse( data );
-        } else if ( ! type.indexOf( 'application/x-www-form-urlencoded' ) ) {
+        } else if ( ! object.type.indexOf( 'application/x-www-form-urlencoded' ) ) {
           data = qs.parse( data );
         }
       } catch ( _error ) {
@@ -151,7 +151,7 @@ function ajax ( path, options ) {
       }
     }
 
-    if ( ! error && data.status >= 200 && data.status < 300 ) {
+    if ( ! error && object.status >= 200 && object.status < 300 ) {
       if ( timeoutId != null ) {
         clearTimeout( timeoutId );
       }

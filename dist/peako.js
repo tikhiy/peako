@@ -727,7 +727,7 @@ if (typeof qs === 'undefined') {
     var qs;
     try {
         qs = function () {
-            throw new Error('Cannot find module \'qs\' from \'/home/silent/git/peako\'');
+            throw new Error('Cannot find module \'qs\' from \'/home/silent/git/lib/peako\'');
         }();
     } catch (error) {
     }
@@ -779,7 +779,7 @@ function ajax(path, options) {
         async = !('async' in options) || options.async;
     }
     xhr.onreadystatechange = function () {
-        var object, error, type;
+        var object, error;
         if (this.readyState !== 4) {
             return;
         }
@@ -791,16 +791,16 @@ function ajax(path, options) {
         data = this.responseText;
         if (object.type) {
             try {
-                if (!type.indexOf('application/json')) {
+                if (!object.type.indexOf('application/json')) {
                     data = JSON.parse(data);
-                } else if (!type.indexOf('application/x-www-form-urlencoded')) {
+                } else if (!object.type.indexOf('application/x-www-form-urlencoded')) {
                     data = qs.parse(data);
                 }
             } catch (_error) {
                 error = true;
             }
         }
-        if (!error && data.status >= 200 && data.status < 300) {
+        if (!error && object.status >= 200 && object.status < 300) {
             if (timeoutId != null) {
                 clearTimeout(timeoutId);
             }
@@ -2622,17 +2622,18 @@ if (noRequestAnimationFrame) {
 }
 },{"./timestamp":152}],152:[function(require,module,exports){
 'use strict';
-var getTime = require('./now');
-var timestamp, navigatorStart;
+var now = require('./now');
+var navigatorStart;
 if (typeof performance === 'undefined' || !performance.now) {
-    navigatorStart = getTime();
-    timestamp = function timestamp() {
-        return getTime() - navigatorStart;
+    navigatorStart = now();
+    module.exports = function timestamp() {
+        return now() - navigatorStart;
     };
 } else {
-    timestamp = performance.now;
+    module.exports = function timestamp() {
+        return performance.now();
+    };
 }
-module.exports = timestamp;
 },{"./now":136}],153:[function(require,module,exports){
 'use strict';
 var _unescape = require('./_unescape'), isSymbol = require('./is-symbol');
