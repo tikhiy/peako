@@ -15,5 +15,7 @@ module.exports = {
   MIN_SAFE_INT:    -9007199254740991,
 
   DEEP:         1,
-  DEEP_KEEP_FN: 2
+  DEEP_KEEP_FN: 2,
+
+  PLACEHOLDER: {}
 };
