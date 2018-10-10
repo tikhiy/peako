@@ -1,5 +1,5 @@
 all: lint
-	node_modules/.bin/browserify -o dist/peako.js peako.js -x qs
+	node_modules/.bin/browserify -o dist/peako.js peako.js -x qs -d
 
 min: all
 	node_modules/.bin/uglifyjs -cmo dist/peako.min.js dist/peako.js
