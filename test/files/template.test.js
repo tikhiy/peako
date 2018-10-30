@@ -32,4 +32,22 @@ describe( 'peako.template', function () {
       template( '<%# A comment. %>' ).render().should.equal( '' );
     } );
   } );
+
+  describe( 'custom patterns', function () {
+    it( 'works', function () {
+      var source = '<?php print( data.$universe ); ?>';
+
+      var options = {
+        regexps: {
+          code: '<\\?php\\s*([^]*?)\\s*\\?>'
+        }
+      };
+
+      var data = {
+        $universe: 'The Universe'
+      };
+
+      template( source, options ).render( data ).should.equal( 'The Universe' );
+    } );
+  } );
 } );
