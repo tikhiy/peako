@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = function baseExec ( regexp, string ) {
-  var result = [],
-      value;
+  var result = [];
+  var value;
 
   regexp.lastIndex = 0;
 

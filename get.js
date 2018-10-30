@@ -1,9 +1,9 @@
 'use strict';
 
-var castPath = require( './cast-path' ),
-    toObject = require( './to-object' ),
-    baseGet  = require( './base/base-get' ),
-    ERR      = require( './constants' ).ERR;
+var castPath = require( './cast-path' );
+var toObject = require( './to-object' );
+var baseGet  = require( './base/base-get' );
+var ERR      = require( './constants' ).ERR;
 
 module.exports = function get ( object, path ) {
   var length = ( path = castPath( path ) ).length;

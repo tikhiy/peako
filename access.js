@@ -1,15 +1,18 @@
 'use strict';
 
-var DOMWrapper = require( './DOMWrapper' ),
-    type       = require( './type' ),
-    keys       = require( './keys' );
+var DOMWrapper = require( './DOMWrapper' );
+var type       = require( './type' );
+var keys       = require( './keys' );
 
 function access ( obj, key, val, fn, _noCheck ) {
   var chainable = _noCheck || typeof val === 'undefined';
-  var bulk = key == null;
+  var bulk = key === null || key === 'undefined';
   var len = obj.length;
   var raw = false;
-  var i, k, l, e;
+  var e;
+  var k;
+  var i;
+  var l;
 
   if ( ! _noCheck && type( key ) === 'object' ) {
     for ( i = 0, k = keys( key ), l = k.length; i < l; ++i ) {

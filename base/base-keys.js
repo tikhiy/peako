@@ -1,15 +1,13 @@
 'use strict';
 
-var baseIndexOf = require( './base-index-of' );
+var support     = require( '../support/support-keys' );
 
-var support = require( '../support/support-keys' );
+var baseIndexOf = require( './base-index-of' );
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
 
-var k, fixKeys;
-
-if ( support === 'not-supported' ) {
-  k = [
+if ( support === 'has-a-bug' ) {
+  var _keys = [
     'toString',
     'toLocaleString',
     'valueOf',
@@ -18,24 +16,12 @@ if ( support === 'not-supported' ) {
     'propertyIsEnumerable',
     'constructor'
   ];
-
-  fixKeys = function fixKeys ( keys, object ) {
-    var i, key;
-
-    for ( i = k.length - 1; i >= 0; --i ) {
-      if ( baseIndexOf( keys, key = k[ i ] ) < 0 && hasOwnProperty.call( object, key ) ) {
-        keys.push( key );
-      }
-    }
-
-    return keys;
-  };
 }
 
 module.exports = function baseKeys ( object ) {
   var keys = [];
-
   var key;
+  var i;
 
   for ( key in object ) {
     if ( hasOwnProperty.call( object, key ) ) {
@@ -43,9 +29,13 @@ module.exports = function baseKeys ( object ) {
     }
   }
 
-  if ( support !== 'not-supported' ) {
-    return keys;
+  if ( support === 'has-a-bug' ) {
+    for ( i = _keys.length - 1; i >= 0; --i ) {
+      if ( baseIndexOf( keys, _keys[ i ] ) < 0 && hasOwnProperty.call( object, _keys[ i ] ) ) {
+        keys.push( _keys[ i ] );
+      }
+    }
   }
 
-  return fixKeys( keys, object );
+  return keys;
 };

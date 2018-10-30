@@ -1,0 +1,29 @@
+{
+  "globals": {
+    "ActiveXObject": false
+  },
+
+  "env": {
+    "browser": true,
+    "commonjs": true
+  },
+
+  "parserOptions": {
+    "ecmaVersion": 3
+  },
+
+  "extends": "v6.js",
+
+  "overrides": [
+    {
+      "files": "*",
+      "rules": {
+        "brace-rules/brace-on-same-line": "off",
+        "brace-style": [
+          "error",
+          "1tbs"
+        ]
+      }
+    }
+  ]
+}

@@ -5,10 +5,10 @@ var upperFirst = require( './upper-first' );
 // camelize( 'background-repeat-x' ); // -> 'backgroundRepeatX'
 
 module.exports = function camelize ( string ) {
-
   var words = string.match( /[0-9a-z]+/gi );
-
-  var result, i, l;
+  var result;
+  var i;
+  var l;
 
   if ( ! words ) {
     return '';
@@ -21,5 +21,4 @@ module.exports = function camelize ( string ) {
   }
 
   return result;
-
 };

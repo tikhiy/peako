@@ -1,8 +1,10 @@
 'use strict';
 
-var baseCopyArray = require( './base/base-copy-array' ),
-    DOMWrapper    = require( './DOMWrapper' ),
-    _first        = require( './_first' );
+var _first        = require( './_first' );
+
+var baseCopyArray = require( './base/base-copy-array' );
+
+var DOMWrapper    = require( './DOMWrapper' );
 
 module.exports = function stack ( elements ) {
   var wrapper = new DOMWrapper();
@@ -15,7 +17,7 @@ module.exports = function stack ( elements ) {
     }
   }
 
-  wrapper._previous = wrapper.prevObject = this;
+  wrapper._previous = wrapper.prevObject = this; // eslint-disable-line no-multi-assign
 
   return wrapper;
 };

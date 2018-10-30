@@ -1,10 +1,10 @@
 'use strict';
 
-var create         = require( './create' ),
-    getPrototypeOf = require( './get-prototype-of' ),
-    toObject       = require( './to-object' ),
-    each           = require( './each' ),
-    isObjectLike   = require( './is-object-like' );
+var getPrototypeOf = require( './get-prototype-of' );
+var isObjectLike   = require( './is-object-like' );
+var toObject       = require( './to-object' );
+var create         = require( './create' );
+var each           = require( './each' );
 
 module.exports = function clone ( deep, target, guard ) {
   var cln;

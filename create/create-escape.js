@@ -6,7 +6,7 @@ module.exports = function createEscape ( regexp, map ) {
   }
 
   return function escape ( string ) {
-    if ( string == null ) {
+    if ( string === null || typeof string === 'undefined' ) {
       return '';
     }
 

@@ -1,22 +1,31 @@
 'use strict';
 
-// export before call recursive require
-
 module.exports = DOMWrapper;
 
-var isArrayLikeObject = require( './is-array-like-object' );
-var isDOMElement = require( './is-dom-element' );
-var baseForEach = require( './base/base-for-each' );
-var baseForIn = require( './base/base-for-in' );
-var parseHTML = require( './parse-html' );
-var _first = require( './_first' );
-var event = require( './event' );
-var support = require( './support/support-get-attribute' );
-var access = require( './access' );
+var _textContent         = require( './_text-content' );
+var _first               = require( './_first' );
+
+var support              = require( './support/support-get-attribute' );
+
+var createRemoveProperty = require( './create/create-remove-prop' );
+
+var baseForEach          = require( './base/base-for-each' );
+var baseForIn            = require( './base/base-for-in' );
+
+var isArrayLikeObject    = require( './is-array-like-object' );
+var isDOMElement         = require( './is-dom-element' );
+var getElementW          = require( './get-element-w' );
+var getElementH          = require( './get-element-h' );
+var parseHTML            = require( './parse-html' );
+var access               = require( './access' );
+var event                = require( './event' );
+
 var rselector = /^(?:#([\w-]+)|([\w-]+)|\.([\w-]+))$/;
 
 function DOMWrapper ( selector, context ) {
-  var match, list, i;
+  var match;
+  var list;
+  var i;
 
   // _();
 
@@ -141,7 +150,10 @@ baseForIn( {
   DOMWrapper.prototype[ methodName ] = function ( types, selector, listener, useCapture ) {
     var removeAll = name === 'off' && ! arguments.length;
     var one = name === 'one';
-    var element, i, j, l;
+    var element;
+    var i;
+    var j;
+    var l;
 
     if ( ! removeAll ) {
       if ( ! ( types = types.match( /[^\s\uFEFF\xA0]+/g ) ) ) {
@@ -155,7 +167,7 @@ baseForIn( {
     // off( types, listener )
 
     if ( name !== 'trigger' && typeof selector === 'function' ) {
-      if ( listener != null ) {
+      if ( typeof listener !== 'undefined' ) {
         useCapture = listener;
       }
 
@@ -196,7 +208,8 @@ baseForEach( [
   'touchcancel', 'load'
 ], function ( eventType ) {
   DOMWrapper.prototype[ eventType ] = function ( arg ) {
-    var i, l;
+    var i;
+    var l;
 
     if ( typeof arg !== 'function' ) {
       return this.trigger( eventType, arg );
@@ -214,11 +227,12 @@ baseForIn( {
   disabled: 'disabled',
   checked:  'checked',
   value:    'value',
-  text:     'textContent' in document.body ? 'textContent' : require( './_text-content' ),
+  text:     'textContent' in document.body ? 'textContent' : _textContent, // eslint-disable-line no-ternary
   html:     'innerHTML'
 }, function ( key, methodName ) {
   DOMWrapper.prototype[ methodName ] = function ( value ) {
-    var element, i;
+    var element;
+    var i;
 
     if ( typeof value === 'undefined' ) {
       if ( ! ( element = this[ 0 ] ) || element.nodeType !== 1 ) {
@@ -289,14 +303,18 @@ baseForIn( {
   var _data = {};
 
   function _accessData ( element, key, value, chainable ) {
-    var attributes, attribute, data, i, l;
+    var attributes;
+    var attribute;
+    var data;
+    var i;
+    var l;
 
     if ( ! element._peakoId ) {
       element._peakoId = ++_peakoId;
     }
 
     if ( ! ( data = _data[ element._peakoId ] ) ) {
-      data = _data[ element._peakoId ] = {};
+      data = _data[ element._peakoId ] = {}; // eslint-disable-line no-multi-assign
 
       for ( attributes = element.attributes, i = 0, l = attributes.length; i < l; ++i ) {
         if ( ! ( attribute = attributes[ i ] ).nodeName.indexOf( 'data-' ) ) {
@@ -316,19 +334,15 @@ baseForIn( {
     return access( this, key, value, _accessData );
   };
 
-  DOMWrapper.prototype.removeData = require( './create/create-remove-prop' )( function _removeData ( element, key ) {
+  DOMWrapper.prototype.removeData = createRemoveProperty( function _removeData ( element, key ) {
     if ( element._peakoId ) {
       delete _data[ element._peakoId ][ key ];
     }
   } );
 } )();
 
-baseForIn( { height: require( './get-element-h' ), width: require( './get-element-w' ) }, function ( get, name ) {
+baseForIn( { height: getElementW, width: getElementH }, function ( get, name ) {
   DOMWrapper.prototype[ name ] = function () {
-    if ( arguments.length ) {
-      throw Error( '_().' + name + "( value ) is deprecated now. use _().style( '" + name + "', value ) instead" );
-    }
-
     if ( this[ 0 ] ) {
       return get( this[ 0 ] );
     }

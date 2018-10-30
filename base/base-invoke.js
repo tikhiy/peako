@@ -3,7 +3,7 @@
 var get = require( './base-get' );
 
 module.exports = function baseInvoke ( object, path, args ) {
-  if ( object != null ) {
+  if ( object !== null && typeof object !== 'undefined' ) {
     if ( path.length <= 1 ) {
       return object[ path[ 0 ] ].apply( object, args );
     }

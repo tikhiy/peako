@@ -3,7 +3,7 @@
 var ERR = require( './constants' ).ERR;
 
 module.exports = function toObject ( value ) {
-  if ( value == null ) {
+  if ( value === null || typeof value === 'undefined' ) {
     throw TypeError( ERR.UNDEFINED_OR_NULL );
   }
 

@@ -1,7 +1,7 @@
 'use strict';
 
-var isObjectLike = require( './is-object-like' ),
-    isWindowLike = require( './is-window-like' );
+var isObjectLike = require( './is-object-like' );
+var isWindowLike = require( './is-window-like' );
 
 module.exports = function isDOMElement ( value ) {
   var nodeType;

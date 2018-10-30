@@ -4,7 +4,11 @@ var escape = require( './escape' );
 
 module.exports = function _textContent ( element, value ) {
   var result = '';
-  var children, i, l, child, type;
+  var children;
+  var child;
+  var type;
+  var i;
+  var l;
 
   if ( typeof value !== 'undefined' ) {
     element.innerHTML = escape( value );

@@ -2,9 +2,8 @@
 
 var baseAssign = require( './base/base-assign' );
 
-var isset = require( './isset' );
-
-var keys = require( './keys' );
+var isset      = require( './isset' );
+var keys       = require( './keys' );
 
 var defaults = [
   'altKey',        'bubbles',        'cancelable',
@@ -22,11 +21,10 @@ var defaults = [
 ];
 
 function Event ( original, options ) {
-
-  var i, k;
+  var i;
+  var k;
 
   if ( typeof original === 'object' ) {
-
     for ( i = defaults.length - 1; i >= 0; --i ) {
       if ( isset( k = defaults[ i ], original ) ) {
         this[ k ] = original[ k ];
@@ -41,10 +39,8 @@ function Event ( original, options ) {
       }
     }
 
-    this.original = this.originalEvent = original;
-
+    this.original = this.originalEvent = original; // eslint-disable-line no-multi-assign
     this.which = Event.which( original );
-
   } else {
     this.isTrusted = false;
   }
@@ -58,7 +54,6 @@ function Event ( original, options ) {
   if ( typeof options === 'object' ) {
     baseAssign( this, options, keys( options ) );
   }
-
 }
 
 Event.prototype = {
@@ -90,13 +85,12 @@ Event.prototype = {
 };
 
 Event.which = function which ( event ) {
-
   if ( event.which ) {
     return event.which;
   }
 
   if ( ! event.type.indexOf( 'key' ) ) {
-    if ( event.charCode != null ) {
+    if ( typeof event.charCode !== 'undefined' ) {
       return event.charCode;
     }
 
@@ -107,15 +101,15 @@ Event.which = function which ( event ) {
     return null;
   }
 
-  if ( event.button & 1 ) {
+  if ( event.button & 1 ) { // eslint-disable-line no-bitwise
     return 1;
   }
 
-  if ( event.button & 2 ) {
+  if ( event.button & 2 ) { // eslint-disable-line no-bitwise
     return 3;
   }
 
-  if ( event.button & 4 ) {
+  if ( event.button & 4 ) { // eslint-disable-line no-bitwise
     return 2;
   }
 

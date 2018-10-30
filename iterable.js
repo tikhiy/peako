@@ -1,8 +1,8 @@
 'use strict';
 
-var isArrayLikeObject = require( './is-array-like-object' ),
-    baseValues        = require( './base/base-values' ),
-    keys              = require( './keys' );
+var isArrayLikeObject = require( './is-array-like-object' );
+var baseValues        = require( './base/base-values' );
+var keys              = require( './keys' );
 
 module.exports = function iterable ( value ) {
   if ( isArrayLikeObject( value ) ) {

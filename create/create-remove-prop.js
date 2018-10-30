@@ -4,7 +4,9 @@ var _words = require( '../_words' );
 
 module.exports = function _createRemoveProp ( _removeProp ) {
   return function ( keys ) {
-    var element, i, j;
+    var element;
+    var i;
+    var j;
 
     if ( typeof keys === 'string'  ) {
       keys = _words( keys );

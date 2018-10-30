@@ -2,27 +2,22 @@
 
 var create = require( './create' );
 
-var toString = {}.toString,
-    types = create( null );
+var cache = create( null );
 
-module.exports = function getType ( value ) {
-  var type, tag;
+module.exports = function type ( value ) {
+  if ( typeof value !== 'object' && typeof value !== 'function' ) {
+    return typeof value;
+  }
 
   if ( value === null ) {
     return 'null';
   }
 
-  type = typeof value;
+  var string = Object.prototype.toString.call( value );
 
-  if ( type !== 'object' && type !== 'function' ) {
-    return type;
+  if ( ! cache[ string ] ) {
+    cache[ string ] = string.slice( 8, -1 ).toLowerCase();
   }
 
-  type = types[ tag = toString.call( value ) ];
-
-  if ( type ) {
-    return type;
-  }
-
-  return ( types[ tag ] = tag.slice( 8, -1 ).toLowerCase() );
+  return cache[ string ];
 };

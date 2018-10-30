@@ -5,7 +5,10 @@ var matches     = require( './matches-selector' );
 
 module.exports = function parent ( selector ) {
   var elements = this.stack();
-  var i, l, parent, element;
+  var element;
+  var parent;
+  var i;
+  var l;
 
   for ( i = 0, l = this.length; i < l; ++i ) {
     parent = ( element = this[ i ] ).nodeType === 1 && element.parentElement;

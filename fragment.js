@@ -15,13 +15,16 @@ function append ( fragment, elements ) {
 }
 
 module.exports = function fragment ( elements, context ) {
-
   var fragment = context.createDocumentFragment();
-
-  var i, l, j, div, tag, wrapper, element;
+  var element;
+  var wrapper;
+  var tag;
+  var div;
+  var i;
+  var j;
+  var l;
 
   for ( i = 0, l = elements.length; i < l; ++i ) {
-
     element = elements[ i ];
 
     if ( isObjectLike( element ) ) {
@@ -53,7 +56,6 @@ module.exports = function fragment ( elements, context ) {
     } else {
       fragment.appendChild( context.createTextNode( element ) );
     }
-
   }
 
   if ( div ) {
@@ -61,5 +63,4 @@ module.exports = function fragment ( elements, context ) {
   }
 
   return fragment;
-
 };

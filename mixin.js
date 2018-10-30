@@ -1,72 +1,66 @@
 'use strict';
 
+var memoize       = require( './internal/memoize' );
+
 var isPlainObject = require( './is-plain-object' );
+var toObject      = require( './to-object' );
+var keys          = require( './keys' );
+var isArray       = memoize( require( './is-array' ) );
 
-var toObject = require( './to-object' );
-
-var isArray = require( './is-array' );
-
-var keys = require( './keys' );
-
-module.exports = function mixin ( deep, object ) {
-
-  var l = arguments.length;
-
+/**
+ * @method peako.mixin
+ * @param  {boolean}    [deep=true]
+ * @param  {object}     target
+ * @param  {...object?} object
+ * @return {[type]}
+ */
+module.exports = function mixin ( deep, target ) {
+  var argsLength = arguments.length;
   var i = 2;
-
-
-  var names, exp, j, k, val, key, nowArray, src;
-
-  //  mixin( {}, {} )
+  var object;
+  var source;
+  var value;
+  var j;
+  var l;
+  var k;
 
   if ( typeof deep !== 'boolean' ) {
-    object = deep;
-    deep   = true;
-    i      = 1;
+    target = deep;
+    deep = true;
+    i = 1;
   }
 
-  // var extendable = {
-  //   extend: require( 'peako/mixin' )
-  // };
+  target = toObject( target );
 
-  // extendable.extend( { name: 'Extendable Object' } );
+  for ( ; i < argsLength; ++i ) {
+    object = arguments[ i ];
 
-  if ( i === l ) {
-
-    object = this; // jshint ignore: line
-
-    --i;
-
-  }
-
-  object = toObject( object );
-
-  for ( ; i < l; ++i ) {
-    names = keys( exp = toObject( arguments[ i ] ) );
-
-    for ( j = 0, k = names.length; j < k; ++j ) {
-      val = exp[ key = names[ j ] ];
-
-      if ( deep && val !== exp && ( isPlainObject( val ) || ( nowArray = isArray( val ) ) ) ) {
-        src = object[ key ];
-
-        if ( nowArray ) {
-          if ( ! isArray( src ) ) {
-            src = [];
-          }
-
-          nowArray = false;
-        } else if ( ! isPlainObject( src ) ) {
-          src = {};
-        }
-
-        object[ key ] = mixin( true, src, val );
-      } else {
-        object[ key ] = val;
-      }
+    if ( ! object ) {
+      continue;
     }
 
+    for ( k = keys( object ), j = 0, l = k.length; j < l; ++j ) {
+      value = object[ k[ j ] ];
+
+      if ( deep && isPlainObject( value ) || isArray( value ) ) {
+        source = target[ k[ j ] ];
+
+        if ( isArray( value ) ) {
+          if ( ! isArray( source ) ) {
+            source = [];
+          }
+        } else {
+          if ( ! isPlainObject( source ) ) {
+            source = {};
+          }
+        }
+
+        target[ k[ j ] ] = mixin( true, source, value );
+      } else {
+        target[ k[ j ] ] = value;
+      }
+    }
   }
 
-  return object;
+  return target;
 };

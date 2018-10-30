@@ -2,8 +2,8 @@
 
 module.exports = function fromPairs ( pairs ) {
   var object = {};
-
-  var i, l;
+  var i;
+  var l;
 
   for ( i = 0, l = pairs.length; i < l; ++i ) {
     object[ pairs[ i ][ 0 ] ] = pairs[ i ][ 1 ];

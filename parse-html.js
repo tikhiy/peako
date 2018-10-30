@@ -1,7 +1,7 @@
 'use strict';
 
-var baseCloneArray = require( './base/base-clone-array' ),
-    fragment       = require( './fragment' );
+var baseCloneArray = require( './base/base-clone-array' );
+var fragment       = require( './fragment' );
 
 module.exports = function parseHTML ( string, context ) {
   if ( /^(?:<([\w-]+)><\/[\w-]+>|<([\w-]+)(?:\s*\/)?>)$/.test( string ) ) {

@@ -21,7 +21,7 @@ if ( typeof document !== 'undefined' ) {
   peako = require( './_' );
   peako.DOMWrapper = require( './DOMWrapper' );
 } else {
-  peako = function peako () {};
+  peako = function peako () {}; // eslint-disable-line brace-rules/brace-on-same-line
 }
 
 peako.ajax              = require( './ajax' );
@@ -103,7 +103,7 @@ peako.compound          = require( './compound' );
 peako.debounce          = require( './debounce' );
 
 if ( typeof self !== 'undefined' ) {
-  self.peako = self._ = peako;
+  self.peako = self._ = peako; // eslint-disable-line no-multi-assign
 }
 
 module.exports = peako;

@@ -1,22 +1,20 @@
 'use strict';
 
-var _unescape = require( './_unescape' ),
-    isSymbol  = require( './is-symbol' );
+var _unescape = require( './_unescape' );
+var isSymbol  = require( './is-symbol' );
 
-module.exports = function toKey ( val ) {
-  var key;
-
-  if ( typeof val === 'string' ) {
-    return _unescape( val );
+module.exports = function ( value ) {
+  if ( typeof value === 'string' ) {
+    return _unescape( value );
   }
 
-  if ( isSymbol( val ) ) {
-    return val;
+  if ( isSymbol( value ) ) {
+    return value;
   }
 
-  key = '' + val;
+  var key = '' + value;
 
-  if ( key === '0' && 1 / val === -Infinity ) {
+  if ( key === '0' && 1 / value === -Infinity ) {
     return '-0';
   }
 

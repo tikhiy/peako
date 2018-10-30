@@ -1,10 +1,12 @@
 'use strict';
 
-var callIteratee = require( '../call-iteratee' ),
-    isset        = require( '../isset' );
+var callIteratee = require( '../call-iteratee' );
+var isset        = require( '../isset' );
 
 module.exports = function baseForEach ( arr, fn, ctx, fromRight ) {
-  var i, j, idx;
+  var idx;
+  var i;
+  var j;
 
   for ( i = -1, j = arr.length - 1; j >= 0; --j ) {
     if ( fromRight ) {

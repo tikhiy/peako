@@ -4,13 +4,13 @@
  * @param {string} name Must be 'Width' or 'Height' (capitalized).
  */
 module.exports = function createGetElementDimension ( name ) {
-
   /**
    * @param {Window|Node} e
    */
   return function ( e ) {
-
-    var v, b, d;
+    var v;
+    var b;
+    var d;
 
     // if the element is a window
 
@@ -41,6 +41,5 @@ module.exports = function createGetElementDimension ( name ) {
     }
 
     return v;
-
   };
 };

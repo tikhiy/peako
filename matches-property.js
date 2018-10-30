@@ -1,21 +1,19 @@
 'use strict';
 
-var castPath = require( './cast-path' ),
-    get      = require( './base/base-get' ),
-    ERR      = require( './constants' ).ERR;
+var castPath = require( './cast-path' );
+var get      = require( './base/base-get' );
+var ERR      = require( './constants' ).ERR;
 
 module.exports = function matchesProperty ( property ) {
-
-  var path  = castPath( property[ 0 ] ),
-      value = property[ 1 ];
+  var path  = castPath( property[ 0 ] );
+  var value = property[ 1 ];
 
   if ( ! path.length ) {
     throw Error( ERR.NO_PATH );
   }
 
   return function ( object ) {
-
-    if ( object == null ) {
+    if ( object === null || typeof object === 'undefined' ) {
       return false;
     }
 
@@ -24,7 +22,5 @@ module.exports = function matchesProperty ( property ) {
     }
 
     return object[ path[ 0 ] ] === value;
-
   };
-
 };

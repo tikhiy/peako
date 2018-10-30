@@ -1,17 +1,19 @@
 'use strict';
 
-var baseExec  = require( './base/base-exec' ),
-    _unescape = require( './_unescape' ),
-    isKey     = require( './is-key' ),
-    toKey     = require( './to-key' ),
-    _type     = require( './_type' );
+var _unescape = require( './_unescape' );
+var _type     = require( './_type' );
+
+var baseExec  = require( './base/base-exec' );
+
+var isKey     = require( './is-key' );
+var toKey     = require( './to-key' );
 
 var rProperty = /(^|\.)\s*([_a-z]\w*)\s*|\[\s*((?:-)?(?:\d+|\d*\.\d+)|("|')(([^\\]\\(\\\\)*|[^\4])*)\4)\s*\]/gi;
 
 function stringToPath ( str ) {
-  var path = baseExec( rProperty, str ),
-      i = path.length - 1,
-      val;
+  var path = baseExec( rProperty, str );
+  var i = path.length - 1;
+  var val;
 
   for ( ; i >= 0; --i ) {
     val = path[ i ];
@@ -20,7 +22,7 @@ function stringToPath ( str ) {
     if ( val[ 2 ] ) {
       path[ i ] = val[ 2 ];
     // [ "" ] || [ '' ]
-    } else if ( val[ 5 ] != null ) {
+    } else if ( typeof val[ 5 ] === 'string' ) {
       path[ i ] = _unescape( val[ 5 ] );
     // [ 0 ]
     } else {
@@ -32,7 +34,9 @@ function stringToPath ( str ) {
 }
 
 function castPath ( val ) {
-  var path, l, i;
+  var path;
+  var i;
+  var l;
 
   if ( isKey( val ) ) {
     return [ toKey( val ) ];

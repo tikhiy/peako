@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function isset ( key, obj ) {
-  if ( obj == null ) {
+  if ( obj === null || typeof obj === 'undefined' ) {
     return false;
   }
 

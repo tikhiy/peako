@@ -1,12 +1,10 @@
 'use strict';
 
-var isObjectLike = require( './is-object-like' ),
-    isLength = require( './is-length' );
-
-var toString = {}.toString;
+var isObjectLike = require( './is-object-like' );
+var isLength     = require( './is-length' );
 
 module.exports = Array.isArray || function isArray ( value ) {
   return isObjectLike( value ) &&
     isLength( value.length ) &&
-    toString.call( value ) === '[object Array]';
+    Object.prototype.toString.call( value ) === '[object Array]';
 };

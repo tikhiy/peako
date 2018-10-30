@@ -2,12 +2,10 @@
 
 var ERR = require( './constants' ).ERR;
 
-var toString = Object.prototype.toString;
-
 module.exports = Object.getPrototypeOf || function getPrototypeOf ( obj ) {
   var prototype;
 
-  if ( obj == null ) {
+  if ( obj === null || typeof obj === 'undefined' ) {
     throw TypeError( ERR.UNDEFINED_OR_NULL );
   }
 
@@ -17,7 +15,7 @@ module.exports = Object.getPrototypeOf || function getPrototypeOf ( obj ) {
     return prototype;
   }
 
-  if ( toString.call( obj.constructor ) === '[object Function]' ) {
+  if ( Object.prototype.toString.call( obj.constructor ) === '[object Function]' ) {
     return obj.constructor.prototype;
   }
 

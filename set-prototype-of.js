@@ -1,10 +1,10 @@
 'use strict';
 
-var isPrimitive = require( './is-primitive' ),
-    ERR         = require( './constants' ).ERR;
+var isPrimitive = require( './is-primitive' );
+var ERR         = require( './constants' ).ERR;
 
 module.exports = Object.setPrototypeOf || function setPrototypeOf ( target, prototype ) {
-  if ( target == null ) {
+  if ( target === null || typeof target === 'undefined' ) {
     throw TypeError( ERR.UNDEFINED_OR_NULL );
   }
 

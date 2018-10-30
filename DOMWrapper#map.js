@@ -1,9 +1,10 @@
 'use strict';
 
 module.exports = function map ( fun ) {
-  var els = this.stack(),
-      len = this.length,
-      el, i;
+  var els = this.stack();
+  var len = this.length;
+  var el;
+  var i;
 
   els.length = this.length;
 

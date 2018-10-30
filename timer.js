@@ -15,29 +15,30 @@
 
 var timestamp = require( './timestamp' );
 
-var requestAF, cancelAF;
+var requestAF;
+var cancelAF;
 
-if ( typeof window !== 'undefined' ) {
-  cancelAF = window.cancelAnimationFrame ||
-    window.webkitCancelAnimationFrame ||
-    window.webkitCancelRequestAnimationFrame ||
-    window.mozCancelAnimationFrame ||
-    window.mozCancelRequestAnimationFrame;
-  requestAF = window.requestAnimationFrame ||
-    window.webkitRequestAnimationFrame ||
-    window.mozRequestAnimationFrame;
+if ( typeof self !== 'undefined' ) {
+  cancelAF = self.cancelAnimationFrame ||
+    self.webkitCancelAnimationFrame ||
+    self.webkitCancelRequestAnimationFrame ||
+    self.mozCancelAnimationFrame ||
+    self.mozCancelRequestAnimationFrame;
+  requestAF = self.requestAnimationFrame ||
+    self.webkitRequestAnimationFrame ||
+    self.mozRequestAnimationFrame;
 }
 
 var noRequestAnimationFrame = ! requestAF || ! cancelAF ||
   typeof navigator !== 'undefined' && /iP(ad|hone|od).*OS\s6/.test( navigator.userAgent );
 
 if ( noRequestAnimationFrame ) {
-  var lastRequestTime = 0,
-      frameDuration   = 1000 / 60;
+  var lastRequestTime = 0;
+  var frameDuration   = 1000 / 60;
 
   exports.request = function request ( animate ) {
-    var now             = timestamp(),
-        nextRequestTime = Math.max( lastRequestTime + frameDuration, now );
+    var now             = timestamp();
+    var nextRequestTime = Math.max( lastRequestTime + frameDuration, now );
 
     return setTimeout( function () {
       lastRequestTime = nextRequestTime;

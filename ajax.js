@@ -17,7 +17,7 @@ var hasOwnProperty = {}.hasOwnProperty;
  * @private
  */
 function createHTTPRequest () {
-  var HTTPFactories, i;
+  var HTTPFactories; var i;
 
   HTTPFactories = [
     function () {
@@ -47,7 +47,7 @@ function createHTTPRequest () {
 
   for ( i = 0; i < HTTPFactories.length; ++i ) {
     try {
-      return ( createHTTPRequest = HTTPFactories[ i ] )(); // jshint ignore: line
+      return ( createHTTPRequest = HTTPFactories[ i ] )();
     } catch ( ex ) {}
   }
 
@@ -55,14 +55,20 @@ function createHTTPRequest () {
 }
 
 /**
- * @memberof peako
- * @param {string|object} path A URL or options.
- * @param {object} [options]
- * @param {string} [options.path] A URL.
- * @param {string} [options.method] Default to 'GET' when no options or no `data` in options, or 'POST' when `data` in options.
- * @param {boolean} [options.async] Default to `true` when options specified, or `false` when no options.
- * @param {function} [options.success] Will be called when a server respond with 2XX status code.
- * @param {function} [options.error] Will be called when a server respond with other status code or an error occurs while parsing response.
+ * @method peako.ajax
+ * @param  {string|object} path              A URL or options.
+ * @param  {object}        [options]         An options.
+ * @param  {string}        [options.path]    A URL.
+ * @param  {string}        [options.method]  Default to 'GET' when no options or no `data` in
+ *                                           options, or 'POST' when `data` in options.
+ * @param  {boolean}       [options.async]   Default to `true` when options specified, or `false`
+ *                                           when no options.
+ * @param  {function}      [options.success] Will be called when a server respond with 2xx status
+ *                                           code.
+ * @param  {function}      [options.error]   Will be called when a server respond with other status
+ *                                           code or an error occurs while parsing response.
+ * @return {string?}                         Returns a response data if a request was synchronous
+ *                                                   otherwise `null`.
  * @example <caption>Synchronous (do not use) GET request</caption>
  * var data = ajax('./data.json');
  * @example <caption>Synchronous (do not use) GET request, with callbacks</caption>
@@ -100,9 +106,12 @@ function createHTTPRequest () {
  * });
  */
 function ajax ( path, options ) {
-  var data = null,
-      xhr = createHTTPRequest(),
-      async, timeoutId, type, name;
+  var data = null;
+  var xhr = createHTTPRequest();
+  var reqContentType;
+  var timeoutId;
+  var async;
+  var name;
 
   // _.ajax( options );
   // async = options.async || true
@@ -113,7 +122,7 @@ function ajax ( path, options ) {
 
   // _.ajax( path );
   // async = false
-  } else if ( options == null ) {
+  } else if ( typeof options === 'undefined' || options === null ) {
     options = _options;
     async = false;
 
@@ -125,25 +134,35 @@ function ajax ( path, options ) {
   }
 
   xhr.onreadystatechange = function () {
-    var object, error;
+    var resContentType;
+    var status;
+    var object;
+    var error;
 
     if ( this.readyState !== 4 ) {
       return;
     }
 
+    if ( this.status !== 1223 ) {
+      status = this.status;
+    } else {
+      status = 204;
+    }
+
+    resContentType = this.getResponseHeader( 'content-type' );
+
     object = {
-      status: this.status === 1223 ? 204 : this.status,
-      type: this.getResponseHeader( 'content-type' ),
+      status: status,
       path: path
     };
 
     data = this.responseText;
 
-    if ( object.type ) {
+    if ( resContentType ) {
       try {
-        if ( ! object.type.indexOf( 'application/json' ) ) {
+        if ( ! resContentType.indexOf( 'application/json' ) ) {
           data = JSON.parse( data );
-        } else if ( ! object.type.indexOf( 'application/x-www-form-urlencoded' ) ) {
+        } else if ( ! resContentType.indexOf( 'application/x-www-form-urlencoded' ) ) {
           data = qs.parse( data );
         }
       } catch ( _error ) {
@@ -151,8 +170,8 @@ function ajax ( path, options ) {
       }
     }
 
-    if ( ! error && object.status >= 200 && object.status < 300 ) {
-      if ( timeoutId != null ) {
+    if ( ! error && status >= 200 && status < 300 ) {
+      if ( typeof timeoutId !== 'undefined' ) {
         clearTimeout( timeoutId );
       }
 
@@ -177,23 +196,23 @@ function ajax ( path, options ) {
       }
 
       if ( name.toLowerCase() === 'content-type' ) {
-        type = options.headers[ name ];
+        reqContentType = options.headers[ name ];
       }
 
       xhr.setRequestHeader( name, options.headers[ name ] );
     }
   }
 
-  if ( async && options.timeout != null ) {
+  if ( async && typeof options.timeout !== 'undefined' && options.timeout !== null ) {
     timeoutId = setTimeout( function () {
       xhr.abort();
     }, options.timeout );
   }
 
-  if ( type != null && 'data' in options ) {
-    if ( ! type.indexOf( 'application/json' ) ) {
+  if ( typeof reqContentType !== 'undefined' && reqContentType !== null && 'data' in options ) {
+    if ( ! reqContentType.indexOf( 'application/json' ) ) {
       xhr.send( JSON.stringify( options.data ) );
-    } else if ( ! type.indexOf( 'application/x-www-form-urlencoded' ) ) {
+    } else if ( ! reqContentType.indexOf( 'application/x-www-form-urlencoded' ) ) {
       xhr.send( qs.stringify( options.data ) );
     } else {
       xhr.send( options.data );

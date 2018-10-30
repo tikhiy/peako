@@ -1,13 +1,14 @@
 'use strict';
 
-var support = require( './support/support-define-property' );
+var baseDefineProperty = require( './base/base-define-property' );
 
-var defineProperty, baseDefineProperty, isPrimitive;
+var support            = require( './support/support-define-property' );
+
+var isPrimitive        = require( './is-primitive' );
+
+var defineProperty;
 
 if ( support !== 'full' ) {
-  isPrimitive        = require( './is-primitive' );
-  baseDefineProperty = require( './base/base-define-property' );
-
   defineProperty = function defineProperty ( object, key, descriptor ) {
     if ( support !== 'not-supported' ) {
       try {

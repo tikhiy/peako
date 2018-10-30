@@ -1,7 +1,7 @@
 'use strict';
 
-var isFinite  = require( './is-finite' ),
-    constants = require( './constants' );
+var isFinite  = require( './is-finite' );
+var constants = require( './constants' );
 
 module.exports = function isSafeInteger ( value ) {
   return isFinite( value ) &&

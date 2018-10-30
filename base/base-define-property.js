@@ -2,22 +2,21 @@
 
 var isset = require( '../isset' );
 
-var undefined; // jshint ignore: line
-
-var defineGetter = Object.prototype.__defineGetter__,
-    defineSetter = Object.prototype.__defineSetter__;
+var defineGetter = Object.prototype.__defineGetter__;
+var defineSetter = Object.prototype.__defineSetter__;
 
 function baseDefineProperty ( object, key, descriptor ) {
-  var hasGetter = isset( 'get', descriptor ),
-      hasSetter = isset( 'set', descriptor ),
-      get, set;
+  var hasGetter = isset( 'get', descriptor );
+  var hasSetter = isset( 'set', descriptor );
+  var get;
+  var set;
 
   if ( hasGetter || hasSetter ) {
-    if ( hasGetter && typeof ( get = descriptor.get ) !== 'function' ) {
+    if ( hasGetter && typeof( get = descriptor.get ) !== 'function' ) {
       throw TypeError( 'Getter must be a function: ' + get );
     }
 
-    if ( hasSetter && typeof ( set = descriptor.set ) !== 'function' ) {
+    if ( hasSetter && typeof( set = descriptor.set ) !== 'function' ) {
       throw TypeError( 'Setter must be a function: ' + set );
     }
 
@@ -34,12 +33,12 @@ function baseDefineProperty ( object, key, descriptor ) {
         defineSetter.call( object, key, set );
       }
     } else {
-      throw Error( 'Cannot define getter or setter' );
+      throw Error( 'Cannot define a getter or setter' );
     }
   } else if ( isset( 'value', descriptor ) ) {
     object[ key ] = descriptor.value;
   } else if ( ! isset( key, object ) ) {
-    object[ key ] = undefined;
+    object[ key ] = void 0;
   }
 
   return object;

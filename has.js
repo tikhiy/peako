@@ -1,10 +1,10 @@
 'use strict';
 
-var castPath = require( './cast-path' ),
-    toObject = require( './to-object' ),
-    isset    = require( './isset' ),
-    baseHas  = require( './base/base-has' ),
-    ERR      = require( './constants' ).ERR;
+var castPath = require( './cast-path' );
+var toObject = require( './to-object' );
+var isset    = require( './isset' );
+var baseHas  = require( './base/base-has' );
+var ERR      = require( './constants' ).ERR;
 
 module.exports = function has ( obj, path ) {
   var l = ( path = castPath( path ) ).length;

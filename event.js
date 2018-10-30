@@ -86,9 +86,11 @@ exports.on = function on ( element, type, selector, listener, useCapture, one ) 
 };
 
 exports.off = function off ( element, type, selector, listener, useCapture ) {
-  var i, items, item;
+  var items;
+  var item;
+  var i;
 
-  if ( type == null ) {
+  if ( type === null || typeof type === 'undefined' ) {
     for ( i = events.types.length - 1; i >= 0; --i ) {
       event.off( element, events.types[ i ], selector );
     }
@@ -104,11 +106,10 @@ exports.off = function off ( element, type, selector, listener, useCapture ) {
     item = items[ i ];
 
     if ( item.element !== element ||
-      listener != null && (
+      typeof listener !== 'undefined' && (
         item.listener !== listener ||
         item.useCapture !== useCapture ||
-        item.selector && item.selector !== selector ) )
-    {
+        item.selector && item.selector !== selector ) ) {
       continue;
     }
 
@@ -129,7 +130,9 @@ exports.off = function off ( element, type, selector, listener, useCapture ) {
 
 exports.trigger = function trigger ( element, type, data ) {
   var items = events.items[ type ];
-  var i, closest, item;
+  var closest;
+  var item;
+  var i;
 
   if ( ! items ) {
     return;
@@ -141,17 +144,13 @@ exports.trigger = function trigger ( element, type, data ) {
     if ( element ) {
       closest = closestNode( element, item.selector || item.element );
     } else if ( item.selector ) {
-
-      // jshint -W083
-
-      new DOMWrapper( item.selector ).each( function () {
-        item.wrapper( createEventWithTarget( type, data, this ), this );
-      } );
-
-      // jshint +W083
+      new DOMWrapper( item.selector ).each( ( function ( item ) {
+        return function () {
+          item.wrapper( createEventWithTarget( type, data, this ), this );
+        };
+      } )( item ) );
 
       continue;
-
     } else {
       closest = item.element;
     }
@@ -163,7 +162,12 @@ exports.trigger = function trigger ( element, type, data ) {
 };
 
 exports.copy = function copy ( target, source, deep ) {
-  var i, j, l, items, item, type;
+  var items;
+  var item;
+  var type;
+  var i;
+  var j;
+  var l;
 
   for ( i = events.types.length - 1; i >= 0; --i ) {
 

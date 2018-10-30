@@ -1,12 +1,13 @@
 'use strict';
 
-var mixin = require( './mixin' ),
-    clone = require( './clone' );
+var mixin = require( './mixin' );
 
-module.exports = function defaults ( defaults, object ) {
-  if ( object == null ) {
-    return clone( true, defaults );
+function defaults ( defaults, object ) {
+  if ( object ) {
+    return mixin( {}, defaults, object );
   }
 
-  return mixin( true, clone( true, defaults ), object );
-};
+  return mixin( {}, defaults );
+}
+
+module.exports = defaults;

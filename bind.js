@@ -1,8 +1,9 @@
 'use strict';
 
 var _throwArgumentException = require( './_throw-argument-exception' );
-var constants = require( './constants' );
-var indexOf = require( './index-of' );
+
+var constants               = require( './constants' );
+var indexOf                 = require( './index-of' );
 
 // Function::bind() polyfill.
 
@@ -32,7 +33,8 @@ var _bind = Function.prototype.bind || function bind ( c ) {
 function process ( p, a ) {
   var r = [];
   var j = -1;
-  var i, l;
+  var i;
+  var l;
 
   for ( i = 0, l = p.length; i < l; ++i ) {
     if ( p[ i ] === constants.PLACEHOLDER ) {

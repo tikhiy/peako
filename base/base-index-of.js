@@ -2,15 +2,19 @@
 
 var baseToIndex = require( './base-to-index' );
 
-var indexOf     = Array.prototype.indexOf,
-    lastIndexOf = Array.prototype.lastIndexOf;
+var indexOf     = Array.prototype.indexOf;
+var lastIndexOf = Array.prototype.lastIndexOf;
 
 function baseIndexOf ( arr, search, fromIndex, fromRight ) {
-  var l, i, j, idx, val;
+  var idx;
+  var val;
+  var i;
+  var j;
+  var l;
 
   // use the native function if it is supported and the search is not nan.
 
-  if ( search === search && ( idx = fromRight ? lastIndexOf : indexOf ) ) {
+  if ( search === search && ( idx = fromRight ? lastIndexOf : indexOf ) ) { // eslint-disable-line no-ternary
     return idx.call( arr, search, fromIndex );
   }
 

@@ -1,7 +1,7 @@
 'use strict';
 
-var castPath = require( '../cast-path' ),
-    noop     = require( '../noop' );
+var castPath = require( '../cast-path' );
+var noop     = require( '../noop' );
 
 module.exports = function createProperty ( baseProperty, useArgs ) {
   return function ( path ) {

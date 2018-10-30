@@ -3,9 +3,9 @@
 var isset = require( '../isset' );
 
 module.exports = function baseGet ( obj, path, off ) {
-  var l = path.length - off,
-      i = 0,
-      key;
+  var i = 0;
+  var l = path.length - off;
+  var key;
 
   for ( ; i < l; ++i ) {
     key = path[ i ];

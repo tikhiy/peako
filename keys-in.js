@@ -3,8 +3,8 @@
 var toObject = require( './to-object' );
 
 module.exports = function getKeysIn ( obj ) {
-  var keys = [],
-      key;
+  var keys = [];
+  var key;
 
   obj = toObject( obj );
 
