@@ -3,26 +3,9 @@
   "version": "1.0.0",
   "description": "A library for manipulating JS objects, HTML, & CSS (based on jQuery & Lodash).",
   "main": "peako.js",
-  "scripts": {
-    "prepublish": "make --always-make lint test gzip"
+  "directories": {
+    "test": "test"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/silent-tempest/peako.git"
-  },
-  "keywords": [
-    "object",
-    "array",
-    "html",
-    "css"
-  ],
-  "author": "Vladislav Tikhiy (SILENT)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/silent-tempest/peako/issues"
-  },
-  "homepage": "https://github.com/silent-tempest/peako#readme",
-  "directories": {},
   "dependencies": {},
   "devDependencies": {
     "browserify": "^16.2.2",
@@ -32,5 +15,23 @@
     "eslint-config-v6.js": "github:tikhiy/eslint-config-v6.js#master",
     "mocha": "^5.2.0",
     "uglify-js": "^3.4.5"
-  }
+  },
+  "scripts": {
+    "prepublish": "make --always-make lint test gzip"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tikhiy/peako.git"
+  },
+  "keywords": [
+    "html",
+    "css",
+    "dom"
+  ],
+  "author": "Vladislav Tikhiy (SILENT)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tikhiy/peako/issues"
+  },
+  "homepage": "https://github.com/tikhiy/peako#readme"
 }
