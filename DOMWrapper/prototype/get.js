@@ -1,6 +1,6 @@
 'use strict';
 
-var clone = require( '../base/base-clone-array' );
+var clone = require( '../../base/base-clone-array' );
 
 module.exports = function get ( index ) {
   if ( typeof index === 'undefined' ) {

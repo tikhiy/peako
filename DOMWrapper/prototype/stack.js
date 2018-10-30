@@ -1,10 +1,10 @@
 'use strict';
 
-var _first        = require( '../internal/first' );
+var _first        = require( '../../internal/first' );
 
-var baseCopyArray = require( '../base/base-copy-array' );
+var baseCopyArray = require( '../../base/base-copy-array' );
 
-var DOMWrapper    = require( '.' );
+var DOMWrapper    = require( '..' );
 
 module.exports = function stack ( elements ) {
   var wrapper = new DOMWrapper();

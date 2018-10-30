@@ -1,11 +1,13 @@
 /*!
- * Copyright (c) 2017-2018 SILENT
- * Released under the MIT License.
- *
- * peako:               https://github.com/silent-tempest/peako
- * based on jquery:     https://github.com/jquery/jquery
- * based on underscore: https://github.com/jashkenas/underscore
- * based on lodash:     https://github.com/lodash/lodash
+ * Copyright (c) 2017-2018 Vladislav Tikhiy (SILENT)
+ * Released under the MIT license.
+ * https://github.com/tikhiy/peako
+ */
+
+/*!
+ * Based on jQuery        https://github.com/jquery/jquery
+ * Based on Underscore.js https://github.com/jashkenas/underscore
+ * Based on Lodash        https://github.com/lodash/lodash
  */
 
 'use strict';

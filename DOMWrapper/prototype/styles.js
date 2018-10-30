@@ -1,6 +1,6 @@
 'use strict';
 
-var camelize = require( '../camelize' );
+var camelize = require( '../../camelize' );
 
 module.exports = function styles ( keys ) {
   var element = this[ 0 ];

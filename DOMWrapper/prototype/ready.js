@@ -1,6 +1,6 @@
 'use strict';
 
-var event = require( '../event' );
+var event = require( '../../event' );
 
 module.exports = function ready ( cb ) {
   var doc = this[ 0 ];
