@@ -1,8 +1,14 @@
 # peako
 
-### Installation ([Node.js](https://nodejs.org/en/about/) / [Browserify](http://browserify.org/))
+[![Size](http://img.badgesize.io/tikhiy/peako/next/dist/peako.min.js.gz.svg?&label=lightweight)](https://github.com/ngryman/badge-size)
 
-`$ npm i --save peako` or `$ npm i -D peako`
+### Installation
+
+```bash
+$ npm install --save github:tikhiy/peako#next
+```
+
+##### Example
 
 ```javascript
 var _ = require( 'peako/_' );
@@ -12,14 +18,22 @@ _( document ).on( 'click', 'a', function ( event ) {
 } );
 ```
 
-### Installation (Browser / Workers)
+### Installation
 
 ```html
-<script src="https://rawgit.com/silent-tempest/dist/dev/dist/peako.min.js"></script>
+<script src="peako.min.js"></script>
 ```
 
+##### Example
+
 ```javascript
-_( self ).scroll( function ( event ) {
-  console.log( 'beep boop', peako.type( event.original ) );
+var listener = _.debounce( 50, function ( event ) {
+  console.log( 'onscroll called!' );
 } );
+
+_( self ).scroll( listener );
 ```
+
+### License
+
+Released under the [MIT](LICENSE) license.
