@@ -8,19 +8,19 @@
 module.exports = {
 
   /**
-   * Request headers.
+   * A request headers.
    */
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
   },
 
   /**
-   * Milliseconds after which the request should be canceled.
+   * A timeout for cancel a request.
    */
   timeout: 1000 * 60,
 
   /**
-   * The request method: 'GET', 'POST' (others are ignored, instead, 'GET' will be used).
+   * A request method: 'GET', 'POST' (others are ignored, instead, 'GET' will be used).
    */
   method: 'GET'
 };

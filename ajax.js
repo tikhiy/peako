@@ -59,8 +59,8 @@ function createHTTPRequest () {
  * @param  {string|object} path              A URL or options.
  * @param  {object}        [options]         An options.
  * @param  {string}        [options.path]    A URL.
- * @param  {string}        [options.method]  Default to 'GET' when no options or no `data` in
- *                                           options, or 'POST' when `data` in options.
+ * @param  {string}        [options.method]  A request method. If no present GET or POST will be
+ *                                           used.
  * @param  {boolean}       [options.async]   Default to `true` when options specified, or `false`
  *                                           when no options.
  * @param  {function}      [options.success] Will be called when a server respond with 2xx status
@@ -110,6 +110,7 @@ function ajax ( path, options ) {
   var data = null;
   var xhr = createHTTPRequest();
   var reqContentType;
+  var method;
   var async;
   var name;
 
@@ -143,11 +144,9 @@ function ajax ( path, options ) {
       return;
     }
 
-    if ( this.status !== 1223 ) {
-      status = this.status;
-    } else {
-      status = 204;
-    }
+    status = this.status === 1223 // eslint-disable-line no-ternary
+      ? 204
+      : this.status;
 
     resContentType = this.getResponseHeader( 'content-type' );
 
@@ -183,11 +182,15 @@ function ajax ( path, options ) {
     }
   };
 
-  if ( options.method === 'POST' || 'data' in options ) {
-    xhr.open( 'POST', path, async );
-  } else {
-    xhr.open( 'GET', path, async );
+  method = options.method;
+
+  if ( typeof method === 'undefined' ) {
+    method = 'data' in options // eslint-disable-line no-ternary
+      ? 'POST'
+      : 'GET';
   }
+
+  xhr.open( method, path, async );
 
   if ( options.headers ) {
     for ( name in options.headers ) {
