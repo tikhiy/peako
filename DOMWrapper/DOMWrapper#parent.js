@@ -1,7 +1,7 @@
 'use strict';
 
-var baseIndexOf = require( './base/base-index-of' );
-var matches     = require( './matches-selector' );
+var baseIndexOf = require( '../base/base-index-of' );
+var matches     = require( '../matches-selector' );
 
 module.exports = function parent ( selector ) {
   var elements = this.stack();

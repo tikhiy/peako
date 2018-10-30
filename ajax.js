@@ -106,10 +106,10 @@ function createHTTPRequest () {
  * });
  */
 function ajax ( path, options ) {
+  var timeoutId = null;
   var data = null;
   var xhr = createHTTPRequest();
   var reqContentType;
-  var timeoutId;
   var async;
   var name;
 
@@ -171,7 +171,7 @@ function ajax ( path, options ) {
     }
 
     if ( ! error && status >= 200 && status < 300 ) {
-      if ( typeof timeoutId !== 'undefined' ) {
+      if ( timeoutId !== null ) {
         clearTimeout( timeoutId );
       }
 

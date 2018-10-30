@@ -1,12 +1,12 @@
 'use strict';
 
-var _throwArgumentException = require( './_throw-argument-exception' );
+var _ArgumentException = require( './internal/ArgumentException' );
 
 module.exports = function debounce ( maxWait, fn ) {
   var timeoutId = null;
 
   if ( typeof fn !== 'function' ) {
-    _throwArgumentException( fn, 'a function' );
+    throw _ArgumentException( fn, 'a function' );
   }
 
   function debounced () {

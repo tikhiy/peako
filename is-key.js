@@ -1,6 +1,6 @@
 'use strict';
 
-var _type    = require( './_type' );
+var _type    = require( './internal/type' );
 
 var rDeepKey = /(^|[^\\])(\\\\)*(\.|\[)/;
 

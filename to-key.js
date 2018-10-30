@@ -1,6 +1,7 @@
 'use strict';
 
-var _unescape = require( './_unescape' );
+var _unescape = require( './internal/unescape' );
+
 var isSymbol  = require( './is-symbol' );
 
 module.exports = function ( value ) {

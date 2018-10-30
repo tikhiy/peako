@@ -1,6 +1,6 @@
 'use strict';
 
-var isArray = require( './is-array' );
+var isArray = require( '../is-array' );
 
 module.exports = function css ( k, v ) {
   if ( isArray( k ) ) {

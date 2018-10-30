@@ -2,23 +2,23 @@
 
 module.exports = DOMWrapper;
 
-var _textContent         = require( './_text-content' );
-var _first               = require( './_first' );
+var _textContent         = require( '../internal/text-content' );
+var _first               = require( '../internal/first' );
 
-var support              = require( './support/support-get-attribute' );
+var support              = require( '../support/support-get-attribute' );
 
-var createRemoveProperty = require( './create/create-remove-prop' );
+var createRemoveProperty = require( '../create/create-remove-prop' );
 
-var baseForEach          = require( './base/base-for-each' );
-var baseForIn            = require( './base/base-for-in' );
+var baseForEach          = require( '../base/base-for-each' );
+var baseForIn            = require( '../base/base-for-in' );
 
-var isArrayLikeObject    = require( './is-array-like-object' );
-var isDOMElement         = require( './is-dom-element' );
-var getElementW          = require( './get-element-w' );
-var getElementH          = require( './get-element-h' );
-var parseHTML            = require( './parse-html' );
-var access               = require( './access' );
-var event                = require( './event' );
+var isArrayLikeObject    = require( '../is-array-like-object' );
+var isDOMElement         = require( '../is-dom-element' );
+var getElementW          = require( '../get-element-w' );
+var getElementH          = require( '../get-element-h' );
+var parseHTML            = require( '../parse-html' );
+var access               = require( '../access' );
+var event                = require( '../event' );
 
 var rselector = /^(?:#([\w-]+)|([\w-]+)|\.([\w-]+))$/;
 
@@ -263,7 +263,7 @@ baseForIn( {
 }, void 0, true, [ 'disabled', 'checked', 'value', 'text', 'html' ] );
 
 ( function () {
-  var props = require( './props' );
+  var props = require( '../props' );
 
   function _attr ( element, key, value, chainable ) {
     if ( element.nodeType !== 1 ) {

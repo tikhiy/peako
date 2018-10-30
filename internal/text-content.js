@@ -1,6 +1,6 @@
 'use strict';
 
-var escape = require( './escape' );
+var escape = require( '../escape' );
 
 module.exports = function _textContent ( element, value ) {
   var result = '';

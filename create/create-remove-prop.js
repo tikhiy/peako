@@ -1,6 +1,6 @@
 'use strict';
 
-var _words = require( '../_words' );
+var _words = require( '../internal/words' );
 
 module.exports = function _createRemoveProp ( _removeProp ) {
   return function ( keys ) {

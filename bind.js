@@ -1,6 +1,6 @@
 'use strict';
 
-var _throwArgumentException = require( './_throw-argument-exception' );
+var _ArgumentException = require( './internal/ArgumentException' );
 
 var constants               = require( './constants' );
 var indexOf                 = require( './index-of' );
@@ -74,7 +74,7 @@ module.exports = function bind ( f, c ) {
   var p;
 
   if ( typeof f !== 'function' ) {
-    _throwArgumentException( f, 'a function' );
+    throw _ArgumentException( f, 'a function' );
   }
 
   // no partial arguments were provided

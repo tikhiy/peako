@@ -1,13 +1,16 @@
 {
   "source": {
-    "exclude": [
-      "./dist/",
-      "./node_modules/",
-      "./bench/",
-      "./_peako-old.js",
-      "./_mixin.js"
-    ],
+    "exclude": [ "node_modules", "bench", "docs", "dist", "test" ],
+    "include": [ ".", "README.md" ]
+  },
 
-    "excludePattern": "(^|/)_"
-  }
+  "opts": {
+    "destination": "docs",
+    "recurse": true,
+    "private": false
+  },
+
+  "plugins": [
+    "plugins/markdown"
+  ]
 }

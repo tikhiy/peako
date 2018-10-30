@@ -2,16 +2,16 @@
 
 /**
  * @private
- * @method memoize
+ * @method _memoize
  * @param  {function} function_
  * @return {function}
  */
-module.exports = function ( function_ ) {
+module.exports = function _memoize ( function_ ) {
   var called = false;
   var lastResult;
   var lastValue;
 
-  return function ( value ) {
+  return function memoized ( value ) {
     switch ( false ) {
       case called:
         called = true;

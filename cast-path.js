@@ -1,7 +1,7 @@
 'use strict';
 
-var _unescape = require( './_unescape' );
-var _type     = require( './_type' );
+var _unescape = require( './internal/unescape' );
+var _type     = require( './internal/type' );
 
 var baseExec  = require( './base/base-exec' );
 

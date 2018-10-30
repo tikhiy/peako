@@ -1,13 +1,13 @@
 'use strict';
 
-var _throwArgumentException = require( './_throw-argument-exception' );
+var _ArgumentException = require( './internal/ArgumentException' );
 var defaultTo = require( './default-to' );
 
 module.exports = function before ( n, fn ) {
   var value;
 
   if ( typeof fn !== 'function' ) {
-    _throwArgumentException( fn, 'a function' );
+    throw _ArgumentException( fn, 'a function' );
   }
 
   n = defaultTo( n, 1 );

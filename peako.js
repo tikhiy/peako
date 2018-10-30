@@ -11,9 +11,7 @@
 'use strict';
 
 /**
- * @constructor peako
- * @param {string} selector
- * @alias _
+ * @namespace peako
  */
 var peako;
 
