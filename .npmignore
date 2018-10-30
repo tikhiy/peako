@@ -1,2 +1,9 @@
 dist
-out
+docs
+test
+.eslintignore
+.eslintrc.json
+.gitignore
+.jsdoc.json
+.npmignore
+Makefile
