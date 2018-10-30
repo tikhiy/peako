@@ -1,11 +1,10 @@
 {
   "name": "peako",
   "version": "0.0.5",
-  "description": "A library for manipulating JS objects, HTML, & CSS.",
+  "description": "A library for manipulating JS objects, HTML, & CSS (based on jQuery & Lodash).",
   "main": "peako.js",
   "scripts": {
-    "build": "make",
-    "lint": "jshint . --verbose"
+    "prepublish": "make --always-make lint test gzip"
   },
   "repository": {
     "type": "git",
@@ -17,7 +16,7 @@
     "html",
     "css"
   ],
-  "author": "SILENT",
+  "author": "Vladislav Tikhiy (SILENT)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/silent-tempest/peako/issues"

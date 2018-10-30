@@ -5,7 +5,7 @@
 ### Installation
 
 ```bash
-$ npm install --save github:tikhiy/peako#next
+npm install --save github:tikhiy/peako#next
 ```
 
 ##### Example
@@ -33,6 +33,20 @@ var listener = _.debounce( 50, function ( event ) {
 
 _( self ).scroll( listener );
 ```
+
+### Development
+
+##### Linting
+
+* `make lint`
+
+##### Testing
+
+* `make test`
+
+##### Before Committing
+
+* `npm run prepublish`
 
 ### License
 
