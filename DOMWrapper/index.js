@@ -4,6 +4,7 @@ module.exports = DOMWrapper;
 
 var _textContent         = require( '../internal/text-content' );
 var _first               = require( '../internal/first' );
+var _words               = require( '../internal/words' );
 
 var support              = require( '../support/support-get-attribute' );
 
@@ -143,20 +144,22 @@ DOMWrapper.prototype = {
 
 baseForIn( {
   trigger: 'trigger',
+  once:    'on',
   off:     'off',
-  one:     'on',
   on:      'on'
 }, function ( name, methodName ) {
   DOMWrapper.prototype[ methodName ] = function ( types, selector, listener, useCapture ) {
-    var removeAll = name === 'off' && ! arguments.length;
-    var one = name === 'one';
+    var removeAll = methodName === 'off' && ! arguments.length;
+    var once = methodName === 'once';
     var element;
     var i;
     var j;
     var l;
 
     if ( ! removeAll ) {
-      if ( ! ( types = types.match( /[^\s\uFEFF\xA0]+/g ) ) ) {
+      types = _words( types );
+
+      if ( ! types.length ) {
         return this;
       }
 
@@ -166,7 +169,7 @@ baseForIn( {
     // off( types, listener, useCapture )
     // off( types, listener )
 
-    if ( name !== 'trigger' && typeof selector === 'function' ) {
+    if ( methodName !== 'trigger' && typeof selector === 'function' ) {
       if ( typeof listener !== 'undefined' ) {
         useCapture = listener;
       }
@@ -186,14 +189,26 @@ baseForIn( {
         event.off( element );
       } else {
         for ( j = 0; j < l; ++j ) {
-          event[ name ]( element, types[ j ], selector, listener, useCapture, one );
+          event[ name ]( element, types[ j ], selector, listener, useCapture, once );
         }
       }
     }
 
     return this;
   };
-}, void 0, true, [ 'trigger', 'off', 'one', 'on' ] );
+
+  if ( methodName === 'once' ) {
+    var count = 0;
+
+    DOMWrapper.prototype.one = function one () {
+      if ( count++ < 1 ) {
+        console.log( '"one" is deprecated now. Use "once" instead.' );
+      }
+
+      return this.once.apply( this, [].slice.call( arguments ) );
+    };
+  }
+}, void 0, true, [ 'trigger', 'once', 'off', 'on' ] );
 
 baseForEach( [
   'blur',        'focus',       'focusin',
