@@ -7,7 +7,7 @@ describe( 'peako.isObjectLike', function () {
     isObjectLike( null ).should.be.false;
   } );
 
-  it( 'returns "true" for a built-in object', function () {
+  it( 'returns "true" for built-in objects', function () {
     isObjectLike( Math ).should.be.true;
   } );
 

@@ -2,8 +2,9 @@
 
 var _ArgumentException = require( './internal/ArgumentException' );
 
-var constants               = require( './constants' );
-var indexOf                 = require( './index-of' );
+var placeholder        = require( './placeholder' );
+var constants          = require( './constants' );
+var indexOf            = require( './index-of' );
 
 // Function::bind() polyfill.
 
@@ -37,7 +38,7 @@ function process ( p, a ) {
   var l;
 
   for ( i = 0, l = p.length; i < l; ++i ) {
-    if ( p[ i ] === constants.PLACEHOLDER ) {
+    if ( p[ i ] === placeholder || p[ i ] === constants.PLACEHOLDER ) {
       r.push( a[ ++j ] );
     } else {
       r.push( p[ i ] );
@@ -52,23 +53,26 @@ function process ( p, a ) {
 }
 
 /**
- * @param {function} f The target function that should be bound.
- * @param {*} c The new context for the target function.
- * @param {...*} p The partial arguments, may contain constants.PLACEHOLDER.
+ * @param  {function} f The target function that should be bound.
+ * @param  {*}        c The new context for the target function.
+ * @param  {...*}     p The partial arguments, may contain _.placeholder.
+ * @return {function}
  * @example
- *
- * function f ( x, y ) {
+ * var _    = require( 'peako/placeholder' );
+ * var bind = require( 'peako/bind' );
+
+ * function weirdFunction ( x, y ) {
  *   return this[ x ] + this[ y ];
  * }
  *
- * const c = {
+ * var context = {
  *   x: 42,
  *   y: 1
  * };
  *
- * const bound = bind( f, c, constants.PLACEHOLDER, 'y' );
+ * var boundFunction = bind( weirdFunction, context, _, 'y' );
  *
- * bound( 'x' ); // -> 43
+ * boundFunction( 'x' ); // -> 43
  */
 module.exports = function bind ( f, c ) {
   var p;
@@ -87,7 +91,7 @@ module.exports = function bind ( f, c ) {
 
   // no placeholders in the partial arguments
 
-  if ( indexOf( p, constants.PLACEHOLDER ) < 0 ) {
+  if ( indexOf( p, placeholder ) < 0 && indexOf( p, constants.PLACEHOLDER ) < 0 ) {
     return Function.prototype.call.apply( _bind, arguments );
   }
 

@@ -7,7 +7,7 @@ describe( 'peako.isObject', function () {
     isObject( null ).should.be.false;
   } );
 
-  it( 'returns "false" for a built-in object', function () {
+  it( 'returns "false" for built-in objects', function () {
     isObject( Math ).should.be.false;
   } );
 
