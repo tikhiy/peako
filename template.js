@@ -1,18 +1,24 @@
 'use strict';
 
-var regexps = require( './template-regexps' );
 var escape  = require( './escape' );
 
-function replacer ( match, safe, html, comm, code ) {
-  if ( safe !== null && typeof safe !== 'undefined' ) {
+var regexps = {
+  safe: '<\\%=\\s*([^]*?)\\s*\\%>',
+  html: '<\\%-\\s*([^]*?)\\s*\\%>',
+  comm: "'''([^]*?)'''",
+  code: '<\\%\\s*([^]*?)\\s*\\%>'
+};
+
+function replacer ( match, safe, html, code ) {
+  if ( typeof safe !== 'undefined' ) {
     return "'+_e(" + safe.replace( /\\n/g, '\n' ) + ")+'";
   }
 
-  if ( html !== null && typeof html !== 'undefined' ) {
+  if ( typeof html !== 'undefined' ) {
     return "'+(" + html.replace( /\\n/g, '\n' ) + ")+'";
   }
 
-  if ( code !== null && typeof code !== 'undefined' ) {
+  if ( typeof code !== 'undefined' ) {
     return "';" + code.replace( /\\n/g, '\n' ) + ";_r+='";
   }
 
@@ -25,11 +31,19 @@ function replacer ( match, safe, html, comm, code ) {
  * @param  {string} source            The template source.
  * @param  {object} [options]         An options.
  * @param  {object} [options.regexps] Custom patterns.
- *                                    See {@link peako.templateRegexps}.
  * @return {object}                   An object with `render` method.
  * @example
- * var template = peako.template('<title><%- data.username %></title>');
- * var html = template.render({ username: 'John' });
+ * var template = peako.template(`
+ *   ''' A html-safe output. '''
+ *   <title><%= data.username %></title>
+ *   ''' A block of code. '''
+ *   <% for ( var i = 0; i < 5; i += 1 ) { %>
+ *     <%- i %>
+ *   <% } %>
+ *   ''' The "print" function. '''
+ *   <% print( 'Hello T!' ); %>
+ * `);
+ * var html = template.render( { username: 'John' } );
  * // -> '<title>John</title>'
  */
 function template ( source, options ) {
@@ -41,17 +55,30 @@ function template ( source, options ) {
     options = {};
   }
 
-  if ( ! options.regexps ) {
-    options.regexps = regexps;
+  function _ ( key ) {
+    return options.regexps && options.regexps[ key ] || regexps[ key ];
   }
 
-  regexp = RegExp(
-    ( options.regexps.safe || regexps.safe ) + '|' +
-    ( options.regexps.html || regexps.html ) + '|' +
-    ( options.regexps.comm || regexps.comm ) + '|' +
-    ( options.regexps.code || regexps.code ), 'g' );
+  var regexps_ = {
+    safe: _( 'safe' ),
+    html: _( 'html' ),
+    code: _( 'code' ),
+    comm: _( 'comm' )
+  };
 
-  result += "function print(){_r+=Array.prototype.join.call(arguments,'');}";
+  regexp = RegExp(
+    ( regexps_.safe ) + '|' +
+    ( regexps_.html ) + '|' +
+    ( regexps_.code ) + '|' +
+    ( regexps_.comm ), 'g' );
+
+  if ( options.with ) {
+    result += 'with(data||{}){';
+  }
+
+  if ( options.print !== null ) {
+    result += 'function ' + ( options.print || 'print' ) + "(){_r+=Array.prototype.join.call(arguments,'');}";
+  }
 
   result += "var _r='";
 
@@ -59,7 +86,13 @@ function template ( source, options ) {
     .replace( /\n/g, '\\n' )
     .replace( regexp, replacer );
 
-  result += "';return _r;";
+  result += "';";
+
+  if ( options.with ) {
+    result += '}';
+  }
+
+  result += 'return _r;';
 
   render_ = Function( 'data', '_e', result );
 

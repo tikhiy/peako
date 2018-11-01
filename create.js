@@ -1,5 +1,7 @@
 'use strict';
 
+module.exports = Object.create || create;
+
 var defineProperties = require( './define-properties' );
 
 var setPrototypeOf = require( './set-prototype-of' );
@@ -8,7 +10,7 @@ var isPrimitive = require( './is-primitive' );
 
 function C () {}
 
-module.exports = Object.create || function create ( prototype, descriptors ) {
+function create ( prototype, descriptors ) {
   var object;
 
   if ( prototype !== null && isPrimitive( prototype ) ) {

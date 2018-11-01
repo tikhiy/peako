@@ -5,7 +5,7 @@
 ### Installation
 
 ```bash
-npm install --save github:tikhiy/peako#next
+npm install --save github:tikhiy/peako#1.2.0
 ```
 
 ##### Example

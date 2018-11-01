@@ -29,18 +29,24 @@ describe( 'peako.template', function () {
 
   describe( 'comm', function () {
     it( 'works', function () {
-      template( '<%# A comment. %>' ).render().should.equal( '' );
+      template( "''' A comment. '''" ).render().should.equal( '' );
     } );
   } );
 
   describe( 'custom patterns', function () {
     it( 'works', function () {
-      var source = '<?php print( data.$universe ); ?>';
+      template( "<?php echo( $universe ); ?>",  ).render( { $universe: 'The Universe.' } );
+
+      var source = '<?php echo( $universe ); ?>';
 
       var options = {
+        'with': true,
+
         regexps: {
           code: '<\\?php\\s*([^]*?)\\s*\\?>'
-        }
+        },
+
+        print: 'echo'
       };
 
       var data = {

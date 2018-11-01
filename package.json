@@ -1,7 +1,7 @@
 {
   "name": "peako",
   "version": "1.2.0",
-  "description": "A library for manipulating JS objects, HTML, & CSS (based on jQuery & Lodash).",
+  "description": "A JavaScript (ES3 Syntax, ES6 API) library for manipulating JS objects, arrays, HTML, & CSS (based on jQuery & Lodash).",
   "main": "peako.js",
   "directories": {
     "test": "test"

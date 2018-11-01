@@ -12,28 +12,29 @@ var events = {
 var support = typeof self !== 'undefined' && 'addEventListener' in self;
 
 /**
- * @param {Node} element The element to which the listener should be attached.
- * @param {string} type The event type name.
- * @param {string?} selector The selector to which delegate an event.
- * @param {function} listener The event listener.
- * @param {boolean} useCapture
- * @param {boolean} [one] Remove the listener after it first dispatching?
+ * @method peako.event.on
+ * @param  {Node}     element
+ * @param  {string}   type
+ * @param  {string?}  selector
+ * @param  {function} listener
+ * @param  {boolean}  useCapture
+ * @param  {boolean}  [once]
+ * @return {void}
+ * @example
+ * _.event.on( document, 'click', '.post__like-button', ( event ) => {
+ *   const data = {
+ *     id: _( this ).parent( '.post' ).data( 'id' )
+ *   }
+ *
+ *   _.ajax( '/like', { data } )
+ * }, false )
  */
-
-// on( document, 'click', '.post__like-button', ( event ) => {
-//   const data = {
-//     id: _( this ).parent( '.post' ).attr( 'data-id' )
-//   }
-
-//   ajax( '/like', { data } )
-// }, false )
-
-exports.on = function on ( element, type, selector, listener, useCapture, one ) {
+exports.on = function on ( element, type, selector, listener, useCapture, once ) {
   var item = {
     useCapture: useCapture,
     listener: listener,
     element: element,
-    one: one
+    once: once
   };
 
   if ( selector ) {
@@ -46,7 +47,7 @@ exports.on = function on ( element, type, selector, listener, useCapture, one ) 
         return;
       }
 
-      if ( one ) {
+      if ( once ) {
         exports.off( element, type, selector, listener, useCapture );
       }
 
@@ -64,7 +65,7 @@ exports.on = function on ( element, type, selector, listener, useCapture, one ) 
         return;
       }
 
-      if ( one ) {
+      if ( once ) {
         exports.off( element, type, selector, listener, useCapture );
       }
 
@@ -85,6 +86,15 @@ exports.on = function on ( element, type, selector, listener, useCapture, one ) 
   }
 };
 
+/**
+ * @method peako.event.off
+ * @param  {Node}     element
+ * @param  {string}   type
+ * @param  {string}   selector
+ * @param  {function} listener
+ * @param  {boolean}  useCapture
+ * @return {void}
+ */
 exports.off = function off ( element, type, selector, listener, useCapture ) {
   var items;
   var item;
@@ -109,7 +119,9 @@ exports.off = function off ( element, type, selector, listener, useCapture ) {
       typeof listener !== 'undefined' && (
         item.listener !== listener ||
         item.useCapture !== useCapture ||
-        item.selector && item.selector !== selector ) ) {
+        // todo: check both item.selector and selector and then compare
+        item.selector && item.selector !== selector ) )
+    { // eslint-disable-line brace-style
       continue;
     }
 
@@ -170,19 +182,13 @@ exports.copy = function copy ( target, source, deep ) {
   var l;
 
   for ( i = events.types.length - 1; i >= 0; --i ) {
-
     if ( ( items = events.items[ type = events.types[ i ] ] ) ) {
-
       for ( j = 0, l = items.length; j < l; ++j ) {
-
         if ( ( item = items[ j ] ).target === source ) {
-          event.on( target, type, null, item.listener, item.useCapture, item.one );
+          event.on( target, type, null, item.listener, item.useCapture, item.once );
         }
-
       }
-
     }
-
   }
 
   if ( ! deep ) {
@@ -198,13 +204,9 @@ exports.copy = function copy ( target, source, deep ) {
 };
 
 function createEventWithTarget ( type, data, target ) {
-
   var e = new Event( type, data );
-
   e.target = target;
-
   return e;
-
 }
 
 function IEType ( type ) {

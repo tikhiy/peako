@@ -1,8 +1,8 @@
 'use strict';
 
-var baseDefineProperty = require( './base/base-define-property' );
-
 var support            = require( './support/support-define-property' );
+
+var baseDefineProperty = require( './base/base-define-property' );
 
 var isPrimitive        = require( './is-primitive' );
 

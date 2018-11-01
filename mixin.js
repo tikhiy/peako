@@ -12,7 +12,7 @@ var isArray       = memoize( require( './is-array' ) );
  * @param  {boolean}    [deep=true]
  * @param  {object}     target
  * @param  {...object?} object
- * @return {[type]}
+ * @return {object}
  */
 module.exports = function mixin ( deep, target ) {
   var argsLength = arguments.length;

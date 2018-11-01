@@ -1,7 +1,17 @@
 {
   "source": {
-    "exclude": [ "node_modules", "bench", "docs", "dist", "test" ],
-    "include": [ ".", "README.md" ]
+    "exclude": [
+      "node_modules",
+      "bench",
+      "docs",
+      "dist",
+      "test"
+    ],
+
+    "include": [
+      ".",
+      "README.md"
+    ]
   },
 
   "opts": {
