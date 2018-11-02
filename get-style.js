@@ -1,5 +1,13 @@
 'use strict';
 
-module.exports = function getStyle ( e, k, c ) {
-  return e.style[ k ] || ( c || getComputedStyle( e ) ).getPropertyValue( k );
+/**
+ * @method getStyle
+ * @param  {object}  element
+ * @param  {string}  style
+ * @param  {object} [computedStyle]
+ * @return {string}
+ */
+module.exports = function getStyle ( element, style, computedStyle ) {
+  return element.style[ style ] ||
+    ( computedStyle || getComputedStyle( element ) ).getPropertyValue( style );
 };
