@@ -1,60 +1,42 @@
 'use strict';
 
-var baseToIndex = require( './base-to-index' );
+// var baseToIndex = require( './base-to-index' );
 
-var indexOf     = Array.prototype.indexOf;
-var lastIndexOf = Array.prototype.lastIndexOf;
+/**
+ * @private
+ * @method baseIndexOf
+ * @param  {object}  array
+ * @param  {any}     value
+ * @param  {number?} fromIndex
+ * @param  {boolean} fromRight
+ * @return {number}
+ */
+module.exports = function baseIndexOf ( array, value, fromIndex, fromRight ) {
+  // if ( typeof fromIndex === 'undefined' ) {
+  //   fromIndex = fromRight
+  //     ? array.length - 1
+  //     : 0;
+  // } else {
+  //   fromIndex = baseToIndex( fromIndex, array.length );
+  // }
 
-function baseIndexOf ( arr, search, fromIndex, fromRight ) {
-  var idx;
-  var val;
-  var i;
-  var j;
-  var l;
-
-  // use the native function if it is supported and the search is not nan.
-
-  if ( search === search && ( idx = fromRight ? lastIndexOf : indexOf ) ) { // eslint-disable-line no-ternary
-    return idx.call( arr, search, fromIndex );
+  if ( value === value ) {
+    // eslint-disable-next-line no-ternary
+    return fromRight
+      ? Array.prototype.lastIndexOf.call( array, value )
+      : Array.prototype.indexOf.call( array, value );
   }
 
-  l = arr.length;
+  for ( var l = array.length - 1, i = l; i >= 0; --i ) {
+    // eslint-disable-next-line no-ternary
+    var index = fromRight
+      ? i
+      : l - i;
 
-  if ( ! l ) {
-    return -1;
-  }
-
-  j = l - 1;
-
-  if ( typeof fromIndex !== 'undefined' ) {
-    fromIndex = baseToIndex( fromIndex, l );
-
-    if ( fromRight ) {
-      j = Math.min( j, fromIndex );
-    } else {
-      j = Math.max( 0, fromIndex );
-    }
-
-    i = j - 1;
-  } else {
-    i = -1;
-  }
-
-  for ( ; j >= 0; --j ) {
-    if ( fromRight ) {
-      idx = j;
-    } else {
-      idx = ++i;
-    }
-
-    val = arr[ idx ];
-
-    if ( val === search || search !== search && val !== val ) {
-      return idx;
+    if ( array[ index ] === value || value !== value && array[ index ] !== array[ index ] ) {
+      return index;
     }
   }
 
   return -1;
-}
-
-module.exports = baseIndexOf;
+};
