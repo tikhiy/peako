@@ -55,22 +55,15 @@ function template ( source, options ) {
     options = {};
   }
 
-  function _ ( key ) {
+  function get ( key ) {
     return options.regexps && options.regexps[ key ] || regexps[ key ];
   }
 
-  var regexps_ = {
-    safe: _( 'safe' ),
-    html: _( 'html' ),
-    code: _( 'code' ),
-    comm: _( 'comm' )
-  };
-
   regexp = RegExp(
-    ( regexps_.safe ) + '|' +
-    ( regexps_.html ) + '|' +
-    ( regexps_.code ) + '|' +
-    ( regexps_.comm ), 'g' );
+    get( 'safe' ) + '|' +
+    get( 'html' ) + '|' +
+    get( 'code' ) + '|' +
+    get( 'comm' ), 'g' );
 
   if ( options.with ) {
     result += 'with(data||{}){';
