@@ -1,5 +1,5 @@
 'use strict';
 
 /**
- * @member {object} peako.placeholder
+ * @member {object} _.placeholder
  */
