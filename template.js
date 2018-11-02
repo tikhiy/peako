@@ -37,14 +37,13 @@ function replacer ( match, safe, html, code ) {
  *   ''' A html-safe output. '''
  *   <title><%= data.username %></title>
  *   ''' A block of code. '''
- *   <% for ( var i = 0; i < 5; i += 1 ) { %>
- *     <%- i %>
- *   <% } %>
- *   ''' The "print" function. '''
- *   <% print( 'Hello T!' ); %>
+ *   <% for ( var i = 0; i < 5; i += 1 ) {
+ *     // The "print" function.
+ *     print( i );
+ *   } %>
  * `);
  * var html = template.render( { username: 'John' } );
- * // -> '<title>John</title>'
+ * // -> '\n  \n  <title>John</title>\n  \n  01234\n'
  */
 function template ( source, options ) {
   var result = '';
