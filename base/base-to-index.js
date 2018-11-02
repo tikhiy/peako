@@ -1,13 +1,20 @@
 'use strict';
 
-module.exports = function baseToIndex ( v, l ) {
-  if ( ! l || ! v ) {
+/**
+ * @private
+ * @method baseToIndex
+ * @param  {number} index
+ * @param  {number} length
+ * @return {number}
+ */
+module.exports = function baseToIndex ( index, length ) {
+  if ( ! length || ! index ) {
     return 0;
   }
 
-  if ( v < 0 ) {
-    v += l;
+  if ( index < 0 ) {
+    index += length;
   }
 
-  return v || 0;
+  return index || 0;
 };
