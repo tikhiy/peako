@@ -74,7 +74,6 @@ peako.once              = require( './once' );
 peako.defaultTo         = require( './default-to' );
 peako.timer             = require( './timer' );
 peako.timestamp         = require( './timestamp' );
-peako.now               = require( './now' );
 peako.clamp             = require( './clamp' );
 peako.bind              = require( './bind' );
 peako.trim              = require( './trim' );

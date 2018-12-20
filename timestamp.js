@@ -1,13 +1,12 @@
 'use strict';
 
-var now = require( './now' );
 var navigatorStart;
 
 if ( typeof performance === 'undefined' || ! performance.now ) {
-  navigatorStart = now();
+  navigatorStart = Date.now();
 
   module.exports = function timestamp () {
-    return now() - navigatorStart;
+    return Date.now() - navigatorStart;
   };
 } else {
   module.exports = function timestamp () {
