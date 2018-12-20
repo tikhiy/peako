@@ -3,8 +3,6 @@
 var _processArgs = require( './internal/process-args' );
 
 var _            = require( './placeholder' );
-// constants.PLACEHOLDER is for backward-compability.
-var constants    = require( './constants' );
 
 /**
  * Эта расширенная версия стандартного ES5 `Function.bind`, в которой есть поддержка placeholder`ов.
@@ -35,7 +33,7 @@ function bind ( function_, thisArg ) {
 
   // Search for placeholders in the arguments.
   for ( ; i < argsLen; ++i ) {
-    if ( args[ i ] === _ || args[ i ] === constants.PLACEHOLDER ) {
+    if ( args[ i ] === _ ) {
       break;
     }
   }
