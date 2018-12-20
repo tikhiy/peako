@@ -1,6 +1,6 @@
 'use strict';
 
-var callIteratee = require( '../call-iteratee' );
+var callIteratee = require( '../internal/call-iteratee' );
 var toObject     = require( '../to-object' );
 var iterable     = require( '../iterable' );
 var iteratee     = require( '../iteratee' ).iteratee;

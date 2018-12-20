@@ -1,6 +1,6 @@
 'use strict';
 
-var callIteratee = require( '../call-iteratee' );
+var callIteratee = require( '../internal/call-iteratee' );
 
 module.exports = function baseForIn ( obj, fn, ctx, fromRight, keys ) {
   var key;
