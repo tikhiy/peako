@@ -3,10 +3,8 @@
 module.exports = Object.create || create;
 
 var defineProperties = require( './define-properties' );
-
-var setPrototypeOf = require( './set-prototype-of' );
-
-var isPrimitive = require( './is-primitive' );
+var setPrototypeOf   = require( './set-prototype-of' );
+var isPrimitive      = require( './is-primitive' );
 
 function C () {}
 
