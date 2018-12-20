@@ -1,12 +1,11 @@
 'use strict';
 
-var _ArgumentException = require( './internal/ArgumentException' );
-var _processArgs       = require( './internal/process-args' );
+var _processArgs = require( './internal/process-args' );
 
-var placeholder        = require( './placeholder' );
+var placeholder  = require( './placeholder' );
 // constants.PLACEHOLDER is for backward-compability.
-var constants          = require( './constants' );
-var indexOf            = require( './index-of' );
+var constants    = require( './constants' );
+var indexOf      = require( './index-of' );
 
 /**
  * Эта расширенная версия стандартного ES5 `Function.bind`, в которой есть поддержка placeholder`ов.
@@ -20,7 +19,7 @@ var indexOf            = require( './index-of' );
  */
 function bind ( function_, thisArg ) {
   if ( typeof function_ !== 'function' ) {
-    throw _ArgumentException( function_, 'a function' );
+    throw TypeError( 'in _.bind(), provided "function_" is not a function (' + typeof function_ + ')' );
   }
 
   // If no partialArgs were provided make a tiny optimization using built-in

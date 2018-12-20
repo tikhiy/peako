@@ -42,4 +42,10 @@ describe( 'peako.bind', function () {
     var toString = bind( Function.prototype.call, Object.prototype.toString );
     toString( [] ).should.equal( '[object Array]' );
   } );
+
+  it( 'throw error if the first argument is not a function', function () {
+    ( function () {
+      bind( 0 );
+    } ).should.throw( TypeError, 'not a function' );
+  } );
 } );
