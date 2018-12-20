@@ -3,7 +3,6 @@
 var getPrototypeOf = require( './get-prototype-of' );
 var isObjectLike   = require( './is-object-like' );
 var toObject       = require( './to-object' );
-var create         = require( './create' );
 var each           = require( './each' );
 
 module.exports = function clone ( deep, target, guard ) {
@@ -14,7 +13,7 @@ module.exports = function clone ( deep, target, guard ) {
     deep = true;
   }
 
-  cln = create( getPrototypeOf( target = toObject( target ) ) );
+  cln = Object.create( getPrototypeOf( target = toObject( target ) ) );
 
   each( target, function ( value, key, target ) {
     if ( value === target ) {

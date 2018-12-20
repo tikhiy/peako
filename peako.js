@@ -28,7 +28,6 @@ peako.ajax              = require( './ajax' );
 peako.assign            = require( './assign' );
 peako.assignIn          = require( './assign-in' );
 peako.clone             = require( './clone' );
-peako.create            = require( './create' );
 peako.defaults          = require( './defaults' );
 peako.each              = require( './each' );
 peako.eachRight         = require( './each-right' );

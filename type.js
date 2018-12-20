@@ -1,8 +1,6 @@
 'use strict';
 
-var create = require( './create' );
-
-var cache = create( null );
+var cache = Object.create( null );
 
 module.exports = function type ( value ) {
   if ( typeof value !== 'object' && typeof value !== 'function' ) {
