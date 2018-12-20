@@ -9,7 +9,7 @@ module.exports = Object.getPrototypeOf || function getPrototypeOf ( obj ) {
     throw TypeError( ERR.UNDEFINED_OR_NULL );
   }
 
-  prototype = obj.__proto__; // jshint ignore: line
+  prototype = obj.__proto__;
 
   if ( typeof prototype !== 'undefined' ) {
     return prototype;

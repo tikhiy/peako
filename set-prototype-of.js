@@ -13,7 +13,7 @@ module.exports = Object.setPrototypeOf || function setPrototypeOf ( target, prot
   }
 
   if ( '__proto__' in target ) {
-    target.__proto__ = prototype; // jshint ignore: line
+    target.__proto__ = prototype;
   }
 
   return target;
