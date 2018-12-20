@@ -63,7 +63,7 @@ function DOMWrapper ( selector, context ) {
       // _( '#id', '.another-element' )
 
       if ( ! match || ! context.getElementById && match[ 1 ] || ! context.getElementsByClassName && match[ 3 ] ) {
-        if ( match[ 1 ] ) {
+        if ( match && match[ 1 ] ) {
           list = [ context.querySelector( selector ) ];
         } else {
           list = context.querySelectorAll( selector );
