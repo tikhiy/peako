@@ -2,10 +2,9 @@
 
 var _processArgs = require( './internal/process-args' );
 
-var placeholder  = require( './placeholder' );
+var _            = require( './placeholder' );
 // constants.PLACEHOLDER is for backward-compability.
 var constants    = require( './constants' );
-var indexOf      = require( './index-of' );
 
 /**
  * Эта расширенная версия стандартного ES5 `Function.bind`, в которой есть поддержка placeholder`ов.
@@ -22,23 +21,34 @@ function bind ( function_, thisArg ) {
     throw TypeError( 'in _.bind(), provided "function_" is not a function (' + typeof function_ + ')' );
   }
 
+  var args = arguments;
+  var argsLen = args.length;
+
   // If no partialArgs were provided make a tiny optimization using built-in
   // `Function.bind`.
-  if ( arguments.length <= 2 ) {
+  if ( argsLen <= 2 ) {
     return Function.prototype.bind.call( function_, thisArg );
   }
 
-  var partialArgs = Array.prototype.slice.call( arguments, 2 );
+  // Skip function_ and thisArg.
+  var i = 2;
+
+  // Search for placeholders in the arguments.
+  for ( ; i < argsLen; ++i ) {
+    if ( args[ i ] === _ || args[ i ] === constants.PLACEHOLDER ) {
+      break;
+    }
+  }
 
   // If no placeholders in the partialArgs were provided make a tiny
   // optimization using built-in `Function.bind`.
-  if ( indexOf( partialArgs, placeholder ) < 0 && indexOf( partialArgs, constants.PLACEHOLDER ) < 0 ) {
-    return Function.prototype.call.apply( Function.prototype.bind, arguments );
+  if ( i === argsLen ) {
+    return Function.prototype.call.apply( Function.prototype.bind, args );
   }
 
   return function bound () {
     // Call a function with new this (thisArg) and processed arguments.
-    return function_.apply( thisArg, _processArgs( partialArgs, arguments ) );
+    return function_.apply( thisArg, _processArgs( args, arguments ) );
   };
 }
 

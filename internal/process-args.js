@@ -1,8 +1,8 @@
 'use strict';
 
-var placeholder = require( '../placeholder' );
+var _         = require( '../placeholder' );
 // constants.PLACEHOLDER is for backward-compability.
-var constants   = require( '../constants' );
+var constants = require( '../constants' );
 
 /**
  * Этот метод возращает один массив аргументов из частичных аргументов с placeholder`ами, и
@@ -18,11 +18,12 @@ var constants   = require( '../constants' );
 function _processArgs ( partialArgs, args ) {
   var result = [];
   var j = -1;
-  var i;
-  var length;
+  // Skip function_ and thisArg.
+  var i = 2;
+  var length = partialArgs.length;
 
-  for ( i = 0, length = partialArgs.length; i < length; ++i ) {
-    if ( partialArgs[ i ] === placeholder || partialArgs[ i ] === constants.PLACEHOLDER ) {
+  for ( ; i < length; ++i ) {
+    if ( partialArgs[ i ] === _ || partialArgs[ i ] === constants.PLACEHOLDER ) {
       result.push( args[ ++j ] );
     } else {
       result.push( partialArgs[ i ] );
@@ -30,7 +31,7 @@ function _processArgs ( partialArgs, args ) {
   }
 
   for ( length = args.length; j < length; ++j ) {
-    result.push( args[ i ] );
+    result.push( args[ j ] );
   }
 
   return result;
