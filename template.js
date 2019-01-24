@@ -9,7 +9,7 @@ var regexps = {
   code: '<\\%\\s*([^]*?)\\s*\\%>'
 };
 
-function replacer ( match, safe, html, code ) {
+function replacer ( match, safe, html, comm, code ) {
   if ( typeof safe !== 'undefined' ) {
     return "'+_e(" + safe.replace( /\\n/g, '\n' ) + ")+'";
   }
@@ -61,8 +61,8 @@ function template ( source, options ) {
   regexp = RegExp(
     get( 'safe' ) + '|' +
     get( 'html' ) + '|' +
-    get( 'code' ) + '|' +
-    get( 'comm' ), 'g' );
+    get( 'comm' ) + '|' +
+    get( 'code' ), 'g' );
 
   if ( options.with ) {
     result += 'with(data||{}){';
