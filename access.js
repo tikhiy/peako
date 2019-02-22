@@ -5,7 +5,7 @@ var type       = require( './type' );
 var keys       = require( './keys' );
 
 function access ( obj, key, val, fn, _noCheck ) {
-  var chainable = _noCheck || typeof val === 'undefined';
+  var chainable = _noCheck || typeof val !== 'undefined';
   var bulk = key === null || key === 'undefined';
   var len = obj.length;
   var raw = false;
