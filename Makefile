@@ -15,3 +15,6 @@ gzip: min
 
 test:
 	@node_modules/.bin/mocha -r test/internal/register `find test/files -name '*.test.js'`
+
+docs:
+	@rm -r docs && node_modules/.bin/jsdoc --configure .jsdoc.json

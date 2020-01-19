@@ -19,7 +19,7 @@ var getElementW          = require( '../get-element-w' );
 var getElementH          = require( '../get-element-h' );
 var parseHTML            = require( '../parse-html' );
 var access               = require( '../access' );
-var event                = require( '../event' );
+var events               = require( '../events' );
 
 var rselector = /^(?:#([\w-]+)|([\w-]+)|\.([\w-]+))$/;
 
@@ -186,10 +186,10 @@ baseForIn( {
       element = this[ i ];
 
       if ( removeAll ) {
-        event.off( element );
+        events.off( element );
       } else {
         for ( j = 0; j < l; ++j ) {
-          event[ name ]( element, types[ j ], selector, listener, useCapture, once );
+          events[ name ]( element, types[ j ], selector, listener, useCapture, once );
         }
       }
     }

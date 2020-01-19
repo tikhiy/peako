@@ -5,7 +5,7 @@
 ### Installation
 
 ```bash
-npm install --save github:tikhiy/peako#v1.4.0
+npm install --save peako
 ```
 
 ##### Example
@@ -21,7 +21,7 @@ _( document ).on( 'click', 'a', function ( event ) {
 ### Installation
 
 ```html
-<script src="peako.min.js"></script>
+<script src="https://raw.githubusercontent.com/tikhiy/peako/next/dist/peako.min.js"></script>
 ```
 
 ##### Example
@@ -38,15 +38,21 @@ _( self ).scroll( listener );
 
 ##### Linting
 
-* `make lint`
+```bash
+make lint
+```
 
 ##### Testing
 
-* `make test`
+```bash
+make test
+```
 
 ##### Before Committing
 
-* `npm run prepublish`
+```bash
+npm run prepublish
+```
 
 ### License
 

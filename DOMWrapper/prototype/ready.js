@@ -1,6 +1,6 @@
 'use strict';
 
-var event = require( '../../event' );
+var events = require( '../../events' );
 
 module.exports = function ready ( cb ) {
   var doc = this[ 0 ];
@@ -13,7 +13,7 @@ module.exports = function ready ( cb ) {
   readyState = doc.readyState;
 
   if ( doc.attachEvent ? readyState !== 'complete' : readyState === 'loading' ) { // eslint-disable-line no-ternary
-    event.on( doc, 'DOMContentLoaded', null, function () {
+    events.on( doc, 'DOMContentLoaded', null, function () {
       cb();
     }, false, true );
   } else {

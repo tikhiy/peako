@@ -12,7 +12,7 @@ var events = {
 var support = typeof self !== 'undefined' && 'addEventListener' in self;
 
 /**
- * @method peako.event.on
+ * @method peako.events.on
  * @param  {Node}     element
  * @param  {string}   type
  * @param  {string?}  selector
@@ -21,7 +21,7 @@ var support = typeof self !== 'undefined' && 'addEventListener' in self;
  * @param  {boolean}  [once]
  * @return {void}
  * @example
- * _.event.on( document, 'click', '.post__like-button', ( event ) => {
+ * _.events.on( document, 'click', '.post__like-button', ( event ) => {
  *   const data = {
  *     id: _( this ).parent( '.post' ).data( 'id' )
  *   }
@@ -87,7 +87,7 @@ exports.on = function on ( element, type, selector, listener, useCapture, once )
 };
 
 /**
- * @method peako.event.off
+ * @method peako.events.off
  * @param  {Node}     element
  * @param  {string}   type
  * @param  {string}   selector
@@ -102,7 +102,7 @@ exports.off = function off ( element, type, selector, listener, useCapture ) {
 
   if ( type === null || typeof type === 'undefined' ) {
     for ( i = events.types.length - 1; i >= 0; --i ) {
-      event.off( element, events.types[ i ], selector );
+      exports.off( element, events.types[ i ], selector );
     }
 
     return;
@@ -185,7 +185,7 @@ exports.copy = function copy ( target, source, deep ) {
     if ( ( items = events.items[ type = events.types[ i ] ] ) ) {
       for ( j = 0, l = items.length; j < l; ++j ) {
         if ( ( item = items[ j ] ).target === source ) {
-          event.on( target, type, null, item.listener, item.useCapture, item.once );
+          exports.on( target, type, null, item.listener, item.useCapture, item.once );
         }
       }
     }
@@ -199,7 +199,7 @@ exports.copy = function copy ( target, source, deep ) {
   source = source.childNodes;
 
   for ( i = target.length - 1; i >= 0; --i ) {
-    event.copy( target[ i ], source[ i ], true );
+    exports.copy( target[ i ], source[ i ], true );
   }
 };
 
