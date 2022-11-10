@@ -14,7 +14,7 @@
     "eslint": "^5.16.0",
     "eslint-config-v6.js": "github:tikhiy/eslint-config-v6.js#v1.0.9",
     "jsdoc": "^3.6.3",
-    "mocha": "^5.2.0",
+    "mocha": "^10.1.0",
     "uglify-js": "^3.7.5"
   },
   "scripts": {
